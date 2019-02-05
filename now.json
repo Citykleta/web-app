@@ -1,0 +1,25 @@
+{
+  "name": "citykleta-web-app",
+  "version": 2,
+  "alias": [
+    "app.citykleta-test.com"
+  ],
+  "build": {
+    "env": {
+      "MAPBOX_PUBLIC_TOKEN": "pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw",
+      "MAPBOX_STYLE": "mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb"
+    }
+  },
+  "builds": [
+    {
+      "src": "./package.json",
+      "use": "@now/static-build"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/public/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

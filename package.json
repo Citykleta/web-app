@@ -1,0 +1,41 @@
+{
+  "name": "citykleta-web",
+  "version": "0.1.0",
+  "description": "web app for citykleta platform",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c rollup/build.js && cp ./src/*.css src/*.html ./dist",
+    "now-build": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citykleta/web-app.git"
+  },
+  "keywords": [
+    "bicycle",
+    "serverless",
+    "webapp",
+    "citykleta"
+  ],
+  "author": "Laurent RENARD",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Citykleta/web-app/issues"
+  },
+  "homepage": "https://github.com/Citykleta/web-app#readme",
+  "devDependencies": {
+    "rollup": "^1.1.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "typescript": "^3.3.1",
+    "zora": "^3.0.0-1"
+  },
+  "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.5.0",
+    "mapbox-gl": "^0.53.0-beta.1"
+  }
+}
