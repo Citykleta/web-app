@@ -8,8 +8,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c rollup/build.js && cp ./src/*.css src/*.html ./dist",
-    "now-build": "npm run build"
+    "compile": "tsc",
+    "build": "npm run compile && rollup -c rollup/build.js && cp ./src/*.css src/*.html ./dist",
+    "now-build": "npm run build",
+    "dev": ""
   },
   "repository": {
     "type": "git",
@@ -31,11 +33,13 @@
     "rollup": "^1.1.2",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
+    "smart-table-events": "^1.0.10",
     "typescript": "^3.3.1",
     "zora": "^3.0.0-1"
   },
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.5.0",
+    "flaco": "^2.0.0-3",
     "mapbox-gl": "^0.53.0-beta.1"
   }
 }

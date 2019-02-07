@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "target": "esnext"
+  },
+  "include": [
+    "./src/app/"
+  ]
+}
