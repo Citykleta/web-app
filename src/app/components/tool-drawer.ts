@@ -1,25 +1,41 @@
-import {Events, Store, ToolSelectionState} from '../services/store';
-import {NavigationService} from '../services/navigation';
+import {Events, ToolSelectionState} from '../services/store';
+import {ToolItem} from '../services/navigation';
+import {factory as itineraryControl} from './itinerary-control';
+import {ServiceRegistry} from '../services/service-registry';
 
-export const template = `<div id="tools-content">
-<button>close</button>
-<p>Hello tool</p>
-</div>`;
+const template = `<div class="tool-container"></div>`;
+const hiddenClassName = 'hidden';
 
-export const component = (store: Store, navigation: NavigationService) => {
+export const factory = (registry: ServiceRegistry) => {
+    const {store, itinerary} = registry;
     const domElement = document.createElement('DIV');
-    domElement.classList.add('closed');
-    domElement.setAttribute('id', 'tools-container');
     domElement.innerHTML = template;
+    domElement.classList.add(hiddenClassName);
+    domElement.setAttribute('id', 'toolbox-container');
+    const toolContent = domElement.firstChild;
 
-    const closeButton = domElement.querySelector('button');
-
-    closeButton.addEventListener('click', () => navigation.unselectAll());
-
-    store.on(Events.TOOL_CHANGED, (state: ToolSelectionState) => {
+    store.on(Events.TOOL_CHANGED, async (state: ToolSelectionState) => {
         const {selectedTool} = state;
         const isOpen = selectedTool !== null;
-        domElement.classList.toggle('closed', isOpen === false);
+        domElement.classList.toggle(hiddenClassName, isOpen === false);
+
+        if (toolContent.firstChild) {
+            const range = document.createRange();
+            range.selectNodeContents(toolContent);
+            range.deleteContents();
+        }
+
+        if (isOpen) {
+            // mount tool settings
+            switch (selectedTool) {
+                case ToolItem.ITINERARY:
+                    toolContent.appendChild(itineraryControl(registry));
+                    break;
+                default:
+                    throw new Error('unknown tool');
+            }
+
+        }
     });
 
     return domElement;
