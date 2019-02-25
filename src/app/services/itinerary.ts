@@ -1,10 +1,5 @@
 import {Events, ItineraryState, Store} from './store';
-import defaultStore from './store';
-
-export interface Point {
-    long: number;
-    lat: number;
-}
+import {Point} from '../tools/interfaces';
 
 export interface ItineraryService {
     addPoint(p: Point, index ?: number): void;
@@ -38,5 +33,3 @@ export const provider = (store: Store): ItineraryService => {
         }
     };
 };
-
-export default provider(defaultStore);

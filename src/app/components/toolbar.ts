@@ -1,6 +1,6 @@
-import {ToolItem} from '../services/navigation';
 import {Events, ToolSelectionState} from '../services/store';
 import {ServiceRegistry} from '../services/service-registry';
+import {ToolType} from '../tools/interfaces';
 
 const template = `<ul>
 <li class="hidden tool-item">
@@ -31,17 +31,17 @@ export const factory = (registry: ServiceRegistry): Element => {
     });
 
     itenerary.addEventListener('click', ev => {
-        navigation.selectTool(ToolItem.ITINERARY);
+        navigation.selectTool(ToolType.ITINERARY);
     });
 
     search.addEventListener('click', ev => {
-        navigation.selectTool(ToolItem.SEARCH);
+        navigation.selectTool(ToolType.SEARCH);
     });
 
     store.on(Events.TOOL_CHANGED, (state: ToolSelectionState) => {
         const {selectedTool} = state;
-        itenerary.parentElement.classList.toggle('selected', selectedTool === ToolItem.ITINERARY);
-        search.parentElement.classList.toggle('selected', selectedTool === ToolItem.SEARCH);
+        itenerary.parentElement.classList.toggle('selected', selectedTool === ToolType.ITINERARY);
+        search.parentElement.classList.toggle('selected', selectedTool === ToolType.SEARCH);
         close.parentElement.classList.toggle('hidden', selectedTool === null);
     });
 

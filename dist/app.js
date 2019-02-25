@@ -40,7 +40,6 @@
                 selectedTool: null
             },
             itinerary: {
-                processing: false,
                 stops: [],
                 directions: []
             }
@@ -52,6 +51,12 @@
         return {
             selectTool(tool) {
                 state.tool.selectedTool = tool;
+                //todo where should it be ?
+                if (tool === null) {
+                    state.itinerary.stops = [];
+                    state.itinerary.directions = [];
+                    eventEmitter.dispatch(Events.ITINERARY_STOP_CHANGED, this.getState().itinerary);
+                }
                 eventEmitter.dispatch(Events.TOOL_CHANGED, this.getState().tool);
             },
             addItineraryPoint(point, index) {
@@ -76,30 +81,12 @@
             }
         };
     };
-    var defaultStore = provider();
 
-    var ToolItem;
-    (function (ToolItem) {
-        ToolItem["ITINERARY"] = "ITINERARY";
-        ToolItem["SEARCH"] = "SEARCH";
-    })(ToolItem || (ToolItem = {}));
-    const provider$1 = (store) => {
-        let currentTool = null;
-        store.on(Events.TOOL_CHANGED, (state) => {
-            currentTool = state.selectedTool;
-        });
-        return {
-            selectTool(tool) {
-                if (tool !== currentTool) {
-                    store.selectTool(tool);
-                }
-            },
-            unselectAll() {
-                this.selectTool(null);
-            }
-        };
-    };
-    var navigation = provider$1(defaultStore);
+    var ToolType;
+    (function (ToolType) {
+        ToolType["ITINERARY"] = "ITINERARY";
+        ToolType["SEARCH"] = "SEARCH";
+    })(ToolType || (ToolType = {}));
 
     const template = `<ul>
 <li class="hidden tool-item">
@@ -117,24 +104,24 @@
 </ul>
 `;
     const factory = (registry) => {
-        const { navigation: navigation$$1, store } = registry;
+        const { navigation, store } = registry;
         const domElement = document.createElement('DIV');
         domElement.classList.add('tools-bar');
         domElement.innerHTML = template;
         const [close, itenerary, search, settings] = Array.from(domElement.querySelectorAll('button'));
         close.addEventListener('click', ev => {
-            navigation$$1.unselectAll();
+            navigation.unselectAll();
         });
         itenerary.addEventListener('click', ev => {
-            navigation$$1.selectTool(ToolItem.ITINERARY);
+            navigation.selectTool(ToolType.ITINERARY);
         });
         search.addEventListener('click', ev => {
-            navigation$$1.selectTool(ToolItem.SEARCH);
+            navigation.selectTool(ToolType.SEARCH);
         });
         store.on(Events.TOOL_CHANGED, (state) => {
             const { selectedTool } = state;
-            itenerary.parentElement.classList.toggle('selected', selectedTool === ToolItem.ITINERARY);
-            search.parentElement.classList.toggle('selected', selectedTool === ToolItem.SEARCH);
+            itenerary.parentElement.classList.toggle('selected', selectedTool === ToolType.ITINERARY);
+            search.parentElement.classList.toggle('selected', selectedTool === ToolType.SEARCH);
             close.parentElement.classList.toggle('hidden', selectedTool === null);
         });
         return domElement;
@@ -154,6 +141,11 @@
         domElement.innerHTML = template$1;
         const range = document.createRange();
         range.selectNodeContents(domElement);
+        const { store } = registry;
+        store.on(Events.ITINERARY_STOP_CHANGED, (itineraryState) => {
+            const { stops } = itineraryState;
+            console.log(stops);
+        });
         return range.extractContents();
     };
 
@@ -166,6 +158,7 @@
         domElement.classList.add(hiddenClassName);
         domElement.setAttribute('id', 'toolbox-container');
         const toolContent = domElement.firstChild;
+        const itineraryComponent = factory$1(registry);
         store.on(Events.TOOL_CHANGED, async (state) => {
             const { selectedTool } = state;
             const isOpen = selectedTool !== null;
@@ -178,8 +171,8 @@
             if (isOpen) {
                 // mount tool settings
                 switch (selectedTool) {
-                    case ToolItem.ITINERARY:
-                        toolContent.appendChild(factory$1(registry));
+                    case ToolType.ITINERARY:
+                        toolContent.appendChild(itineraryComponent);
                         break;
                     default:
                         throw new Error('unknown tool');
@@ -189,7 +182,7 @@
         return domElement;
     };
 
-    const provider$2 = (store) => {
+    const provider$1 = (store) => {
         let itineraryStops = [];
         store.on(Events.ITINERARY_STOP_CHANGED, (state) => {
             itineraryStops = state.stops;
@@ -210,14 +203,60 @@
             }
         };
     };
-    var itinerary = provider$2(defaultStore);
 
-    const provider$3 = () => ({
-        itinerary,
-        store: defaultStore,
-        navigation
-    });
-    var registry = provider$3();
+    const provider$2 = (store) => {
+        let currentTool = null;
+        store.on(Events.TOOL_CHANGED, (state) => {
+            currentTool = state.selectedTool;
+        });
+        return {
+            selectTool(tool) {
+                if (tool !== currentTool) {
+                    store.selectTool(tool);
+                }
+            },
+            unselectAll() {
+                this.selectTool(null);
+            }
+        };
+    };
+
+    const itineraryTool = (registry) => {
+        const { itinerary } = registry;
+        return {
+            type: ToolType.ITINERARY,
+            actionClick(p) {
+                itinerary.addPoint(p);
+            }
+        };
+    };
+
+    const provider$3 = (registry) => {
+        const tools = [itineraryTool(registry)];
+        const { store } = registry;
+        let currentTool = null;
+        store.on(Events.TOOL_CHANGED, (state) => {
+            currentTool = tools.find(tool => tool.type === state.selectedTool) || null;
+        });
+        return {
+            actionClick(p) {
+                if (currentTool !== null && typeof currentTool.actionClick === 'function') {
+                    currentTool.actionClick(p);
+                }
+            }
+        };
+    };
+
+    const provider$4 = () => {
+        // @ts-ignore
+        const registry = {};
+        const store = registry.store = provider();
+        const itinerary = registry.itinerary = provider$1(store);
+        const navigation = registry.navigation = provider$2(store);
+        const mapTools = registry.mapTools = provider$3(registry);
+        return registry;
+    };
+    var registry = provider$4();
 
     var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -265,26 +304,65 @@
 
     });
 
+    const factory$3 = (registry) => {
+        const { store, mapTools } = registry;
+        const accessToken = 'pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw';
+        const style = 'http://localhost:8080/styles/klokantech-basic/style.json';
+        mapboxGl.accessToken = accessToken;
+        const map = new mapboxGl.Map({
+            container: 'map-container',
+            style,
+            center: [-82.367408, 23.122419],
+            zoom: 12.4
+        });
+        store.on(Events.ITINERARY_STOP_CHANGED, (state) => {
+            const features = [];
+            for (const p of state.stops) {
+                features.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [p.lng, p.lat]
+                    }
+                });
+            }
+            const geojson = {
+                type: 'FeatureCollection',
+                features
+            };
+            console.log(geojson);
+            map.getSource('directions-stops').setData(geojson);
+        });
+        map.on('load', () => {
+            map.addSource('directions-stops', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+            map.addLayer({
+                id: 'directions-stops',
+                type: 'circle',
+                source: 'directions-stops',
+                paint: {
+                    ['circle-color']: 'red'
+                }
+            });
+            map.on('click', async (ev) => {
+                const { lng, lat } = ev.lngLat;
+                mapTools.actionClick({ lng, lat });
+            });
+        });
+        return map;
+    };
+
     const drawer = factory$2(registry);
     const toolbar = factory(registry);
     drawer.appendChild(toolbar);
     const body = document.querySelector('body');
-    const mapContainer = document.getElementById('map-container');
     body.appendChild(drawer);
-    const accessToken = 'pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw';
-    const style = 'mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb';
-    mapboxGl.accessToken = accessToken;
-    const map = new mapboxGl.Map({
-        container: 'map-container',
-        style,
-        center: [-82.367408, 23.122419],
-        zoom: 12.4
-    });
-    map.on('click', async (ev) => {
-        const { lng, lat } = ev.lngLat;
-        console.log(lng);
-        console.log(lat);
-    });
+    const map = factory$3(registry);
 
 }());
 //# sourceMappingURL=app.js.map

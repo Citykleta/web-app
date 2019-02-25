@@ -1,13 +1,8 @@
 import {Events, Store, ToolSelectionState} from './store';
-import defaultStore from './store';
-
-export enum ToolItem {
-    ITINERARY = 'ITINERARY',
-    SEARCH = 'SEARCH'
-}
+import {ToolType} from '../tools/interfaces';
 
 export interface NavigationService {
-    selectTool(tool: ToolItem): void;
+    selectTool(tool: ToolType): void;
 
     unselectAll(): void;
 }
@@ -20,7 +15,7 @@ export const provider = (store: Store): NavigationService => {
     });
 
     return {
-        selectTool(tool: ToolItem) {
+        selectTool(tool: ToolType) {
             if (tool !== currentTool) {
                 store.selectTool(tool);
             }
@@ -30,5 +25,3 @@ export const provider = (store: Store): NavigationService => {
         }
     };
 };
-
-export default provider(defaultStore);

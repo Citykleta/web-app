@@ -1,7 +1,7 @@
 import {Events, ToolSelectionState} from '../services/store';
-import {ToolItem} from '../services/navigation';
 import {factory as itineraryControl} from './itinerary-control';
 import {ServiceRegistry} from '../services/service-registry';
+import {ToolType} from '../tools/interfaces';
 
 const template = `<div class="tool-container"></div>`;
 const hiddenClassName = 'hidden';
@@ -12,7 +12,9 @@ export const factory = (registry: ServiceRegistry) => {
     domElement.innerHTML = template;
     domElement.classList.add(hiddenClassName);
     domElement.setAttribute('id', 'toolbox-container');
+
     const toolContent = domElement.firstChild;
+    const itineraryComponent = itineraryControl(registry);
 
     store.on(Events.TOOL_CHANGED, async (state: ToolSelectionState) => {
         const {selectedTool} = state;
@@ -28,13 +30,12 @@ export const factory = (registry: ServiceRegistry) => {
         if (isOpen) {
             // mount tool settings
             switch (selectedTool) {
-                case ToolItem.ITINERARY:
-                    toolContent.appendChild(itineraryControl(registry));
+                case ToolType.ITINERARY:
+                    toolContent.appendChild(itineraryComponent);
                     break;
                 default:
                     throw new Error('unknown tool');
             }
-
         }
     });
 

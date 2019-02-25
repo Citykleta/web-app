@@ -1,9 +1,8 @@
 import {emitter} from 'smart-table-events';
-import {ToolItem} from './navigation';
-import {Point} from './itinerary';
+import {ToolType, Point} from '../tools/interfaces';
 
 export interface Store {
-    selectTool(tool: ToolItem | null): void;
+    selectTool(tool: ToolType | null): void;
 
     getState(): ApplicationState;
 
@@ -22,11 +21,10 @@ export enum Events {
 }
 
 export interface ToolSelectionState {
-    selectedTool: ToolItem | null;
+    selectedTool: ToolType | null;
 }
 
 export interface ItineraryState {
-    processing: boolean;
     stops: Point[],
     directions: any[]
 }
@@ -42,7 +40,6 @@ export const defaultState = (): ApplicationState => {
             selectedTool: null
         },
         itinerary: {
-            processing: false,
             stops: [],
             directions: []
         }
@@ -53,8 +50,14 @@ export const provider = (): Store => {
     const eventEmitter = emitter();
     let state: ApplicationState = defaultState();
     return {
-        selectTool(tool: ToolItem | null) {
+        selectTool(tool: ToolType | null) {
             state.tool.selectedTool = tool;
+            //todo where should it be ?
+            if (tool === null) {
+                state.itinerary.stops = [];
+                state.itinerary.directions = [];
+                eventEmitter.dispatch(Events.ITINERARY_STOP_CHANGED, this.getState().itinerary);
+            }
             eventEmitter.dispatch(Events.TOOL_CHANGED, this.getState().tool);
         },
         addItineraryPoint(point: Point, index?: number) {
@@ -79,5 +82,3 @@ export const provider = (): Store => {
         }
     };
 };
-
-export default provider();

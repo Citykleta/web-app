@@ -1,4 +1,5 @@
 import {ServiceRegistry} from '../services/service-registry';
+import {Events, ItineraryState} from '../services/store';
 
 const template = `
 <h2>Itinerary</h2>
@@ -10,12 +11,19 @@ const template = `
 </div>
 `;
 
-
 export const factory = (registry: ServiceRegistry) => {
     const domElement = document.createElement('DIV');
     domElement.innerHTML = template;
     const range = document.createRange();
     range.selectNodeContents(domElement);
+
+    const {store} = registry;
+
+    store.on(Events.ITINERARY_STOP_CHANGED, (itineraryState: ItineraryState) => {
+        const {stops} = itineraryState;
+        console.log(stops);
+    });
+
     return range.extractContents();
 };
 
