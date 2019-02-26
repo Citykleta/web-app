@@ -1,7 +1,13 @@
 import {emitter} from 'smart-table-events';
 import {ToolType, Point} from '../tools/interfaces';
+import {Emitter} from 'smart-table-events';
+import {Directions} from '../sdk/directions';
 
-export interface Store {
+// 1. todo store should be in charge of reporting errors
+// 2. todo store should be able to cancel network request
+// 3. todo idea for refactoring, use aspect programming on state to trigger event dispatch
+
+export interface Store extends Emitter {
     selectTool(tool: ToolType | null): void;
 
     getState(): ApplicationState;
@@ -11,13 +17,12 @@ export interface Store {
     removeItineraryPoint(index: number): void;
 
     moveItineraryPoint(index: number, point: Point): void;
-
-    on(event: Events, cb: Function): void;
 }
 
 export enum Events {
     TOOL_CHANGED = 'TOOL_CHANGED',
-    ITINERARY_STOP_CHANGED = 'ITINERARY_STOP_CHANGED'
+    ITINERARY_STOPS_CHANGED = 'ITINERARY_STOPS_CHANGED',
+    ITINERARY_ROUTES_CHANGED = 'ITINERARY_ROUTES_CHANGED'
 }
 
 export interface ToolSelectionState {
@@ -26,7 +31,7 @@ export interface ToolSelectionState {
 
 export interface ItineraryState {
     stops: Point[],
-    directions: any[]
+    routes: any[]
 }
 
 export interface ApplicationState {
@@ -41,44 +46,64 @@ export const defaultState = (): ApplicationState => {
         },
         itinerary: {
             stops: [],
-            directions: []
+            routes: []
         }
     };
 };
 
-export const provider = (): Store => {
+interface StoreInput {
+    directions: Directions
+}
+
+export const provider = (input: StoreInput): Store => {
     const eventEmitter = emitter();
+    const {directions: directionAPI} = input;
     let state: ApplicationState = defaultState();
-    return {
+
+    const cloneState = (): ApplicationState => JSON.parse(JSON.stringify(state));
+
+    const eventuallyUpdateRoutes = () => {
+        const {itinerary} = state;
+        if (itinerary.stops.length >= 2) {
+            directionAPI.search(itinerary.stops)
+                .then(resp => {
+                    state.itinerary.routes = resp.routes;
+                    eventEmitter.dispatch(Events.ITINERARY_ROUTES_CHANGED, cloneState().itinerary);
+                });
+        } else {
+            state.itinerary.routes = [];
+            eventEmitter.dispatch(Events.ITINERARY_ROUTES_CHANGED, cloneState().itinerary);
+        }
+    };
+
+    return Object.assign(eventEmitter, {
         selectTool(tool: ToolType | null) {
             state.tool.selectedTool = tool;
-            //todo where should it be ?
-            if (tool === null) {
-                state.itinerary.stops = [];
-                state.itinerary.directions = [];
-                eventEmitter.dispatch(Events.ITINERARY_STOP_CHANGED, this.getState().itinerary);
-            }
+            //todo where should the reset be ?
+            state.itinerary.stops = [];
+            state.itinerary.routes = [];
+            const {itinerary} = this.getState();
+            eventEmitter.dispatch(Events.ITINERARY_STOPS_CHANGED, itinerary);
+            eventEmitter.dispatch(Events.ITINERARY_ROUTES_CHANGED, itinerary);
             eventEmitter.dispatch(Events.TOOL_CHANGED, this.getState().tool);
         },
         addItineraryPoint(point: Point, index?: number) {
             const stops = state.itinerary.stops;
             const insertIndex = index !== void 0 ? index : stops.length - 1;
             stops.splice(insertIndex, 0, point);
-            eventEmitter.dispatch((Events.ITINERARY_STOP_CHANGED), this.getState().itinerary);
+            eventEmitter.dispatch((Events.ITINERARY_STOPS_CHANGED), this.getState().itinerary);
+            eventuallyUpdateRoutes();
         },
         removeItineraryPoint(index: number) {
             state.itinerary.stops.splice(index, 1);
-            eventEmitter.dispatch(Events.ITINERARY_STOP_CHANGED, this.getState().itinerary);
+            eventEmitter.dispatch(Events.ITINERARY_STOPS_CHANGED, this.getState().itinerary);
+            eventuallyUpdateRoutes();
         },
         moveItineraryPoint(index: number, point: Point) {
             Object.assign(state.itinerary.stops[index], point);
-            eventEmitter.dispatch(Events.ITINERARY_STOP_CHANGED, this.getState().itinerary);
+            eventEmitter.dispatch(Events.ITINERARY_STOPS_CHANGED, this.getState().itinerary);
+            eventuallyUpdateRoutes();
         },
-        on(event: Events, cb: Function) {
-            eventEmitter.on(event, cb);
-        },
-        getState() {
-            return JSON.parse(JSON.stringify(state));
-        }
-    };
+        getState: cloneState
+    });
 };

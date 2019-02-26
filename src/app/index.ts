@@ -5,9 +5,10 @@ import {factory as mapFactory} from './components/map';
 
 const drawer = toolDrawerFactory(registry);
 const toolbar = toolbarFactory(registry);
-drawer.appendChild(toolbar);
+const drawerDom = drawer.dom();
+drawerDom.appendChild(toolbar.dom());
 
 const body = document.querySelector('body');
-body.appendChild(drawer);
+body.appendChild(drawerDom);
 
 const map = mapFactory(registry);

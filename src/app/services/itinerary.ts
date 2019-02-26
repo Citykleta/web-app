@@ -13,7 +13,7 @@ export const provider = (store: Store): ItineraryService => {
 
     let itineraryStops = [];
 
-    store.on(Events.ITINERARY_STOP_CHANGED, (state: ItineraryState) => {
+    store.on(Events.ITINERARY_STOPS_CHANGED, (state: ItineraryState) => {
         itineraryStops = state.stops;
     });
 

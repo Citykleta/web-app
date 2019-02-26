@@ -1,6 +1,7 @@
 import {Events, ToolSelectionState} from '../services/store';
 import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
+import {Component} from './interfaces';
 
 const template = `<ul>
 <li class="hidden tool-item">
@@ -12,13 +13,13 @@ const template = `<ul>
 <li class="tool-item">
     <button>Search</button>
 </li>
-<li class="tool-item">
-    <button>Settings</button>
-</li>
+<!--<li class="tool-item">-->
+    <!--<button>Settings</button>-->
+<!--</li>-->
 </ul>
 `;
 
-export const factory = (registry: ServiceRegistry): Element => {
+export const factory = (registry: ServiceRegistry): Component => {
     const {navigation, store} = registry;
     const domElement = document.createElement('DIV');
     domElement.classList.add('tools-bar');
@@ -38,12 +39,21 @@ export const factory = (registry: ServiceRegistry): Element => {
         navigation.selectTool(ToolType.SEARCH);
     });
 
-    store.on(Events.TOOL_CHANGED, (state: ToolSelectionState) => {
+    const toolChangedHandler = (state: ToolSelectionState) => {
         const {selectedTool} = state;
         itenerary.parentElement.classList.toggle('selected', selectedTool === ToolType.ITINERARY);
         search.parentElement.classList.toggle('selected', selectedTool === ToolType.SEARCH);
         close.parentElement.classList.toggle('hidden', selectedTool === null);
-    });
+    };
+    store.on(Events.TOOL_CHANGED, toolChangedHandler);
 
-    return domElement;
+    return {
+        clean() {
+            store.off(Events.TOOL_CHANGED, toolChangedHandler);
+        },
+        dom() {
+            return domElement;
+        }
+
+    };
 };

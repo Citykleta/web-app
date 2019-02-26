@@ -1,11 +1,20 @@
 import {ServiceRegistry} from '../services/service-registry';
 import mapboxgl from 'mapbox-gl';
 import {Events, ItineraryState} from '../services/store';
+import polyline from '@mapbox/polyline';
+
+const EMPTY_SOURCE = Object.freeze({
+    type: 'geojson',
+    data: {
+        type: 'FeatureCollection',
+        features: []
+    }
+});
 
 export const factory = (registry: ServiceRegistry) => {
     const {store, mapTools} = registry;
     const accessToken = 'pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw';
-    const style = 'http://localhost:8080/styles/klokantech-basic/style.json';
+    const style = 'mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb';
 
     mapboxgl.accessToken = accessToken;
 
@@ -16,7 +25,7 @@ export const factory = (registry: ServiceRegistry) => {
         zoom: 12.4
     });
 
-    store.on(Events.ITINERARY_STOP_CHANGED, (state: ItineraryState) => {
+    store.on(Events.ITINERARY_STOPS_CHANGED, (state: ItineraryState) => {
         const features = [];
         for (const p of state.stops) {
             features.push({
@@ -33,18 +42,35 @@ export const factory = (registry: ServiceRegistry) => {
             features
         };
 
-        console.log(geojson);
-
         map.getSource('directions-stops').setData(geojson);
+    });
+
+    store.on(Events.ITINERARY_ROUTES_CHANGED, (state: ItineraryState) => {
+        const {routes} = state;
+        const newData = routes.length > 0 ? {
+            type: 'FeatureCollection',
+            features: [{
+                type: 'Feature',
+                geometry: polyline.toGeoJSON(routes[0].geometry, 5)
+            }]
+        } : EMPTY_SOURCE.data;
+
+        map.getSource('directions-path').setData(newData);
     });
 
     map.on('load', () => {
 
-        map.addSource('directions-stops', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: []
+        map.addSource('directions-stops', EMPTY_SOURCE);
+
+        map.addSource('directions-path', EMPTY_SOURCE);
+
+        map.addLayer({
+            id: 'directions-path',
+            type: 'line',
+            source: 'directions-path',
+            paint: {
+                'line-color': 'blue',
+                'line-width': 7
             }
         });
 

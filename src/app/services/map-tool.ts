@@ -1,6 +1,6 @@
 import {Events, Store, ToolSelectionState} from './store';
-import {ClickTool, Point, Tool} from '../tools/interfaces';
-import defaultServiceRegistry, {ServiceRegistry} from './service-registry';
+import {Point, Tool} from '../tools/interfaces';
+import {ServiceRegistry} from './service-registry';
 import {itineraryTool} from '../tools/itinerary';
 
 export interface MapToolService {
