@@ -322,7 +322,7 @@ const factory$4 = ({ endpoint = DEFAULT_ENDPOINT_ROOT } = { endpoint: DEFAULT_EN
                 lat: truncate(lat),
                 lng: truncate(lng)
             }));
-            const url = new URL('/directions/search', endpoint);
+            const url = new URL('/search/directions', endpoint);
             const body = {
                 waypoints
             };
