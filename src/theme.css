@@ -104,14 +104,37 @@ input {
     font-weight: lighter;
 }
 
+.itinerary-stop-point-container {
+    padding: 0;
+}
+
 .itinerary-stop-point {
     display: flex;
     justify-content: space-between;
-    margin: 0.5em 0;
+    margin: 0;
+    padding: 0.5em;
+    background: #fcfcfc;
+}
+
+.itinerary-stop-point:not(:last-child) {
+    border-bottom: 1px solid #dfdfdf;
 }
 
 .itinerary-stop-point > div {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
+
+.drag-handle {
+    display: flex;
+    background: lightblue;
+    padding: 0.5em;
+    transition: all 0.3s;
+}
+
+.drag-handle:hover {
+    background: orangered;
+    color: white;
+    cursor: grab;
+}
+

@@ -89,7 +89,7 @@ export const provider = (input: StoreInput): Store => {
         },
         addItineraryPoint(point: Point, index?: number) {
             const stops = state.itinerary.stops;
-            const insertIndex = index !== void 0 ? index : stops.length - 1;
+            const insertIndex = index !== void 0 ? index : stops.length;
             stops.splice(insertIndex, 0, point);
             eventEmitter.dispatch((Events.ITINERARY_STOPS_CHANGED), this.getState().itinerary);
             eventuallyUpdateRoutes();

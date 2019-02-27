@@ -75,7 +75,7 @@ const provider = (input) => {
         },
         addItineraryPoint(point, index) {
             const stops = state.itinerary.stops;
-            const insertIndex = index !== void 0 ? index : stops.length - 1;
+            const insertIndex = index !== void 0 ? index : stops.length;
             stops.splice(insertIndex, 0, point);
             eventEmitter.dispatch((Events.ITINERARY_STOPS_CHANGED), this.getState().itinerary);
             eventuallyUpdateRoutes();
@@ -149,14 +149,24 @@ const factory = (registry) => {
 
 const truncate = (value) => Math.trunc(value * 10 ** 6) / 10 ** 6;
 
-const template$1 = (p) => `<div><span>longitude: ${truncate(p.lng)}</span><span>latitude:${truncate(p.lat)}</span></div><button>X</button>`;
+const template$1 = (p) => `<span class="drag-handle" draggable="true">D</span><div><span>longitude: ${truncate(p.lng)}</span><span>latitude:${truncate(p.lat)}</span></div><button>X</button>`;
 const factory$1 = (registry, p) => {
     const el = document.createElement('LI');
     const { itinerary } = registry;
+    let boundingBox;
     el.classList.add('itinerary-stop-point');
     el.innerHTML = template$1(p);
     el.querySelector('button').addEventListener('click', ev => {
         itinerary.removePoint(p);
+    });
+    const dragHandle = el.querySelector('.drag-handle');
+    dragHandle.addEventListener('dragstart', (ev) => {
+        ev.dataTransfer.setData('text/plain', 'woot woot');
+        ev.dataTransfer.dropEffect = 'move';
+    });
+    el.addEventListener('dragover', (ev) => {
+        boundingBox = boundingBox || el.getBoundingClientRect();
+        console.log(boundingBox);
     });
     return {
         clean() {
@@ -170,7 +180,8 @@ const factory$1 = (registry, p) => {
 const template$2 = `
 <h2>Itinerary</h2>
 <div class="tool-content">
-<ul>
+<p>Click on the map to add way points</p>
+<ul class="itinerary-stop-point-container">
     
 </ul>
 </div>
