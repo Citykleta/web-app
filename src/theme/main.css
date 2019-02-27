@@ -1,3 +1,5 @@
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 body {
     box-sizing: border-box;
     display: flex;
@@ -127,7 +129,7 @@ input {
 
 .drag-handle {
     display: flex;
-    background: lightblue;
+    background: yellow;
     padding: 0.5em;
     transition: all 0.3s;
 }
@@ -137,4 +139,3 @@ input {
     color: white;
     cursor: grab;
 }
-

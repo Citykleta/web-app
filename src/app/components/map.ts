@@ -14,7 +14,7 @@ const EMPTY_SOURCE = Object.freeze({
 export const factory = (registry: ServiceRegistry) => {
     const {store, mapTools} = registry;
     const accessToken = 'pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw';
-    const style = 'mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb';
+    const style = '<@MAP_STYLE@>';
 
     mapboxgl.accessToken = accessToken;
 
