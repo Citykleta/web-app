@@ -2,6 +2,7 @@ import {ServiceRegistry} from '../services/service-registry';
 import mapboxgl from 'mapbox-gl';
 import {Events, ItineraryState} from '../services/store';
 import polyline from '@mapbox/polyline';
+import mapBoxConf from '../../conf/mapbox';
 
 const EMPTY_SOURCE = Object.freeze({
     type: 'geojson',
@@ -13,8 +14,8 @@ const EMPTY_SOURCE = Object.freeze({
 
 export const factory = (registry: ServiceRegistry) => {
     const {store, mapTools} = registry;
-    const accessToken = 'pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw';
-    const style = '<@MAP_STYLE@>';
+    const accessToken = mapBoxConf.token;
+    const style = mapBoxConf.styleUrl;
 
     mapboxgl.accessToken = accessToken;
 
