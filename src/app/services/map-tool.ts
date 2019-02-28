@@ -1,10 +1,11 @@
 import {Events, Store, ToolSelectionState} from './store';
-import {Point, Tool} from '../tools/interfaces';
+import {GeoCoord, Tool} from '../tools/interfaces';
 import {ServiceRegistry} from './service-registry';
 import {itineraryTool} from '../tools/itinerary';
+import {truncate} from '../util';
 
 export interface MapToolService {
-    actionClick(p: Point): void;
+    actionClick(p: GeoCoord): void;
 }
 
 export const provider = (registry: ServiceRegistry): MapToolService => {
@@ -17,9 +18,12 @@ export const provider = (registry: ServiceRegistry): MapToolService => {
     });
 
     return {
-        actionClick(p: Point) {
+        actionClick(p: GeoCoord) {
             if (currentTool !== null && typeof currentTool.actionClick === 'function') {
-                currentTool.actionClick(p);
+                currentTool.actionClick({
+                    lng: truncate(p.lng),
+                    lat: truncate(p.lat)
+                });
             }
         }
     };

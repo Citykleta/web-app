@@ -26,6 +26,7 @@ export const factory = (registry: ServiceRegistry): Component => {
         const r = document.createRange();
         range.selectNodeContents(stopListElements);
         range.deleteContents();
+
         for (const stop of stops) {
             stopListElements.appendChild(stopPointFactory(registry, stop).dom());
         }

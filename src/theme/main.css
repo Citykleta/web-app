@@ -139,3 +139,11 @@ input {
     color: white;
     cursor: grab;
 }
+
+.drop-target-before {
+    border-top: 2px solid orangered;
+}
+
+.drop-target-after {
+    border-bottom: 2px solid orangered !important;
+}

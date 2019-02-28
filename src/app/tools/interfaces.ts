@@ -8,10 +8,10 @@ export interface Tool {
 }
 
 export interface ClickTool extends Tool {
-    actionClick(p: Point): void;
+    actionClick(p: GeoCoord): void;
 }
 
-export interface Point {
+export interface GeoCoord {
     lng: number;
     lat: number;
 }

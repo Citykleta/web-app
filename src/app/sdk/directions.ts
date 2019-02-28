@@ -1,10 +1,10 @@
-import {Point} from '../tools/interfaces';
+import {GeoCoord} from '../tools/interfaces';
 import {truncate} from '../util';
 
 //todo set up abort signal to avoid unnecessary round trip with server
 
 export interface Directions {
-    search(points: Point[]): Promise<any>; //todo share types with api
+    search(points: GeoCoord[]): Promise<any>; //todo share types with api
 }
 
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
@@ -12,7 +12,7 @@ const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
 export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_ENDPOINT_ROOT}): Directions => {
     const pending = [];
     return {
-        async search(points: Point[]) {
+        async search(points: GeoCoord[]) {
             const waypoints = points.map(({lat, lng}) => ({
                 lat: truncate(lat),
                 lng: truncate(lng)
