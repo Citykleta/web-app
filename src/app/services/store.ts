@@ -102,7 +102,6 @@ export const provider = (input: StoreInput): Store => {
     let dispatchQueue: Events[] = [];
     let dispatchTimer = null;
     const dispatch = (event: Events) => {
-        eventEmitter.dispatch(event, getPartialState(cloneState(), event));
         dispatchQueue.push(event);
         if (dispatchTimer) {
             clearTimeout(dispatchTimer);
@@ -125,7 +124,6 @@ export const provider = (input: StoreInput): Store => {
             state.tool.selectedTool = tool;
             state.itinerary.stops = [];
             state.itinerary.routes = [];
-            const {itinerary} = this.getState();
             dispatch(Events.ITINERARY_STOPS_CHANGED);
             dispatch(Events.ITINERARY_ROUTES_CHANGED);
             dispatch(Events.TOOL_CHANGED);

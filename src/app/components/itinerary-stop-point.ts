@@ -3,7 +3,7 @@ import {Component} from './interfaces';
 import {truncate} from '../util';
 import {WayPoint} from '../services/store';
 
-const template = (p: WayPoint) => `<span class="drag-handle" draggable="true">D</span><div><span>longitude: ${truncate(p.lng)}</span><span>latitude:${truncate(p.lat)}</span><span>id:${p.id}</span></div><button>X</button>`;
+const template = (p: WayPoint) => `<span class="drag-handle" draggable="true">D</span><div><span>longitude: ${truncate(p.lng)}</span><span>latitude:${truncate(p.lat)}</span></div><button>X</button>`;
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
@@ -29,12 +29,9 @@ export const factory = (registry: ServiceRegistry, p: WayPoint): Component => {
     el.addEventListener('dragover', (ev: DragEvent) => {
         ev.preventDefault();
         boundingBox = boundingBox || el.getBoundingClientRect();
-        if (ev.target !== el) {
-            const isBefore = isTopPart(ev, boundingBox);
-            el.classList.toggle('drop-target-before', isBefore);
-            el.classList.toggle('drop-target-after', !isBefore);
-        }
-
+        const isBefore = isTopPart(ev, boundingBox);
+        el.classList.toggle('drop-target-before', isBefore);
+        el.classList.toggle('drop-target-after', !isBefore);
     });
 
     el.addEventListener('drop', (ev: DragEvent) => {
