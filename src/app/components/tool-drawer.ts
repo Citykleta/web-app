@@ -1,5 +1,6 @@
 import {Events, ToolSelectionState} from '../services/store';
 import {factory as itineraryControl} from './itinerary-control';
+import {factory as searchControl} from './search-control';
 import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
 import {Component} from './interfaces';
@@ -36,6 +37,10 @@ export const factory = (registry: ServiceRegistry): Component => {
             switch (selectedTool) {
                 case ToolType.ITINERARY:
                     component = itineraryControl(registry);
+                    toolContent.appendChild(component.dom());
+                    break;
+                case ToolType.SEARCH:
+                    component = searchControl(registry);
                     toolContent.appendChild(component.dom());
                     break;
                 default:

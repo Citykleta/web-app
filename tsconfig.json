@@ -10,6 +10,7 @@
     "target": "esnext"
   },
   "include": [
-    "./src/app/"
+    "./src/app/",
+    "./test"
   ]
 }

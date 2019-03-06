@@ -3,6 +3,7 @@ import {ToolType, GeoCoord} from '../tools/interfaces';
 import {Emitter} from 'smart-table-events';
 import {Directions} from '../sdk/directions';
 import {unique} from '../util';
+import {Geocoder} from '../sdk/geocoder';
 
 // 1. todo store should be in charge of reporting errors
 // 2. todo store should be able to cancel network request
@@ -22,12 +23,19 @@ export interface Store extends Emitter {
     removeItineraryPoint(id: number): void;
 
     moveItineraryPoint(id: number, newCoord: GeoCoord): void;
+
+    search(query: string): void;
+
+    reverse(p: GeoCoord): void;
 }
 
 export enum Events {
     TOOL_CHANGED = 'TOOL_CHANGED',
     ITINERARY_STOPS_CHANGED = 'ITINERARY_STOPS_CHANGED',
-    ITINERARY_ROUTES_CHANGED = 'ITINERARY_ROUTES_CHANGED'
+    ITINERARY_ROUTES_CHANGED = 'ITINERARY_ROUTES_CHANGED',
+    SEARCH_QUERY_CHANGED = 'SEARCH_QUERY_CHANGED',
+    SEARCH_SUGGESTIONS_CHANGED = 'SEARCH_SUGGESTIONS_CHANGED',
+    SEARCH_ITEM_CHANGED = 'SEARCH_SUGGESTIONS_CHANGED'
 }
 
 export interface ToolSelectionState {
@@ -39,9 +47,16 @@ export interface ItineraryState {
     routes: any[]
 }
 
+export interface SearchState {
+    query: string;
+    suggestions: Location[];
+    searchItem: Location;
+}
+
 export interface ApplicationState {
     tool: ToolSelectionState;
     itinerary: ItineraryState;
+    search: SearchState;
 }
 
 export const defaultState = (): ApplicationState => {
@@ -52,12 +67,18 @@ export const defaultState = (): ApplicationState => {
         itinerary: {
             stops: [],
             routes: []
+        },
+        search: {
+            query: '',
+            suggestions: [],
+            searchItem: null
         }
     };
 };
 
 interface StoreInput {
-    directions: Directions
+    directions: Directions,
+    geocoder: Geocoder
 }
 
 const DISPATCH_THROTTLE_TIME = 30;
@@ -70,6 +91,12 @@ const getPartialState = (state: ApplicationState, event: Events) => {
             return state.itinerary;
         case Events.TOOL_CHANGED:
             return state.tool;
+        case Events.SEARCH_QUERY_CHANGED:
+            return state.search;
+        case Events.SEARCH_ITEM_CHANGED:
+            return state.search;
+        case Events.SEARCH_SUGGESTIONS_CHANGED:
+            return state.search;
         default:
             return state;
     }
@@ -77,7 +104,7 @@ const getPartialState = (state: ApplicationState, event: Events) => {
 
 export const provider = (input: StoreInput): Store => {
     const eventEmitter = emitter();
-    const {directions: directionAPI} = input;
+    const {directions: directionAPI, geocoder: geocoderAPI} = input;
 
     let state: ApplicationState = defaultState();
     let pointId = 0;
@@ -148,6 +175,28 @@ export const provider = (input: StoreInput): Store => {
             const wp = state.itinerary.stops.find(p => p.id === id);
             Object.assign(wp, newCoord);
             dispatch(Events.ITINERARY_STOPS_CHANGED);
+        },
+        async search(query: string) {
+            if (query) {
+                state.search.query = query;
+                dispatch(Events.SEARCH_QUERY_CHANGED);
+                state.search.suggestions = await geocoderAPI.search(query);
+            } else {
+                state.search.query = '';
+                state.search.searchItem = null;
+                state.search.suggestions = [];
+            }
+            dispatch(Events.SEARCH_SUGGESTIONS_CHANGED);
+            dispatch(Events.SEARCH_ITEM_CHANGED);
+            dispatch(Events.SEARCH_QUERY_CHANGED);
+        },
+        async reverse(coords: GeoCoord) {
+            state.search.searchItem = await geocoderAPI.reverse(coords);
+            state.search.suggestions = [];
+            state.search.query = '';
+            dispatch(Events.SEARCH_SUGGESTIONS_CHANGED);
+            dispatch(Events.SEARCH_ITEM_CHANGED);
+            dispatch(Events.SEARCH_QUERY_CHANGED);
         },
         getState: cloneState
     });

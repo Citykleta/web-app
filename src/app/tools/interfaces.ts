@@ -15,3 +15,7 @@ export interface GeoCoord {
     lng: number;
     lat: number;
 }
+
+export interface Location extends GeoCoord {
+    name?: string;
+}
