@@ -10,6 +10,7 @@
     "test:build": "rollup -c rollup/test.js",
     "test:watch": "npm run test:build -- -w",
     "test": "node ./test/dist/debug.js",
+    "test:ci": "node ./test/dist/debug.js | tap-set-exit",
     "compile": "tsc",
     "compile:watch": "npm run compile -- -w",
     "bundle": "rollup -c rollup/build.js",
