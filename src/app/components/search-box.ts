@@ -1,5 +1,5 @@
 import {ServiceRegistry} from '../services/service-registry';
-import {Component} from './interfaces';
+import {Component} from './types';
 
 const template = `<div class="input-container">
 </div>`;

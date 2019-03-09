@@ -1,7 +1,7 @@
-import {Events, ToolSelectionState} from '../services/store';
 import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
-import {Component} from './interfaces';
+import {Component} from './types';
+import {ToolBoxState} from '../reducers/tool-box';
 
 const template = `<ul>
 <li class="hidden tool-item">
@@ -25,6 +25,8 @@ export const factory = (registry: ServiceRegistry): Component => {
     domElement.classList.add('tools-bar');
     domElement.innerHTML = template;
 
+    let state = store.getState().tool;
+
     const [close, itenerary, search, settings] = Array.from(domElement.querySelectorAll('button'));
 
     close.addEventListener('click', ev => {
@@ -39,21 +41,23 @@ export const factory = (registry: ServiceRegistry): Component => {
         navigation.selectTool(ToolType.SEARCH);
     });
 
-    const toolChangedHandler = (state: ToolSelectionState) => {
-        const {selectedTool} = state;
-        itenerary.parentElement.classList.toggle('selected', selectedTool === ToolType.ITINERARY);
-        search.parentElement.classList.toggle('selected', selectedTool === ToolType.SEARCH);
-        close.parentElement.classList.toggle('hidden', selectedTool === null);
-    };
-    store.on(Events.TOOL_CHANGED, toolChangedHandler);
+    const unsubscribe = store.subscribe(() => {
+        const newState = store.getState().tool;
+        if (newState.selectedTool !== state.selectedTool) {
+            const {selectedTool} = newState;
+            itenerary.parentElement.classList.toggle('selected', selectedTool === ToolType.ITINERARY);
+            search.parentElement.classList.toggle('selected', selectedTool === ToolType.SEARCH);
+            close.parentElement.classList.toggle('hidden', selectedTool === null);
+        }
+        state = newState;
+    });
 
     return {
         clean() {
-            store.off(Events.TOOL_CHANGED, toolChangedHandler);
+            unsubscribe();
         },
         dom() {
             return domElement;
         }
-
     };
 };

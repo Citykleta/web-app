@@ -1,10 +1,11 @@
 import {GeoCoord} from '../tools/interfaces';
 import {truncate} from '../util';
+import {Route} from '../reducers/itinerary';
 
 //todo set up abort signal to avoid unnecessary round trip with server
 
 export interface Directions {
-    search(points: GeoCoord[]): Promise<any>; //todo share types with api
+    search(points: GeoCoord[]): Promise<Route[]>;
 }
 
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';

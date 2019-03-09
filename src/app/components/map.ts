@@ -1,8 +1,8 @@
 import {ServiceRegistry} from '../services/service-registry';
 import mapboxgl from 'mapbox-gl';
-import {Events, ItineraryState} from '../services/store';
 import polyline from '@mapbox/polyline';
 import mapBoxConf from '../../conf/mapbox';
+import {ItineraryState} from '../reducers/itinerary';
 
 const EMPTY_SOURCE = Object.freeze({
     type: 'geojson',
@@ -17,6 +17,8 @@ export const factory = (registry: ServiceRegistry) => {
     const accessToken = mapBoxConf.token;
     const style = mapBoxConf.styleUrl;
 
+    let state: ItineraryState = null;
+
     mapboxgl.accessToken = accessToken;
 
     const map = new mapboxgl.Map({
@@ -26,9 +28,11 @@ export const factory = (registry: ServiceRegistry) => {
         zoom: 12.4
     });
 
-    store.on(Events.ITINERARY_STOPS_CHANGED, (state: ItineraryState) => {
+    const unsubscribe = store.subscribe(() => {
+        // todo better update logic (no need to redraw everytime)
+        const {stops, routes} = store.getState().itinerary;
         const features = [];
-        for (const p of state.stops) {
+        for (const p of stops) {
             features.push({
                 type: 'Feature',
                 geometry: {
@@ -44,10 +48,7 @@ export const factory = (registry: ServiceRegistry) => {
         };
 
         map.getSource('directions-stops').setData(geojson);
-    });
 
-    store.on(Events.ITINERARY_ROUTES_CHANGED, (state: ItineraryState) => {
-        const {routes} = state;
         const newData = routes.length > 0 ? {
             type: 'FeatureCollection',
             features: [{

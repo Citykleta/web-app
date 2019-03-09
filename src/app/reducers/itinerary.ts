@@ -3,7 +3,7 @@ import {Reducer} from 'redux';
 import {ActionType} from '../actions/types';
 import {
     AddItineraryPointAction,
-    ChangeItineraryPointLocationAction,
+    ChangeItineraryPointLocationAction, FetchRoutesSuccessAction, InsertionPosition,
     RemoveItineraryPointAction
 } from '../actions/itinerary';
 
@@ -11,9 +11,14 @@ export interface WayPoint extends GeoCoord {
     id: number;
 }
 
+//todo formalize routes type
+export interface Route {
+    geometry: string;
+}
+
 export interface ItineraryState {
     stops: WayPoint[];
-    routes: any[]; //todo formalize routes state
+    routes: Route[];
 }
 
 const defaultState: ItineraryState = {
@@ -21,8 +26,19 @@ const defaultState: ItineraryState = {
     routes: []
 };
 
+const matchId = id => item => item.id === id;
+
 export const reducer: Reducer<ItineraryState> = (previousState = defaultState, action) => {
     switch (action.type) {
+        case ActionType.RESET_ROUTES_ACTION: {
+            return {stops: [], routes: []};
+        }
+        case ActionType.FETCH_ROUTES_SUCCESS: {
+            const {routes} = <FetchRoutesSuccessAction>action;
+            return Object.assign({}, previousState, {
+                routes
+            });
+        }
         case ActionType.CHANGE_ITINERARY_POINT_LOCATION: {
             const {id, location} = <ChangeItineraryPointLocationAction>action;
             return Object.assign({}, previousState, {
@@ -34,12 +50,27 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
             const newStops = [...previousState.stops];
             const beforeIndex = newStops.findIndex(p => p.id === beforeId);
             const insertIndex = beforeIndex >= 0 ? beforeIndex : newStops.length;
+            const id = newStops.reduce((acc, curr) => Math.max(curr.id, acc), -1) + 1;
 
-            newStops.splice(insertIndex, 0, point);
+            newStops.splice(insertIndex, 0, Object.assign({id}, point));
 
             return Object.assign({}, previousState, {
                 stops: newStops
             });
+        }
+        case ActionType.MOVE_ITINERARY_POINT: {
+            const {stops} = previousState;
+            const newStops = stops.map(s => Object.assign({}, s));
+            const {sourceId, targetId, position} = action;
+            const sourceItem = newStops.find(matchId(sourceId));
+            const targetItem = newStops.find(matchId(targetId));
+            if (sourceItem && targetItem) {
+                const targetIndex = position === InsertionPosition.BEFORE ? newStops.indexOf(targetItem) : newStops.indexOf((targetItem)) + 1;
+                newStops.splice(targetIndex, 0, Object.assign({}, sourceItem));
+                const srcIndex = newStops.indexOf(sourceItem);
+                newStops.splice(srcIndex, 1);
+            }
+            return Object.assign(previousState, {stops: newStops});
         }
         case ActionType.REMOVE_ITINERARY_POINT: {
             const {id} = <RemoveItineraryPointAction>action;

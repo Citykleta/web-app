@@ -1,4 +1,3 @@
-import {Events, Store, ToolSelectionState} from './store';
 import {GeoCoord, Tool} from '../tools/interfaces';
 import {ServiceRegistry} from './service-registry';
 import {itineraryTool} from '../tools/itinerary';
@@ -13,8 +12,9 @@ export const provider = (registry: ServiceRegistry): MapToolService => {
     const {store} = registry;
     let currentTool = null;
 
-    store.on(Events.TOOL_CHANGED, (state: ToolSelectionState) => {
-        currentTool = tools.find(tool => tool.type === state.selectedTool) || null;
+    store.subscribe(() => {
+        const {selectedTool} = store.getState().tool;
+        currentTool = tools.find(tool => tool.type === selectedTool) || null;
     });
 
     return {

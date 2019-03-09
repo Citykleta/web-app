@@ -1,18 +1,14 @@
-import { test } from 'zora';
+import { test, skip } from 'zora';
 import toolAction from './actions/tool-box';
 import itineraryAction from './actions/itinerary';
 import itineraryReducer from './reducers/itinerary';
 import toolBoxReducer from './reducers/tool-box';
+import itineraryService from './services/itinerary';
+import toolboxService from './services/tool-box';
 test.indent();
-test('TOOL_BOX ACTIONS', t => {
-    toolAction(t);
-});
-test('ITINERARY ACTIONS', t => {
-    itineraryAction(t);
-});
-test('TOOL-BOX REDUCER', t => {
-    toolBoxReducer(t);
-});
-test('ITINERARY REDUCER', t => {
-    itineraryReducer(t);
-});
+test('ITINERARY ACTIONS', itineraryAction);
+test('ITINERARY REDUCER', itineraryReducer);
+skip('ITINERARY SERVICE', itineraryService);
+test('TOOL_BOX ACTIONS', toolAction);
+test('TOOL-BOX REDUCER', toolBoxReducer);
+test('TOOL-BOX SERVICE', toolboxService);

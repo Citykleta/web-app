@@ -1,9 +1,9 @@
 import {ServiceRegistry} from '../services/service-registry';
-import {Component} from './interfaces';
+import {Component} from './types';
 import {truncate} from '../util';
-import {WayPoint} from '../services/store';
+import {WayPoint} from '../reducers/itinerary';
 
-const template = (p: WayPoint) => `<span class="drag-handle" draggable="true">D</span><div><span>longitude: ${truncate(p.lng)}</span><span>latitude:${truncate(p.lat)}</span></div><button>X</button>`;
+const template = (p: WayPoint) => `<span class="drag-handle" draggable="true">|</span><div><span>lng: ${truncate(p.lng)}</span><span>lat:${truncate(p.lat)}</span></div><button>X</button>`;
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 

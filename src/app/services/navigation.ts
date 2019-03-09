@@ -1,5 +1,7 @@
-import {Events, Store, ToolSelectionState} from './store';
 import {ToolType} from '../tools/interfaces';
+import {Store} from 'redux';
+import {ApplicationState} from './store';
+import {selectTool} from '../actions/tool-box';
 
 export interface NavigationService {
     selectTool(tool: ToolType): void;
@@ -7,18 +9,10 @@ export interface NavigationService {
     unselectAll(): void;
 }
 
-export const provider = (store: Store): NavigationService => {
-    let currentTool = null;
-
-    store.on(Events.TOOL_CHANGED, (state: ToolSelectionState) => {
-        currentTool = state.selectedTool;
-    });
-
+export const provider = (store: Store<ApplicationState>): NavigationService => {
     return {
         selectTool(tool: ToolType) {
-            if (tool !== currentTool) {
-                store.selectTool(tool);
-            }
+            store.dispatch(selectTool(tool));
         },
         unselectAll() {
             this.selectTool(null);

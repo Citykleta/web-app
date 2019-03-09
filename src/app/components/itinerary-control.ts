@@ -1,6 +1,5 @@
 import {ServiceRegistry} from '../services/service-registry';
-import {Events, ItineraryState} from '../services/store';
-import {Component} from './interfaces';
+import {Component} from './types';
 import {factory as stopPointFactory} from './itinerary-stop-point';
 
 const template = `
@@ -14,15 +13,16 @@ const template = `
 `;
 
 export const factory = (registry: ServiceRegistry): Component => {
-    const {store} = registry;
+    const {store, itinerary} = registry;
     const domElement = document.createElement('DIV');
     domElement.innerHTML = template;
     const range = document.createRange();
     range.selectNodeContents(domElement);
     const stopListElements = domElement.querySelector('ul');
 
-    const itineraryStopChangedHandler = (itineraryState: ItineraryState) => {
-        const {stops} = itineraryState;
+    const itineraryStopChangedHandler = () => {
+        // todo update only when required
+        const {stops} = store.getState().itinerary;
         const r = document.createRange();
         range.selectNodeContents(stopListElements);
         range.deleteContents();
@@ -32,11 +32,12 @@ export const factory = (registry: ServiceRegistry): Component => {
         }
     };
 
-    store.on(Events.ITINERARY_STOPS_CHANGED, itineraryStopChangedHandler);
+    const unsubscribe = store.subscribe(itineraryStopChangedHandler);
 
     return {
         clean() {
-            store.off(Events.ITINERARY_STOPS_CHANGED, itineraryStopChangedHandler);
+            unsubscribe();
+            itinerary.reset();
         },
         dom() {
             return range.extractContents();

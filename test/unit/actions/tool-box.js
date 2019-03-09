@@ -9,4 +9,11 @@ export default ({ test }) => {
         };
         t.eq(selectTool(ToolType.ITINERARY), expected);
     });
+    test('foo', t => {
+        // const store = mockStore();
+        // store.dispatch(selectTool(ToolType.ITINERARY));
+        //
+        // // @ts-ignore
+        // t.eq(store.getActions(),[],'f')
+    });
 };
