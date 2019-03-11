@@ -49,6 +49,13 @@ export const factory = (registry: ServiceRegistry) => {
 
         map.getSource('directions-stops').setData(geojson);
 
+        // const newData = {
+        //     type: 'FeatureCollection',
+        //     features: [{
+        //         type: 'Feature',
+        //         geometry:polyline.toGeoJSON('y_dlC|q_vNf@t@oDbDaNbLwB}CrDaD',5)
+        //     }]
+        // };
         const newData = routes.length > 0 ? {
             type: 'FeatureCollection',
             features: [{

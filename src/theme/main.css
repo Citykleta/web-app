@@ -1,7 +1,32 @@
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
+:root {
+    --background: #fcfcfc;
+    --background-1: #fff;
+    --background-2: #ccc;
+    --background-3: #919191;
+    --color: #484848;
+    --color-1: #5b5b5b;
+    --color-2: #f4f4f4;
+    --theme-color: #81bde6;
+    --theme-color-1: #e65b7b;
+}
+
+.theme-dark {
+    --background: #383838;
+    --background-1: #494949;
+    --background-2: #747474;
+    --background-3: #eaeaea;
+    --color: #f5f5f5;
+    --color-1: #fff;
+    --color-2: #444;
+    --theme-color: #81bde6;
+    --theme-color-1: #e65b7b;
+}
+
 body {
     box-sizing: border-box;
+    color: var(--color);
     display: flex;
     font-family: "Open Sans", "OpenSans", sans-serif;
     height: 100vh;
@@ -16,13 +41,13 @@ body * {
 }
 
 #map-container {
-    background: lightskyblue;
+    background: #94c1e1; /*placeholder*/
     flex-grow: 1;
 }
 
 #toolbox-container {
-    border-right: 1px solid #989898;
-    box-shadow: 1px 0 2px 0 #989898;
+    border-right: 1px solid var(--background-3);
+    box-shadow: 1px 0 2px 0 var(--background-3);
     display: flex;
     height: 100%;
     position: absolute;
@@ -35,18 +60,18 @@ body * {
 }
 
 .tool-container {
-    background: #f7f7f7;
-    border-right: 1px solid lightgray;
+    background: var(--background);
+    border-right: 1px solid var(--background-2);
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .tool-container h2 {
-    padding: 0.5em;
+    background: var(--background-1);
+    border-bottom: 1px solid var(--background-2);
     margin: 0;
-    background: white;
-    border-bottom: 1px solid lightgray;
+    padding: 0.5em;
 }
 
 .tool-content {
@@ -54,7 +79,9 @@ body * {
 }
 
 .tools-bar {
-    background: rgba(300, 300, 300, 0.8);
+    background: var(--background-1);
+    color:var(--color-1);
+    opacity: 0.8;
     width: 70px;
 }
 
@@ -68,7 +95,7 @@ body * {
 .tool-item {
     border-color: transparent;
     border-style: solid;
-    border-width: 0 2px;
+    border-width: 0 3px;
     display: flex;
     height: 70px;
 }
@@ -78,12 +105,13 @@ body * {
 }
 
 .tools-bar li.selected {
-    border-right-color: orangered;
+    border-right-color: var(--theme-color-1);
 }
 
 .tools-bar button {
     background: inherit;
     border: 0;
+    color: inherit;
     font: inherit;
     font-size: 90%;
     transition: background-color 0.3s, color 0.3s;
@@ -91,15 +119,15 @@ body * {
 }
 
 .tool-item > button:focus, .tool-item > button:hover {
+    background: var(--theme-color);
+    color: var(--color-2);
     outline: none;
-    background: orange;
-    color: white;
 }
 
 label {
-    margin: 0.5em 0;
     display: flex;
     flex-direction: column;
+    margin: 0.5em 0;
 }
 
 input {
@@ -108,19 +136,22 @@ input {
 }
 
 .itinerary-stop-point-container {
+    border: 1px solid var(--background-2);
+    font-size: 90%;
     padding: 0;
 }
 
 .itinerary-stop-point {
+    background: var(--background-1);
+    color: var(--color-1);
     display: flex;
     justify-content: space-between;
     margin: 0;
     padding: 0.5em;
-    background: #fcfcfc;
 }
 
 .itinerary-stop-point:not(:last-child) {
-    border-bottom: 1px solid #dfdfdf;
+    border-bottom: 1px solid var(--background-2);
 }
 
 .itinerary-stop-point > div {
@@ -130,21 +161,21 @@ input {
 
 .drag-handle {
     display: flex;
-    background: yellow;
+    background: var(--theme-color-1);
     padding: 0.5em;
     transition: all 0.3s;
 }
 
 .drag-handle:hover {
-    background: orangered;
+    background: var(--theme-color);
     color: white;
     cursor: grab;
 }
 
 .drop-target-before {
-    border-top: 2px solid orangered;
+    border-top: 2px solid var(--theme-color);
 }
 
 .drop-target-after {
-    border-bottom: 2px solid orangered !important;
+    border-bottom: 2px solid var(--theme-color) !important;
 }

@@ -36,7 +36,8 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                 throw new Error('not ok response'); //todo handler error in a different way
             }
 
-            return res.json();
+            // todo other properties might relevant as well
+            return (await res.json()).routes;
         }
     };
 };
