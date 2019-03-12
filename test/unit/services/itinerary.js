@@ -3,6 +3,9 @@ import { provider } from '../../../src/app/services/itinerary';
 import { defaultState, directionsAPIStub, testStore } from '../utils';
 import { ActionType } from '../../../src/app/actions/types';
 const storeFactory = storeProvider();
+const setState = (state) => Object.assign(defaultState(), {
+    itinerary: state
+});
 const setup = (store) => {
     let state = null;
     store.subscribe(() => {
@@ -19,15 +22,10 @@ export default (a) => {
     test('add point the first point: no side effect should occur', async (t) => {
         const sdkMock = directionsAPIStub();
         const newPoint = { lng: 1234, lat: 4321, id: 1 };
-        const store = testStore({
-            itinerary: {
-                routes: [],
-                stops: [newPoint]
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            routes: [],
+            stops: [newPoint]
+        }), {
             directions: sdkMock
         });
         const service = provider(store);
@@ -112,15 +110,10 @@ export default (a) => {
     });
     test('remove point no side effects as there is only one point left', async (t) => {
         const sdkMock = directionsAPIStub();
-        const store = testStore({
-            itinerary: {
-                routes: [],
-                stops: [{ lng: 1234, lat: 4321, id: 1 }]
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            routes: [],
+            stops: [{ lng: 1234, lat: 4321, id: 1 }]
+        }), {
             directions: sdkMock
         });
         const service = provider(store);

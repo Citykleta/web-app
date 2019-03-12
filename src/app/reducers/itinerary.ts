@@ -30,7 +30,7 @@ const matchId = id => item => item.id === id;
 
 export const reducer: Reducer<ItineraryState> = (previousState = defaultState, action) => {
     switch (action.type) {
-        case ActionType.RESET_ROUTES_ACTION: {
+        case ActionType.RESET_ROUTES: {
             return {stops: [], routes: []};
         }
         case ActionType.FETCH_ROUTES_SUCCESS: {

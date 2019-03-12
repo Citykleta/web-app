@@ -1,8 +1,8 @@
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
 :root {
-    --background: #fcfcfc;
-    --background-1: #fff;
+    --background: #fff;
+    --background-1: #fcfcfc;
     --background-2: #ccc;
     --background-3: #919191;
     --color: #484848;
@@ -19,16 +19,16 @@
     --background-3: #eaeaea;
     --color: #f5f5f5;
     --color-1: #fff;
-    --color-2: #444;
+    --color-2: #fff;
     --theme-color: #81bde6;
-    --theme-color-1: #e65b7b;
+    --theme-color-1: orangered;
 }
 
 body {
     box-sizing: border-box;
     color: var(--color);
     display: flex;
-    font-family: "Open Sans", "OpenSans", sans-serif;
+    font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     height: 100vh;
     margin: 0;
     padding: 0;
@@ -43,6 +43,10 @@ body * {
 #map-container {
     background: #94c1e1; /*placeholder*/
     flex-grow: 1;
+}
+
+ul:empty{
+    border-color: transparent;
 }
 
 #toolbox-container {
@@ -80,7 +84,7 @@ body * {
 
 .tools-bar {
     background: var(--background-1);
-    color:var(--color-1);
+    color: var(--color-1);
     opacity: 0.8;
     width: 70px;
 }
@@ -131,8 +135,10 @@ label {
 }
 
 input {
+    color: inherit;
     font-size: 0.9em;
     font-weight: lighter;
+    outline: none;
 }
 
 .itinerary-stop-point-container {
@@ -179,3 +185,66 @@ input {
 .drop-target-after {
     border-bottom: 2px solid var(--theme-color) !important;
 }
+
+[role=combobox] {
+    --loading-offset: 2rem;
+    position: relative;
+}
+
+[role=combobox] > input {
+    background: inherit;
+    border: 1px solid var(--background-3);
+    height: var(--loading-offset);
+    padding-left: var(--loading-offset);
+    transition: border-width 0.3s, background 0.3s;
+    width: 100%;
+}
+
+[role=combobox] > input:focus{
+    border-color: var(--theme-color);
+    box-shadow: 0 0 4px 0 var(--theme-color);
+}
+
+/*todo fix hidden class*/
+[role=combobox] > .loading-indicator {
+    align-items: center;
+    display: flex;
+    height: var(--loading-offset);
+    justify-content: center;
+    position: absolute;
+    width: var(--loading-offset);
+}
+
+[role=combobox] > .loading-indicator.hidden{
+    display: none;
+}
+
+[role=listbox] {
+    border-color: var(--background-2);
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+[role=option] {
+    font-size: 0.95em;
+    padding: 4px;
+}
+
+[role=option][aria-selected=true]{
+    background: var(--theme-color-1);
+    color:var(--color-2);
+}
+
+[role=option]:not(:last-child) {
+    border-bottom: 1px solid var(--background-2);
+}
+
+.info{
+    color:var(--color-1);
+    font-size: 0.9em;
+}
+
+

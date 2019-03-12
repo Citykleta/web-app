@@ -1,6 +1,16 @@
 import { ActionType } from '../../../src/app/actions/types';
 import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPointLocation, changeItineraryPointLocationWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes } from '../../../src/app/actions/itinerary';
 import { directionsAPIStub, testStore } from '../utils';
+import { Theme } from '../../../src/app/reducers/settings';
+const setState = (state) => ({
+    itinerary: state,
+    settings: {
+        theme: Theme.LIGHT
+    },
+    tool: {
+        selectedTool: null
+    }
+});
 export default (a) => {
     const { test, skip } = a;
     test('create an ADD_ITINERARY_ACTION without specifying the "before" item', t => {
@@ -102,7 +112,7 @@ export default (a) => {
     });
     test('create a RESET_ROUTES action', t => {
         const actual = resetRoutes();
-        t.eq(actual, { type: ActionType.RESET_ROUTES_ACTION });
+        t.eq(actual, { type: ActionType.RESET_ROUTES });
     });
     test('create a FETCH_ROUTES action thunk: successful request', async (t) => {
         // given
@@ -110,15 +120,10 @@ export default (a) => {
         sdkMock.resolve([{
                 geometry: 'whatever'
             }]);
-        const store = testStore({
-            itinerary: {
-                stops: [{ id: 1, lng: 1234, lat: 4321 }, { id: 2, lng: 4321, lat: 1234 }],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [{ id: 1, lng: 1234, lat: 4321 }, { id: 2, lng: 4321, lat: 1234 }],
+            routes: []
+        }), {
             directions: sdkMock
         });
         //@ts-ignore
@@ -142,15 +147,10 @@ export default (a) => {
         const error = new Error('something went wrong');
         const sdkMock = directionsAPIStub();
         sdkMock.reject(error);
-        const store = testStore({
-            itinerary: {
-                stops: [{ id: 1, lng: 1234, lat: 4321 }, { id: 2, lng: 4321, lat: 1234 }],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, { directions: sdkMock });
+        const store = testStore(setState({
+            stops: [{ id: 1, lng: 1234, lat: 4321 }, { id: 2, lng: 4321, lat: 1234 }],
+            routes: []
+        }), { directions: sdkMock });
         //@ts-ignore
         await store.dispatch(fetchRoutesFromAPI());
         //expectations
@@ -170,15 +170,10 @@ export default (a) => {
     test('add itinerary point with side effects should not have side effect if there is less than 2 stops', async (t) => {
         // given
         const sdkMock = directionsAPIStub();
-        const store = testStore({
-            itinerary: {
-                stops: [{ id: 1, lng: 666, lat: 666 }],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [{ id: 1, lng: 666, lat: 666 }],
+            routes: []
+        }), {
             directions: sdkMock
         });
         // @ts-ignore
@@ -202,18 +197,13 @@ export default (a) => {
         sdkMock.resolve([{
                 geometry: 'geometry'
             }]);
-        const store = testStore({
-            itinerary: {
-                stops: [
-                    { id: 1, lng: 666, lat: 666 },
-                    { id: 2, lng: 4321, lat: 1234 }
-                ],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [
+                { id: 1, lng: 666, lat: 666 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
             directions: sdkMock
         });
         //@ts-ignore
@@ -252,18 +242,13 @@ export default (a) => {
         sdkMock.resolve([{
                 geometry: 'geometry'
             }]);
-        const store = testStore({
-            itinerary: {
-                stops: [
-                    { id: 1, lng: 666, lat: 666 },
-                    { id: 2, lng: 4321, lat: 1234 }
-                ],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [
+                { id: 1, lng: 666, lat: 666 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
             directions: sdkMock
         });
         //@ts-ignore
@@ -297,18 +282,13 @@ export default (a) => {
         sdkMock.resolve([{
                 geometry: 'geometry'
             }]);
-        const store = testStore({
-            itinerary: {
-                stops: [
-                    { id: 1, lng: 666, lat: 666 },
-                    { id: 2, lng: 4321, lat: 1234 }
-                ],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [
+                { id: 1, lng: 666, lat: 666 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
             directions: sdkMock
         });
         //@ts-ignore
@@ -340,15 +320,10 @@ export default (a) => {
     test('remove itinerary point with side effects should not have side effect if there is less than 2 stops', async (t) => {
         // given
         const sdkMock = directionsAPIStub();
-        const store = testStore({
-            itinerary: {
-                stops: [{ id: 1, lng: 666, lat: 666 }],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [{ id: 1, lng: 666, lat: 666 }],
+            routes: []
+        }), {
             directions: sdkMock
         });
         // @ts-ignore
@@ -365,18 +340,13 @@ export default (a) => {
         sdkMock.resolve([{
                 geometry: 'geometry'
             }]);
-        const store = testStore({
-            itinerary: {
-                stops: [
-                    { id: 1, lng: 666, lat: 666 },
-                    { id: 2, lng: 4321, lat: 1234 }
-                ],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [
+                { id: 1, lng: 666, lat: 666 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
             directions: sdkMock
         });
         //@ts-ignore
@@ -406,15 +376,10 @@ export default (a) => {
     test('change itinerary point location with side effects should not have side effect if there is less than 2 stops', async (t) => {
         // given
         const sdkMock = directionsAPIStub();
-        const store = testStore({
-            itinerary: {
-                stops: [{ id: 1, lng: 666, lat: 666 }],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [{ id: 1, lng: 666, lat: 666 }],
+            routes: []
+        }), {
             directions: sdkMock
         });
         // @ts-ignore
@@ -432,18 +397,13 @@ export default (a) => {
         sdkMock.resolve([{
                 geometry: 'geometry'
             }]);
-        const store = testStore({
-            itinerary: {
-                stops: [
-                    { id: 1, lng: 666, lat: 666 },
-                    { id: 2, lng: 4321, lat: 1234 }
-                ],
-                routes: []
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            stops: [
+                { id: 1, lng: 666, lat: 666 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
             directions: sdkMock
         });
         //@ts-ignore

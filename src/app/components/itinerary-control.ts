@@ -5,10 +5,8 @@ import {factory as stopPointFactory} from './itinerary-stop-point';
 const template = `
 <h2>Itinerary</h2>
 <div class="tool-content">
-<p>Click on the map to add way points</p>
-<ul class="itinerary-stop-point-container">
-    
-</ul>
+<p class="info">Click on the map to add way points</p>
+<ul class="itinerary-stop-point-container"></ul>
 </div>
 `;
 

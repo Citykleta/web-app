@@ -4,8 +4,12 @@ import {provider} from '../../../src/app/services/itinerary';
 import {Store} from 'redux';
 import {defaultState, directionsAPIStub, testStore} from '../utils';
 import {ActionType} from '../../../src/app/actions/types';
+import {ItineraryState} from '../../../src/app/reducers/itinerary';
 
 const storeFactory = storeProvider();
+const setState = (state: ItineraryState): ApplicationState => Object.assign(defaultState(), {
+    itinerary: state
+});
 
 const setup = (store: Store<ApplicationState>) => {
     let state = null;
@@ -25,15 +29,10 @@ export default (a: Assert) => {
     test('add point the first point: no side effect should occur', async t => {
         const sdkMock = directionsAPIStub();
         const newPoint = {lng: 1234, lat: 4321, id: 1};
-        const store = testStore({
-            itinerary: {
-                routes: [],
-                stops: [newPoint]
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            routes: [],
+            stops: [newPoint]
+        }), {
             directions: sdkMock
         });
         const service = provider(store);
@@ -129,15 +128,10 @@ export default (a: Assert) => {
 
     test('remove point no side effects as there is only one point left', async t => {
         const sdkMock = directionsAPIStub();
-        const store = testStore({
-            itinerary: {
-                routes: [],
-                stops: [{lng: 1234, lat: 4321, id: 1}]
-            },
-            tool: {
-                selectedTool: null
-            }
-        }, {
+        const store = testStore(setState({
+            routes: [],
+            stops: [{lng: 1234, lat: 4321, id: 1}]
+        }), {
             directions: sdkMock
         });
         const service = provider(store);

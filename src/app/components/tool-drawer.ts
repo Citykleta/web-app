@@ -1,5 +1,6 @@
 import {factory as itineraryControl} from './itinerary-control';
 import {factory as searchControl} from './search-control';
+import {factory as settingsControl} from './settings-control';
 import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
 import {Component} from './types';
@@ -47,6 +48,10 @@ export const factory = (registry: ServiceRegistry): Component => {
                         break;
                     case ToolType.SEARCH:
                         component = searchControl(registry);
+                        toolContent.appendChild(component.dom());
+                        break;
+                    case ToolType.SETTINGS:
+                        component = settingsControl(registry);
                         toolContent.appendChild(component.dom());
                         break;
                     default:

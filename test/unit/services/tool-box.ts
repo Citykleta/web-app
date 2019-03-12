@@ -1,9 +1,16 @@
 import {Assert} from 'zora';
 import {provider} from '../../../src/app/services/navigation';
 import {ToolType} from '../../../src/app/tools/interfaces';
-import {store as storeProvider} from '../../../src/app/services/store';
+import {ApplicationState, store as storeProvider} from '../../../src/app/services/store';
+import {Theme} from '../../../src/app/reducers/settings';
+import {ToolBoxState} from '../../../src/app/reducers/tool-box';
+import {defaultState} from '../utils';
 
 const storeFactory = storeProvider();
+
+const setState = (tool: ToolBoxState): ApplicationState => Object.assign({}, defaultState(), {
+    tool
+});
 
 export default ({test}: Assert) => {
     test('change the selected tool', t => {
@@ -14,25 +21,14 @@ export default ({test}: Assert) => {
         });
         const service = provider(store);
         service.selectTool(ToolType.ITINERARY);
-        t.eq(state, {
-            tool: {
-                selectedTool: ToolType.ITINERARY
-            },
-            itinerary: {
-                stops: [],
-                routes: []
-            }
-        });
+        t.eq(state, setState({
+            selectedTool: ToolType.ITINERARY
+        }));
         service.selectTool(null);
-        t.eq(state, {
-            tool: {
+        t.eq(state, setState(
+            {
                 selectedTool: null
-            },
-            itinerary: {
-                stops: [],
-                routes: []
-            }
-        });
+            }));
     });
 
     test('unselect current selected tool', t => {
@@ -43,24 +39,12 @@ export default ({test}: Assert) => {
         });
         const service = provider(store);
         service.selectTool(ToolType.ITINERARY);
-        t.eq(state, {
-            tool: {
-                selectedTool: ToolType.ITINERARY
-            },
-            itinerary: {
-                stops: [],
-                routes: []
-            }
-        });
+        t.eq(state, setState({
+            selectedTool: ToolType.ITINERARY
+        }));
         service.unselectAll();
-        t.eq(state, {
-            tool: {
-                selectedTool: null
-            },
-            itinerary: {
-                stops: [],
-                routes: []
-            }
-        });
+        t.eq(state, setState({
+            selectedTool: null
+        }));
     });
 }

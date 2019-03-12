@@ -64,12 +64,12 @@ export const fetchRoutesWithFailure = (error: any): FetchRoutesFailureAction => 
     error
 });
 
-export interface ResetRoutesAction extends Action<ActionType.RESET_ROUTES_ACTION> {
-    type: ActionType.RESET_ROUTES_ACTION
+export interface ResetRoutesAction extends Action<ActionType.RESET_ROUTES> {
+    type: ActionType.RESET_ROUTES
 }
 
 export const resetRoutes = (): ResetRoutesAction => ({
-    type: ActionType.RESET_ROUTES_ACTION
+    type: ActionType.RESET_ROUTES
 });
 
 type ItineraryStopsAction =

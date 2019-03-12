@@ -1,5 +1,6 @@
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { Theme } from '../../src/app/reducers/settings';
 export const testStore = (state, extraArgs) => {
     let actions = [];
     const collectActionsMiddleware = store => next => action => {
@@ -47,6 +48,9 @@ export const defaultState = () => ({
     itinerary: {
         routes: [],
         stops: []
+    },
+    settings: {
+        theme: Theme.LIGHT
     }
 });
 export const spy = (fn) => {

@@ -1,6 +1,7 @@
 export enum ToolType {
     ITINERARY = 'ITINERARY',
-    SEARCH = 'SEARCH'
+    SEARCH = 'SEARCH',
+    SETTINGS = 'SETTINGS'
 }
 
 export interface Tool {

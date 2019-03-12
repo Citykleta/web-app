@@ -1,16 +1,19 @@
 import {Reducer} from 'redux';
 import {ActionType} from '../actions/types';
+import {GeoCoord} from '../tools/interfaces';
+
+export interface Suggestion extends GeoCoord {
+    id: number;
+}
 
 export interface SearchState {
-    query?: string;
-    suggestions: any[];
-    selectedLocation: any;
+    suggestions: Suggestion[];
+    matchingItem: Suggestion;
 }
 
 const defaultState: SearchState = {
-    query: '',
     suggestions: [],
-    selectedLocation: null
+    matchingItem: null
 };
 
 export const reducer: Reducer<SearchState> = (previousState = defaultState, action) => {

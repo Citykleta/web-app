@@ -1,7 +1,6 @@
 import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
 import {Component} from './types';
-import {ToolBoxState} from '../reducers/tool-box';
 
 const template = `<ul>
 <li class="hidden tool-item">
@@ -13,9 +12,9 @@ const template = `<ul>
 <li class="tool-item">
     <button>Search</button>
 </li>
-<!--<li class="tool-item">-->
-    <!--<button>Settings</button>-->
-<!--</li>-->
+<li class="tool-item">
+    <button>Settings</button>
+</li>
 </ul>
 `;
 
@@ -39,6 +38,10 @@ export const factory = (registry: ServiceRegistry): Component => {
 
     search.addEventListener('click', ev => {
         navigation.selectTool(ToolType.SEARCH);
+    });
+
+    settings.addEventListener('click', ev => {
+        navigation.selectTool(ToolType.SETTINGS);
     });
 
     const unsubscribe = store.subscribe(() => {
