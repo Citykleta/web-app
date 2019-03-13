@@ -1,9 +1,8 @@
-import {GeoCoord} from '../tools/interfaces';
-//todo set up abort signal to avoid unnecessary round trip with server
+import {GeoCoord, GeoLocation} from '../util';
 
 export interface Geocoder {
-    search(query: string): Promise<any>; //todo share types with api
-    reverse(coordinates: GeoCoord): Promise<any>;
+    search(query: string): Promise<GeoLocation[]>;
+    reverse(coordinates: GeoCoord): Promise<GeoLocation[]>;
 }
 
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
@@ -26,7 +25,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
             });
 
             if (res.ok !== true) {
-                throw new Error('not ok response'); //todo handler error in a different way
+                throw new Error('not ok response');
             }
 
             return res.json();

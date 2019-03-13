@@ -1,59 +1,57 @@
-import {GeoCoord} from '../tools/interfaces';
 import {Action, Store} from 'redux';
-import {API, ApplicationState} from './store';
-import {WayPoint} from '../reducers/itinerary';
+import {API, ApplicationState, EnhancedDispatch} from './store';
 import {
     addItineraryPointWithSideEffects,
     removeItineraryPointWithSideEffects,
     resetRoutes,
     AddItineraryPointAction,
-    RemoveItineraryPointAction, addItineraryPoint, moveItineraryPointWithSideEffects, InsertionPosition
+    RemoveItineraryPointAction,
+    moveItineraryPointWithSideEffects,
+    InsertionPosition
 } from '../actions/itinerary';
-import {ThunkAction, ThunkDispatch} from 'redux-thunk';
+import { ThunkDispatch} from 'redux-thunk';
+import {GeoLocation, GeoCoord, UIPoint} from '../util';
 
 export interface ItineraryService {
-    startMove(p: WayPoint): void;
+    startMove(p: UIPoint): void;
 
-    moveBefore(p: WayPoint): Promise<any>;
+    moveBefore(p: UIPoint): Promise<any>;
 
-    moveAfter(p: WayPoint): Promise<any>;
+    moveAfter(p: UIPoint): Promise<any>;
 
-    addPoint(p: GeoCoord, before ?: WayPoint): Promise<any>;
+    addPoint(p: GeoCoord, before ?: UIPoint): Promise<any>;
 
-    removePoint(p: WayPoint): Promise<any>;
+    removePoint(p: UIPoint): Promise<any>;
 
     reset(): void;
 }
 
-interface EnhancedDispatch<K extends Action<any>> extends ThunkDispatch<ApplicationState, API, K> {
-}
-
 export const provider = (store: Store<ApplicationState>): ItineraryService => {
 
-    let movingPoint: WayPoint = null;
+    let movingPoint: UIPoint = null;
 
     return {
-        startMove(p: WayPoint) {
+        startMove(p: UIPoint) {
             movingPoint = store.getState().itinerary.stops.find(i => i.id === p.id) || null;
         },
-        async moveBefore(p: WayPoint) {
+        async moveBefore(p: UIPoint) {
             if (movingPoint) {
                 // @ts-ignore
                 store.dispatch(moveItineraryPointWithSideEffects(movingPoint.id, p.id, InsertionPosition.BEFORE));
             }
             movingPoint = null;
         },
-        async moveAfter(p: WayPoint) {
+        async moveAfter(p: UIPoint) {
             if (movingPoint) {
                 // @ts-ignore
                 store.dispatch(moveItineraryPointWithSideEffects(movingPoint.id, p.id, InsertionPosition.AFTER));
             }
             movingPoint = null;
         },
-        async addPoint(point, before?: WayPoint) {
+        async addPoint(point, before?: UIPoint) {
             return (<EnhancedDispatch<AddItineraryPointAction>>store.dispatch)(addItineraryPointWithSideEffects(point, before ? before.id : null));
         },
-        async removePoint(point: WayPoint) {
+        async removePoint(point: UIPoint) {
             return (<EnhancedDispatch<RemoveItineraryPointAction>>store.dispatch)(removeItineraryPointWithSideEffects(point.id));
         },
         reset() {

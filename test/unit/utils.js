@@ -51,6 +51,10 @@ export const defaultState = () => ({
     },
     settings: {
         theme: Theme.LIGHT
+    },
+    search: {
+        selectedSuggestion: null,
+        suggestions: []
     }
 });
 export const spy = (fn) => {

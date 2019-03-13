@@ -1,8 +1,4 @@
-import {GeoCoord} from '../tools/interfaces';
-import {truncate} from '../util';
-import {Route} from '../reducers/itinerary';
-
-//todo set up abort signal to avoid unnecessary round trip with server
+import {truncate, Route, GeoCoord} from '../util';
 
 export interface Directions {
     search(points: GeoCoord[]): Promise<Route[]>;
@@ -33,10 +29,9 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
             });
 
             if (res.ok !== true) {
-                throw new Error('not ok response'); //todo handler error in a different way
+                throw new Error('not ok response');
             }
 
-            // todo other properties might relevant as well
             return (await res.json()).routes;
         }
     };

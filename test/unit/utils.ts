@@ -1,10 +1,9 @@
 import {Directions} from '../../src/app/sdk/directions';
-import {GeoCoord} from '../../src/app/tools/interfaces';
-import {Route} from '../../src/app/reducers/itinerary';
 import {ApplicationState} from '../../src/app/services/store';
 import {AnyAction, applyMiddleware, createStore, Store} from 'redux';
 import thunk from 'redux-thunk';
 import {Theme} from '../../src/app/reducers/settings';
+import {GeoCoord, Route} from '../../src/app/util';
 
 interface DirectionsAPIStub extends Directions {
     readonly calls: any[];
@@ -75,6 +74,10 @@ export const defaultState = (): ApplicationState => ({
     },
     settings:{
         theme:Theme.LIGHT
+    },
+    search:{
+        selectedSuggestion:null,
+        suggestions:[]
     }
 });
 

@@ -50,6 +50,7 @@ export const factory = (registry: ServiceRegistry): Component => {
             const {selectedTool} = newState;
             itenerary.parentElement.classList.toggle('selected', selectedTool === ToolType.ITINERARY);
             search.parentElement.classList.toggle('selected', selectedTool === ToolType.SEARCH);
+            settings.parentElement.classList.toggle('selected', selectedTool === ToolType.SETTINGS);
             close.parentElement.classList.toggle('hidden', selectedTool === null);
         }
         state = newState;

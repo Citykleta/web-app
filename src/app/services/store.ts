@@ -1,19 +1,23 @@
-import {applyMiddleware, createStore, Store} from 'redux';
-import thunk from 'redux-thunk';
+import {Action, applyMiddleware, createStore, Store} from 'redux';
+import thunk, {ThunkDispatch} from 'redux-thunk';
 import {ItineraryState} from '../reducers/itinerary';
 import {ToolBoxState} from '../reducers/tool-box';
 import reducer from '../reducers/index';
 import {Directions, factory as directionsAPI} from '../sdk/directions';
 import {SettingsState, Theme} from '../reducers/settings';
+import {Geocoder, factory as geocoderAPI} from '../sdk/geocoder';
+import {SearchState} from '../reducers/search';
 
 export interface ApplicationState {
     tool: ToolBoxState;
     itinerary: ItineraryState;
-    settings: SettingsState
+    settings: SettingsState,
+    search: SearchState
 }
 
 export interface API {
     directions: Directions
+    geocoder: Geocoder
 }
 
 const debugMiddleware = store => next => action => {
@@ -22,7 +26,8 @@ const debugMiddleware = store => next => action => {
 };
 
 export const store = (api: API = {
-    directions: directionsAPI()
+    directions: directionsAPI(),
+    geocoder: geocoderAPI()
 }) => (initialState: ApplicationState = {
     tool: {
         selectedTool: null
@@ -33,7 +38,15 @@ export const store = (api: API = {
     },
     settings: {
         theme: Theme.LIGHT
+    },
+    search: {
+        suggestions: [],
+        selectedSuggestion: null
     }
 }): Store<ApplicationState> => createStore(reducer, initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
     // debugMiddleware
 ));
+
+
+export interface EnhancedDispatch<K extends Action<any>> extends ThunkDispatch<ApplicationState, API, K> {
+}

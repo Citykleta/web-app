@@ -8,15 +8,19 @@ const template = `<h2>Search location</h2>
 </div>`;
 
 export const factory = (registry: ServiceRegistry): Component => {
+    const {search, store} = registry;
     const domElement = document.createElement('DIV');
-    domElement.innerHTML = template;
     const range = document.createRange();
+    domElement.innerHTML = template;
     range.selectNodeContents(domElement);
     const toolContent = domElement.querySelector('.tool-content');
 
-    const sb = searchBox(async (q) => new Promise(resolve => {
-        setTimeout(() => resolve(['foo', 'bar', 'bim'].filter(word => q !== '' && word.includes(q))), 300);
-    }));
+    const suggest = async (q: string) => {
+        await search.search(q);
+        return store.getState().search.suggestions;
+    };
+
+    const sb = searchBox(suggest);
     toolContent.appendChild(sb.dom());
 
     return {

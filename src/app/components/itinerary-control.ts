@@ -6,7 +6,7 @@ const template = `
 <h2>Itinerary</h2>
 <div class="tool-content">
 <p class="info">Click on the map to add way points</p>
-<ul class="itinerary-stop-point-container"></ul>
+<ol class="itinerary-stop-point-container"></ol>
 </div>
 `;
 
@@ -16,7 +16,7 @@ export const factory = (registry: ServiceRegistry): Component => {
     domElement.innerHTML = template;
     const range = document.createRange();
     range.selectNodeContents(domElement);
-    const stopListElements = domElement.querySelector('ul');
+    const stopListElements = domElement.querySelector('.itinerary-stop-point-container');
 
     const itineraryStopChangedHandler = () => {
         // todo update only when required

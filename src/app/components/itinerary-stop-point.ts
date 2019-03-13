@@ -1,13 +1,19 @@
 import {ServiceRegistry} from '../services/service-registry';
 import {Component} from './types';
-import {truncate} from '../util';
-import {WayPoint} from '../reducers/itinerary';
+import {GeoLocation, truncate, UIPoint} from '../util';
 
-const template = (p: WayPoint) => `<span class="drag-handle" draggable="true">|</span><div><span>lng: ${truncate(p.lng)}</span><span>lat:${truncate(p.lat)}</span></div><button>X</button>`;
+const template = (p: UIPoint) => `<span class="drag-handle" draggable="true">|</span>
+<article class="point-info">
+<h3>${p.name || 'unknown place'}</h3>
+<dl class="point-geolocation">
+<dt>lng</dt><dd>${p.lng.toPrecision(8)}</dd>
+<dt>lat</dt><dd>${p.lat.toPrecision(8)}</dd>
+</article>
+<button>X</button>`;
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
-export const factory = (registry: ServiceRegistry, p: WayPoint): Component => {
+export const factory = (registry: ServiceRegistry, p: UIPoint): Component => {
     const el = document.createElement('LI');
     const {itinerary} = registry;
     let boundingBox;

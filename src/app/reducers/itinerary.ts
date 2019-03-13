@@ -1,4 +1,3 @@
-import {GeoCoord} from '../tools/interfaces';
 import {Reducer} from 'redux';
 import {ActionType} from '../actions/types';
 import {
@@ -6,18 +5,10 @@ import {
     ChangeItineraryPointLocationAction, FetchRoutesSuccessAction, InsertionPosition,
     RemoveItineraryPointAction
 } from '../actions/itinerary';
-
-export interface WayPoint extends GeoCoord {
-    id: number;
-}
-
-//todo formalize routes type
-export interface Route {
-    geometry: string;
-}
+import {Route, truncate, UIPoint} from '../util';
 
 export interface ItineraryState {
-    stops: WayPoint[];
+    stops: UIPoint[];
     routes: Route[];
 }
 
@@ -52,7 +43,10 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
             const insertIndex = beforeIndex >= 0 ? beforeIndex : newStops.length;
             const id = newStops.reduce((acc, curr) => Math.max(curr.id, acc), -1) + 1;
 
-            newStops.splice(insertIndex, 0, Object.assign({id}, point));
+            newStops.splice(insertIndex, 0, Object.assign({id}, {
+                lng: truncate(point.lng),
+                lat: truncate(point.lat)
+            }));
 
             return Object.assign({}, previousState, {
                 stops: newStops

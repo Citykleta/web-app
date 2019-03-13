@@ -1,23 +1,42 @@
 import {Action} from 'redux';
 import {ActionType} from './types';
-import {GeoCoord} from '../tools/interfaces';
+import {GeoLocation} from '../util';
+import {API} from '../services/store';
 
-// export interface SetMatchingItemAction extends Action<ActionType.SET_MATCHING_ITEM> {
-//     type: ActionType.SET_MATCHING_ITEM,
-//     point: GeoCoord
-// }
-//
-// export const setMatchingItem = (point: GeoCoord): SetMatchingItemAction => ({
-//     type: ActionType.SET_MATCHING_ITEM,
-//     point
-// });
-//
-// export interface SuggestAction extends Action<ActionType.SUGGEST> {
-//     type: ActionType.SUGGEST,
-//     suggestions: GeoCoord[]
-// }
-//
-// export const suggest = (suggestions: GeoCoord[]): SuggestAction => ({
-//     type: ActionType.SUGGEST,
-//     suggestions
-// });
+export interface FetchSuggestionsAction extends Action<ActionType.FETCH_SUGGESTIONS> {
+    query: string
+}
+
+export const fetchSuggestions = (query: string): FetchSuggestionsAction => ({
+    type: ActionType.FETCH_SUGGESTIONS,
+    query
+});
+
+export interface FetchSuggestionsSuccessAction extends Action<ActionType.FETCH_SUGGESTIONS_SUCCESS> {
+    suggestions: GeoLocation[]
+}
+
+export const fetchSuggestionsWithSuccess = (suggestions: GeoLocation[]): FetchSuggestionsSuccessAction => ({
+    type: ActionType.FETCH_SUGGESTIONS_SUCCESS,
+    suggestions
+});
+
+export interface FetchSuggestionsFailureAction extends Action<ActionType.FETCH_SUGGESTIONS_FAILURE> {
+    error: any
+}
+
+export const fetchSuggestionsWithFailure = (error: any): FetchSuggestionsFailureAction => ({
+    type: ActionType.FETCH_SUGGESTIONS_FAILURE,
+    error
+});
+
+export const fetchSuggestionsFromAPI = (query: string) => async (dispatch, getState, API: API) => {
+    const {geocoder} = API;
+    dispatch(fetchSuggestions(query));
+    try {
+        const res = await geocoder.search(query);
+        return dispatch(fetchSuggestionsWithSuccess(res));
+    } catch (e) {
+        return dispatch(fetchSuggestionsWithFailure(e));
+    }
+};

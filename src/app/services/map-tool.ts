@@ -1,7 +1,7 @@
-import {GeoCoord, Tool} from '../tools/interfaces';
 import {ServiceRegistry} from './service-registry';
 import {itineraryTool} from '../tools/itinerary';
-import {truncate} from '../util';
+import {GeoCoord, truncate} from '../util';
+import {Tool} from '../tools/interfaces';
 
 export interface MapToolService {
     actionClick(p: GeoCoord): void;

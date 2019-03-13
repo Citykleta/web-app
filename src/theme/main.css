@@ -40,27 +40,51 @@ body * {
     box-sizing: inherit;
 }
 
+ul:empty, ol:empty {
+    border-color: transparent;
+}
+
+h1,h2,h3, dl{
+    margin: 0;
+}
+
+label > span::after{
+    content: ':';
+}
+
+button{
+    background: inherit;
+    border:1px solid currentColor;
+    border-radius: 2px;
+    color:inherit;
+    font:inherit;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button:focus, button:hover {
+    background: var(--theme-color);
+    color: var(--color-2);
+    outline: none;
+}
+
 #map-container {
     background: #94c1e1; /*placeholder*/
     flex-grow: 1;
 }
 
-ul:empty{
-    border-color: transparent;
-}
-
 #toolbox-container {
+    --toolbox-container-width: 400px;
     border-right: 1px solid var(--background-3);
     box-shadow: 1px 0 2px 0 var(--background-3);
     display: flex;
     height: 100%;
     position: absolute;
     transition: transform 0.4s;
-    width: 370px;
+    width: var(--toolbox-container-width);
 }
 
 #toolbox-container.hidden {
-    transform: translateX(-300px);
+    transform: translateX(calc(-1 * (var(--toolbox-container-width) - 70px)));
 }
 
 .tool-container {
@@ -74,12 +98,11 @@ ul:empty{
 .tool-container h2 {
     background: var(--background-1);
     border-bottom: 1px solid var(--background-2);
-    margin: 0;
     padding: 0.5em;
 }
 
 .tool-content {
-    padding: 0.5em;
+    padding: 0 0.5em;
 }
 
 .tools-bar {
@@ -109,23 +132,13 @@ ul:empty{
 }
 
 .tools-bar li.selected {
-    border-right-color: var(--theme-color-1);
+    border-left-color: var(--theme-color-1);
 }
 
 .tools-bar button {
-    background: inherit;
     border: 0;
-    color: inherit;
-    font: inherit;
     font-size: 90%;
-    transition: background-color 0.3s, color 0.3s;
     width: 100%;
-}
-
-.tool-item > button:focus, .tool-item > button:hover {
-    background: var(--theme-color);
-    color: var(--color-2);
-    outline: none;
 }
 
 label {
@@ -151,9 +164,24 @@ input {
     background: var(--background-1);
     color: var(--color-1);
     display: flex;
-    justify-content: space-between;
+    align-items: stretch;
     margin: 0;
     padding: 0.5em;
+}
+
+.itinerary-stop-point h3{
+    margin: 0 0 0.5em 0;
+}
+
+.itinerary-stop-point button{
+    align-self: center;
+    box-shadow: 0 0 2px 0 var(--theme-color);
+    color: var(--theme-color);
+}
+
+.itinerary-stop-point button:focus, .itinerary-stop-point button:hover{
+    border-color: var(--theme-color);
+    color: var(--color-2);
 }
 
 .itinerary-stop-point:not(:last-child) {
@@ -163,6 +191,35 @@ input {
 .itinerary-stop-point > div {
     display: flex;
     flex-direction: column;
+}
+
+.point-info{
+    flex-grow: 1;
+    padding: 0 0.5em;
+}
+
+.point-geolocation{
+    align-items: center;
+    display: flex;
+    font-size: 90%;
+    justify-content: space-between;
+}
+
+.point-geolocation > dt{
+    font-weight: bolder;
+    width: 30px;
+}
+
+.point-geolocation > dt::after{
+    content:':'
+}
+
+.point-geolocation > dd{
+    flex-grow: 1;
+    font-style: italic;
+    margin: 0;
+    padding: 0 0.5em;
+    text-align: right;
 }
 
 .drag-handle {
@@ -200,7 +257,7 @@ input {
     width: 100%;
 }
 
-[role=combobox] > input:focus{
+[role=combobox] > input:focus {
     border-color: var(--theme-color);
     box-shadow: 0 0 4px 0 var(--theme-color);
 }
@@ -211,11 +268,17 @@ input {
     display: flex;
     height: var(--loading-offset);
     justify-content: center;
+    padding: 2px;
     position: absolute;
     width: var(--loading-offset);
 }
 
-[role=combobox] > .loading-indicator.hidden{
+.loading-indicator svg{
+    fill: currentColor;
+    width: 100%;
+}
+
+[role=combobox] > .loading-indicator.hidden {
     display: none;
 }
 
@@ -233,18 +296,16 @@ input {
     padding: 4px;
 }
 
-[role=option][aria-selected=true]{
+[role=option][aria-selected=true] {
     background: var(--theme-color-1);
-    color:var(--color-2);
+    color: var(--color-2);
 }
 
 [role=option]:not(:last-child) {
     border-bottom: 1px solid var(--background-2);
 }
 
-.info{
-    color:var(--color-1);
+.info {
+    color: var(--color-1);
     font-size: 0.9em;
 }
-
-
