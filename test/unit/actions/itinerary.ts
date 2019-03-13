@@ -36,6 +36,10 @@ const setState = (state: ItineraryState): ApplicationState => ({
     },
     tool: {
         selectedTool: null
+    },
+    search: {
+        selectedSuggestion: null,
+        suggestions: []
     }
 });
 

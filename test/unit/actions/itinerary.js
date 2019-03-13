@@ -9,6 +9,10 @@ const setState = (state) => ({
     },
     tool: {
         selectedTool: null
+    },
+    search: {
+        selectedSuggestion: null,
+        suggestions: []
     }
 });
 export default (a) => {
