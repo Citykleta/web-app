@@ -1,14 +1,10 @@
 import {ServiceRegistry} from '../services/service-registry';
 import {Component} from './types';
-import {GeoLocation, truncate, UIPoint} from '../util';
+import {UIPoint} from '../util';
+import {template as locationItem} from './location-item';
 
-const template = (p: UIPoint) => `<span class="drag-handle" draggable="true">|</span>
-<article class="point-info">
-<h3>${p.name || 'unknown place'}</h3>
-<dl class="point-geolocation">
-<dt>lng</dt><dd>${p.lng.toPrecision(8)}</dd>
-<dt>lat</dt><dd>${p.lat.toPrecision(8)}</dd>
-</article>
+const draggableLocationPoint = (p: UIPoint) => `<span class="drag-handle" draggable="true">|</span>
+${locationItem(p)}
 <button>X</button>`;
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
@@ -18,7 +14,7 @@ export const factory = (registry: ServiceRegistry, p: UIPoint): Component => {
     const {itinerary} = registry;
     let boundingBox;
     el.classList.add('itinerary-stop-point');
-    el.innerHTML = template(p);
+    el.innerHTML = draggableLocationPoint(p);
 
     el.querySelector('button').addEventListener('click', ev => {
         itinerary.removePoint(p);

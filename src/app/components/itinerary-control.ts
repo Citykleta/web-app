@@ -2,18 +2,20 @@ import {ServiceRegistry} from '../services/service-registry';
 import {Component} from './types';
 import {factory as stopPointFactory} from './itinerary-stop-point';
 
-const template = `
+const template = () => `
 <h2>Itinerary</h2>
 <div class="tool-content">
+<div id="upper-control">
 <p class="info">Click on the map to add way points</p>
 <ol class="itinerary-stop-point-container"></ol>
+</div>
 </div>
 `;
 
 export const factory = (registry: ServiceRegistry): Component => {
     const {store, itinerary} = registry;
     const domElement = document.createElement('DIV');
-    domElement.innerHTML = template;
+    domElement.innerHTML = template();
     const range = document.createRange();
     range.selectNodeContents(domElement);
     const stopListElements = domElement.querySelector('.itinerary-stop-point-container');

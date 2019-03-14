@@ -6,6 +6,7 @@ import reducer from '../reducers/index';
 import {Directions, factory as directionsAPI} from '../sdk/directions';
 import {SettingsState, Theme} from '../reducers/settings';
 import {Geocoder, factory as geocoderAPI} from '../sdk/geocoder';
+// import {factory as geocoderAPI} from '../sdk/geocoder-mock';
 import {SearchState} from '../reducers/search';
 
 export interface ApplicationState {

@@ -27,7 +27,6 @@ import {directionsAPIStub, testStore} from '../utils';
 import {Theme} from '../../../src/app/reducers/settings';
 import {ItineraryState} from '../../../src/app/reducers/itinerary';
 import {ApplicationState} from '../../../src/app/services/store';
-import {ToolType} from '../../../src/app/tools/interfaces';
 
 const setState = (state: ItineraryState): ApplicationState => ({
     itinerary: state,

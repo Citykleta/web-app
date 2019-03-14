@@ -44,20 +44,20 @@ ul:empty, ol:empty {
     border-color: transparent;
 }
 
-h1,h2,h3, dl{
+h1, h2, h3, dl {
     margin: 0;
 }
 
-label > span::after{
+label > span::after {
     content: ':';
 }
 
-button{
+button {
     background: inherit;
-    border:1px solid currentColor;
+    border: 1px solid currentColor;
     border-radius: 2px;
-    color:inherit;
-    font:inherit;
+    color: inherit;
+    font: inherit;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -102,7 +102,15 @@ button:focus, button:hover {
 }
 
 .tool-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
     padding: 0 0.5em;
+}
+
+#lower-control {
+    padding: 1em 0;
 }
 
 .tools-bar {
@@ -169,17 +177,17 @@ input {
     padding: 0.5em;
 }
 
-.itinerary-stop-point h3{
+.itinerary-stop-point h3 {
     margin: 0 0 0.5em 0;
 }
 
-.itinerary-stop-point button{
+.itinerary-stop-point button {
     align-self: center;
     box-shadow: 0 0 2px 0 var(--theme-color);
     color: var(--theme-color);
 }
 
-.itinerary-stop-point button:focus, .itinerary-stop-point button:hover{
+.itinerary-stop-point button:focus, .itinerary-stop-point button:hover {
     border-color: var(--theme-color);
     color: var(--color-2);
 }
@@ -193,28 +201,28 @@ input {
     flex-direction: column;
 }
 
-.point-info{
+.point-info {
     flex-grow: 1;
     padding: 0 0.5em;
 }
 
-.point-geolocation{
+.point-geolocation {
     align-items: center;
     display: flex;
     font-size: 90%;
     justify-content: space-between;
 }
 
-.point-geolocation > dt{
+.point-geolocation > dt {
     font-weight: bolder;
     width: 30px;
 }
 
-.point-geolocation > dt::after{
-    content:':'
+.point-geolocation > dt::after {
+    content: ':'
 }
 
-.point-geolocation > dd{
+.point-geolocation > dd {
     flex-grow: 1;
     font-style: italic;
     margin: 0;
@@ -273,7 +281,7 @@ input {
     width: var(--loading-offset);
 }
 
-.loading-indicator svg{
+.loading-indicator svg {
     fill: currentColor;
     width: 100%;
 }

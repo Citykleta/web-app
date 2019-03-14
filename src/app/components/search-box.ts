@@ -44,11 +44,7 @@ const SearchBoxControllerPrototype = {
         try {
             this.isBusy = true;
             this.suggestions = await this.suggester(query);
-            if (this.suggestions.length) {
-                this.selectSuggestion(this.suggestions[0]);
-            } else {
-                this.selectedSuggestion = null;
-            }
+            this.selectedSuggestion = null;
         } catch (e) {
             this.suggestions = [];
         } finally {
@@ -59,6 +55,8 @@ const SearchBoxControllerPrototype = {
     selectSuggestion(suggestion) {
         if (this.suggestions.includes(suggestion)) {
             this.selectedSuggestion = suggestion;
+        } else {
+            this.selectedSuggestion = null;
         }
     },
     selectPreviousSuggestion() {
@@ -66,6 +64,8 @@ const SearchBoxControllerPrototype = {
             const index = this.suggestions.indexOf(this.selectedSuggestion) - 1;
             const actualIndex = index >= 0 ? index : this.suggestions.length - 1;
             return this.selectSuggestion(this.suggestions[actualIndex]);
+        } else {
+            return this.selectSuggestion(this.suggestions[0]);
         }
     },
     selectNextSuggestion() {
@@ -73,11 +73,18 @@ const SearchBoxControllerPrototype = {
             const index = this.suggestions.indexOf(this.selectedSuggestion) + 1;
             const actualIndex = index >= this.suggestions.length ? 0 : index;
             return this.selectSuggestion(this.suggestions[actualIndex]);
+        } else {
+            return this.selectSuggestion(this.suggestions[0]);
         }
     }
 };
 
-export const searchBoxController = <T>(suggest: Suggest<T>, renderer): SearchBoxController<T> => {
+interface SuggestionsBoxInput<T> {
+    suggest: Suggest<T>;
+    onSelect: Function;
+}
+
+export const searchBoxController = <T>(input: SuggestionsBoxInput<T>, renderer): SearchBoxController<T> => {
     let isBusy = false;
     let suggestions = [];
     let selectedSuggestion = null;
@@ -90,7 +97,7 @@ export const searchBoxController = <T>(suggest: Suggest<T>, renderer): SearchBox
 
     return Object.create(SearchBoxControllerPrototype, {
         suggester: {
-            value: suggest
+            value: input.suggest
         },
         isBusy: {
             get() {
@@ -119,6 +126,7 @@ export const searchBoxController = <T>(suggest: Suggest<T>, renderer): SearchBox
             set(value: T) {
                 if (value !== selectedSuggestion) {
                     selectedSuggestion = value;
+                    input.onSelect(value);
                     render();
                 }
             }
@@ -134,7 +142,7 @@ const createOption = (val: UIPoint, idx: number) => {
     return item;
 };
 
-export const factory = (suggest: Suggest<UIPoint>): Component => {
+export const factory = (suggest: Suggest<UIPoint>, onSelect: Function): Component => {
     const container = document.createElement('div');
     container.classList.add('search-box');
     container.innerHTML = template;
@@ -170,7 +178,10 @@ export const factory = (suggest: Suggest<UIPoint>): Component => {
         input.setAttribute('aria-activedescendant', index >= 0 ? suggestionsElements[index].getAttribute('id') : '');
     };
 
-    const controller = searchBoxController<UIPoint>(suggest, renderer);
+    const controller = searchBoxController<UIPoint>({
+        suggest,
+        onSelect
+    }, renderer);
 
     input.addEventListener('keydown', ev => {
         const {key} = ev;
@@ -183,6 +194,10 @@ export const factory = (suggest: Suggest<UIPoint>): Component => {
                 } else {
                     controller.selectNextSuggestion();
                 }
+                break;
+            }
+            case 'Escape': {
+                controller.selectSuggestion(null);
                 break;
             }
             case 'Enter': {

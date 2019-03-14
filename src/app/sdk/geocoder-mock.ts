@@ -10,12 +10,48 @@ const wait = (time = 300) => new Promise(resolve => {
 export const factory = (): Geocoder => {
     return {
         async search(query = '') {
-            await wait();
-            return [];
+            await wait(500);
+            return query ? [{
+                name: 'Don Cangrejo',
+                lat: 23.1270455,
+                lng: -82.4224199,
+                address: {
+                    number: '',
+                    street: '1ra Avenida',
+                    municipality: 'Miramar'
+                }
+            }, {
+                name: 'DiMar',
+                lat: 23.142668,
+                lng: -82.4000326,
+                address: {
+                    number: '',
+                    street: 'Calle C',
+                    municipality: 'El Vedado'
+                }
+            }] : [];
         },
         async reverse(coordinates: GeoCoord) {
             await wait();
-            return [];
+            return [{
+                name: 'Don Cangrejo',
+                lat: 23.1270455,
+                lng: -82.4224199,
+                address: {
+                    number: '',
+                    street: '1ra Avenida',
+                    municipality: 'Miramar'
+                }
+            }, {
+                name: 'DiMar',
+                lat: 23.142668,
+                lng: -82.4000326,
+                address: {
+                    number: '',
+                    street: 'Calle C',
+                    municipality: 'El Vedado'
+                }
+            }];
         }
     };
 };

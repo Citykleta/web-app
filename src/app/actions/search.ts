@@ -40,3 +40,12 @@ export const fetchSuggestionsFromAPI = (query: string) => async (dispatch, getSt
         return dispatch(fetchSuggestionsWithFailure(e));
     }
 };
+
+export interface SelectSuggestionAction extends Action<ActionType.SELECT_SUGGESTION> {
+    suggestion: GeoLocation;
+}
+
+export const selectSuggestion = (suggestion: GeoLocation): SelectSuggestionAction => ({
+    type: ActionType.SELECT_SUGGESTION,
+    suggestion
+});

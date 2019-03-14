@@ -1,5 +1,17 @@
 export const truncate = (value: number): number => Math.trunc(value * 10 ** 6) / 10 ** 6;
 
+export const isSameLocation = (a: GeoCoord, b: GeoCoord): boolean => {
+    if (a === b) {
+        return true;
+    }
+
+    if (a === null || b === null) {
+        return false;
+    }
+
+    return truncate(a.lng) === truncate(b.lng) && truncate(a.lat) === truncate(b.lat);
+};
+
 export const debounce = (fn, time = 300) => {
     let timer = null;
     return (...args) => {
@@ -16,7 +28,7 @@ export interface GeoCoord {
 }
 
 export interface Address {
-    number?: number;
+    number?: string;
     street?: string;
     municipality: string;
 }
