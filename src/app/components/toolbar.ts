@@ -2,7 +2,7 @@ import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
 import {Component} from './types';
 
-const template = `<ul>
+const template = () => `<ul>
 <li class="hidden tool-item">
     <button>Cancel</button>
 </li>
@@ -22,7 +22,7 @@ export const factory = (registry: ServiceRegistry): Component => {
     const {navigation, store} = registry;
     const domElement = document.createElement('DIV');
     domElement.classList.add('tools-bar');
-    domElement.innerHTML = template;
+    domElement.innerHTML = template();
 
     let state = store.getState().tool;
 

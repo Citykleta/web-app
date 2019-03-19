@@ -7,6 +7,7 @@ import {
     fetchSuggestionsWithSuccess, selectSuggestion
 } from '../actions/search';
 import {GeoLocation} from '../util';
+import {ServiceRegistry} from './service-registry';
 
 export interface SearchService {
     search(query: string): Promise<any>;
@@ -23,5 +24,13 @@ export const provider = (store: Store<ApplicationState>): SearchService => {
         selectSuggestion(p: GeoLocation) {
             return store.dispatch(selectSuggestion(p));
         }
+    };
+};
+
+export const suggester = (registry: ServiceRegistry) => {
+    const {search, store} = registry;
+    return async (q: string) => {
+        await search.search(q);
+        return store.getState().search.suggestions;
     };
 };

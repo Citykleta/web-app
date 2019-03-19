@@ -4,9 +4,9 @@ import {factory as searchBox} from './search-box';
 import {isSameLocation, UIPoint} from '../util';
 import {selectSuggestion} from '../actions/search';
 import {template as locationItem} from './location-item';
-import {runInNewContext} from 'vm';
+import {SearchService, suggester} from '../services/search';
 
-const template = `<h2>Search location</h2>
+const template = () => `<h2>Search location</h2>
 <div class="tool-content">
 <div id="upper-control">
 <p class="info">Click on the map to get info about a location or use the search box to find matching locations.</p>
@@ -20,22 +20,18 @@ export const factory = (registry: ServiceRegistry): Component => {
     const {search, store} = registry;
     const domElement = document.createElement('DIV');
     const range = document.createRange();
-    domElement.innerHTML = template;
+    domElement.innerHTML = template();
     range.selectNodeContents(domElement);
     const locationDetails = domElement.querySelector('#lower-control');
     const upperControl = domElement.querySelector('#upper-control');
 
-    const suggest = async (q: string) => {
-        await search.search(q);
-        return store.getState().search.suggestions;
-    };
+    const suggest = suggester(registry);
 
-    const sb = searchBox(
-        suggest,
-        (p: UIPoint) => {
+    const sb = searchBox({
+        suggest, onSelect: (p: UIPoint) => {
             search.selectSuggestion(p);
         }
-    );
+    });
 
     upperControl.appendChild(sb.dom());
 

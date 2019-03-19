@@ -30,6 +30,7 @@ export default (a: Assert) => {
         const sdkMock = directionsAPIStub();
         const newPoint = {lng: 1234, lat: 4321, id: 1};
         const store = testStore(setState({
+            focus:null,
             routes: [],
             stops: [newPoint]
         }), {
@@ -129,6 +130,7 @@ export default (a: Assert) => {
     test('remove point no side effects as there is only one point left', async t => {
         const sdkMock = directionsAPIStub();
         const store = testStore(setState({
+            focus:null,
             routes: [],
             stops: [{lng: 1234, lat: 4321, id: 1}]
         }), {

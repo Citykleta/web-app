@@ -2,7 +2,6 @@ import {Assert} from 'zora';
 import {provider} from '../../../src/app/services/navigation';
 import {ToolType} from '../../../src/app/tools/interfaces';
 import {ApplicationState, store as storeProvider} from '../../../src/app/services/store';
-import {Theme} from '../../../src/app/reducers/settings';
 import {ToolBoxState} from '../../../src/app/reducers/tool-box';
 import {defaultState} from '../utils';
 

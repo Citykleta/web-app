@@ -69,15 +69,16 @@ export const defaultState = (): ApplicationState => ({
         selectedTool: null
     },
     itinerary: {
+        focus: null,
         routes: [],
         stops: []
     },
-    settings:{
-        theme:Theme.LIGHT
+    settings: {
+        theme: Theme.LIGHT
     },
-    search:{
-        selectedSuggestion:null,
-        suggestions:[]
+    search: {
+        selectedSuggestion: null,
+        suggestions: []
     }
 });
 

@@ -1,12 +1,12 @@
 import {ServiceRegistry} from '../services/service-registry';
 import {Component} from './types';
 import {factory as stopPointFactory} from './itinerary-stop-point';
+import {isSameLocation} from '../util';
 
 const template = () => `
 <h2>Itinerary</h2>
 <div class="tool-content">
 <div id="upper-control">
-<p class="info">Click on the map to add way points</p>
 <ol class="itinerary-stop-point-container"></ol>
 </div>
 </div>
@@ -20,19 +20,37 @@ export const factory = (registry: ServiceRegistry): Component => {
     range.selectNodeContents(domElement);
     const stopListElements = domElement.querySelector('.itinerary-stop-point-container');
 
-    const itineraryStopChangedHandler = () => {
-        // todo update only when required
-        const {stops} = store.getState().itinerary;
-        const r = document.createRange();
-        range.selectNodeContents(stopListElements);
-        range.deleteContents();
+    let stops = [];
 
-        for (const stop of stops) {
-            stopListElements.appendChild(stopPointFactory(registry, stop).dom());
+    const itineraryStopChangedHandler = () => {
+        const {stops: newStops, focus} = store.getState().itinerary;
+        const [from, ...through] = newStops;
+        const to = through.pop();
+        if ((stops.length !== newStops.length) || newStops.some((item, idx) => {
+            // @ts-ignore todo
+            return !isSameLocation(item, stops[idx]);
+        })) {
+            const range = document.createRange();
+            range.selectNodeContents(stopListElements);
+            range.deleteContents();
+
+            stopListElements.appendChild(stopPointFactory(registry, from).dom());
+
+            for (const stop of through) {
+                stopListElements.appendChild(stopPointFactory(registry, stop).dom());
+            }
+
+            stopListElements.appendChild(stopPointFactory(registry, to).dom());
         }
+
+        stops = newStops;
     };
 
     const unsubscribe = store.subscribe(itineraryStopChangedHandler);
+
+    itineraryStopChangedHandler();
+
+    // (<HTMLInputElement>document.querySelector('.itinerary-stop-point')).focus();
 
     return {
         clean() {

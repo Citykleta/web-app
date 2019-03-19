@@ -59,5 +59,7 @@
     "typescript": "^3.3.3333",
     "zora": "^3.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "redux-subscriber": "^1.1.0"
+  }
 }

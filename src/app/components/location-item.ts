@@ -1,8 +1,4 @@
-import {UIPoint} from '../util';
-
-const concatParts = (parts: string[], separator = ', '): string => parts
-    .filter(s => s !== '' || s === void 0)
-    .join(separator);
+import {UIPoint, concatParts} from '../util';
 
 export const template = (p: UIPoint) => {
     const {

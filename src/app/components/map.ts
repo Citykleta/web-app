@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import polyline from '@mapbox/polyline';
 import mapBoxConf from '../../conf/mapbox';
 import {ItineraryState} from '../reducers/itinerary';
+import {GeoCoord, isGeoCoord, UIPoint} from '../util';
 
 const EMPTY_SOURCE = Object.freeze({
     type: 'geojson',
@@ -30,7 +31,11 @@ export const factory = (registry: ServiceRegistry) => {
 
     const unsubscribe = store.subscribe(() => {
         // todo better update logic (no need to redraw everytime)
-        const {stops, routes} = store.getState().itinerary;
+        const state = store.getState().itinerary;
+        const {routes} = state;
+        const stops = <UIPoint[]>state.stops
+            .filter(isGeoCoord);
+
         const features = [];
         for (const p of stops) {
             features.push({
@@ -49,13 +54,6 @@ export const factory = (registry: ServiceRegistry) => {
 
         map.getSource('directions-stops').setData(geojson);
 
-        // const newData = {
-        //     type: 'FeatureCollection',
-        //     features: [{
-        //         type: 'Feature',
-        //         geometry:polyline.toGeoJSON('y_dlC|q_vNf@t@oDbDaNbLwB}CrDaD',5)
-        //     }]
-        // };
         const newData = routes.length > 0 ? {
             type: 'FeatureCollection',
             features: [{

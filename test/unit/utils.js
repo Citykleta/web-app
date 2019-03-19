@@ -46,6 +46,7 @@ export const defaultState = () => ({
         selectedTool: null
     },
     itinerary: {
+        focus: null,
         routes: [],
         stops: []
     },

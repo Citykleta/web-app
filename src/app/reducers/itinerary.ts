@@ -1,19 +1,26 @@
 import {Reducer} from 'redux';
 import {ActionType} from '../actions/types';
 import {
-    AddItineraryPointAction,
-    ChangeItineraryPointLocationAction, FetchRoutesSuccessAction, InsertionPosition,
-    RemoveItineraryPointAction
+    AddItineraryPointAction, UpdateItineraryPointAction, FetchRoutesSuccessAction,
+    RemoveItineraryPointAction, InsertionPosition
 } from '../actions/itinerary';
-import {Route, truncate, UIPoint} from '../util';
+import {Route, StatePoint, truncate, UIPoint} from '../util';
+
+export type UIPointOrPlaceholder = UIPoint | StatePoint;
 
 export interface ItineraryState {
-    stops: UIPoint[];
+    focus: number;
+    stops: UIPointOrPlaceholder[];
     routes: Route[];
 }
 
 const defaultState: ItineraryState = {
-    stops: [],
+    focus: null,
+    stops: [{
+        id: 0
+    }, {
+        id: 1
+    }],
     routes: []
 };
 
@@ -21,8 +28,13 @@ const matchId = id => item => item.id === id;
 
 export const reducer: Reducer<ItineraryState> = (previousState = defaultState, action) => {
     switch (action.type) {
+        case ActionType.FOCUS_ITINERARY_POINT: {
+            return Object.assign(previousState, {
+                focus: action.id
+            });
+        }
         case ActionType.RESET_ROUTES: {
-            return {stops: [], routes: []};
+            return Object.assign({}, defaultState);
         }
         case ActionType.FETCH_ROUTES_SUCCESS: {
             const {routes} = <FetchRoutesSuccessAction>action;
@@ -30,8 +42,8 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
                 routes
             });
         }
-        case ActionType.CHANGE_ITINERARY_POINT_LOCATION: {
-            const {id, location} = <ChangeItineraryPointLocationAction>action;
+        case ActionType.UPDATE_ITINERARY_POINT: {
+            const {id, location} = <UpdateItineraryPointAction>action;
             return Object.assign({}, previousState, {
                 stops: previousState.stops.map(p => p.id !== id ? p : Object.assign({}, p, location))
             });

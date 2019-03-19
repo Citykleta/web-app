@@ -1,9 +1,9 @@
 import { ActionType } from '../../../src/app/actions/types';
-import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPointLocation, changeItineraryPointLocationWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes } from '../../../src/app/actions/itinerary';
+import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPoint, changeItineraryPointWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes } from '../../../src/app/actions/itinerary';
 import { directionsAPIStub, testStore } from '../utils';
 import { Theme } from '../../../src/app/reducers/settings';
 const setState = (state) => ({
-    itinerary: state,
+    itinerary: Object.assign({ focus: null }, state),
     settings: {
         theme: Theme.LIGHT
     },
@@ -50,16 +50,16 @@ export default (a) => {
         };
         t.eq(removeItineraryPoint(66), expected);
     });
-    test('create a CHANGE_ITINERARY_POINT_LOCATION action', t => {
+    test('create a UPDATE_ITINERARY_POINT action', t => {
         const expected = {
-            type: ActionType.CHANGE_ITINERARY_POINT_LOCATION,
+            type: ActionType.UPDATE_ITINERARY_POINT,
             id: 42,
             location: {
                 lng: -82.396679,
                 lat: 23.115898
             }
         };
-        t.eq(changeItineraryPointLocation(42, {
+        t.eq(changeItineraryPoint(42, {
             lng: -82.396679,
             lat: 23.115898
         }), expected);
@@ -387,9 +387,9 @@ export default (a) => {
             directions: sdkMock
         });
         // @ts-ignore
-        await store.dispatch(changeItineraryPointLocation(1, { lng: 666, lat: 666 }));
+        await store.dispatch(changeItineraryPoint(1, { lng: 666, lat: 666 }));
         t.eq(store.getActions(), [{
-                type: ActionType.CHANGE_ITINERARY_POINT_LOCATION,
+                type: ActionType.UPDATE_ITINERARY_POINT,
                 id: 1,
                 location: { lng: 666, lat: 666 }
             }], 'should only dispatched the ADD_ITINERARY_ACTION');
@@ -411,9 +411,9 @@ export default (a) => {
             directions: sdkMock
         });
         //@ts-ignore
-        await store.dispatch(changeItineraryPointLocationWithSideEffects(1, { lng: 666, lat: 666 }));
+        await store.dispatch(changeItineraryPointWithSideEffects(1, { lng: 666, lat: 666 }));
         t.eq(store.getActions(), [{
-                type: ActionType.CHANGE_ITINERARY_POINT_LOCATION,
+                type: ActionType.UPDATE_ITINERARY_POINT,
                 id: 1,
                 location: {
                     lng: 666,

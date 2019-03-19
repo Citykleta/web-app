@@ -6,13 +6,13 @@ import {ToolType} from '../tools/interfaces';
 import {Component} from './types';
 import {ToolBoxState} from '../reducers/tool-box';
 
-const template = `<div class="tool-container"></div>`;
+const template = () => `<div class="tool-container"></div>`;
 const hiddenClassName = 'hidden';
 
 export const factory = (registry: ServiceRegistry): Component => {
     const {store} = registry;
     const domElement = document.createElement('DIV');
-    domElement.innerHTML = template;
+    domElement.innerHTML = template();
     domElement.classList.add(hiddenClassName);
     domElement.setAttribute('id', 'toolbox-container');
 

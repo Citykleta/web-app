@@ -29,6 +29,15 @@ export const factory = (): Geocoder => {
                     street: 'Calle C',
                     municipality: 'El Vedado'
                 }
+            },{
+                name: 'Vista Hermosa',
+                lat: 23.0951823,
+                lng: -82.3153047,
+                address: {
+                    number: '',
+                    street: '',
+                    municipality: 'Vista Hermosa'
+                }
             }] : [];
         },
         async reverse(coordinates: GeoCoord) {

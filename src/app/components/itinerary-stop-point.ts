@@ -1,20 +1,30 @@
 import {ServiceRegistry} from '../services/service-registry';
 import {Component} from './types';
-import {UIPoint} from '../util';
-import {template as locationItem} from './location-item';
+import {StatePoint, UIPoint} from '../util';
+import {template as searchBoxTemplate} from './search-box';
 
-const draggableLocationPoint = (p: UIPoint) => `<span class="drag-handle" draggable="true">|</span>
-${locationItem(p)}
+const draggableLocationPoint = (p: UIPoint | StatePoint) => `<span class="drag-handle" draggable="true">|</span>
+<label>
+<!--<span></span>-->
+${searchBoxTemplate(p)}
+</label>
 <button>X</button>`;
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
-export const factory = (registry: ServiceRegistry, p: UIPoint): Component => {
+export const factory = (registry: ServiceRegistry, p: UIPoint | StatePoint, props = {classList: []}): Component => {
     const el = document.createElement('LI');
-    const {itinerary} = registry;
+    el.id = `itinerary-stop-point-${p.id}`;
+    const {itinerary, store} = registry;
+    const classList = ['itinerary-stop-point', ...props.classList];
     let boundingBox;
-    el.classList.add('itinerary-stop-point');
+    for (const cl of classList) {
+        el.classList.add(cl);
+    }
+
     el.innerHTML = draggableLocationPoint(p);
+
+    const input = el.querySelector('input');
 
     el.querySelector('button').addEventListener('click', ev => {
         itinerary.removePoint(p);
@@ -54,9 +64,16 @@ export const factory = (registry: ServiceRegistry, p: UIPoint): Component => {
         }
     });
 
+    input.addEventListener('focus', ev => {
+        itinerary.setFocus(p.id);
+    });
+
+    input.addEventListener('blur', ev => {
+        // itinerary.setFocus(null);
+    });
+
     return {
         clean() {
-
         },
         dom() {
             return el;

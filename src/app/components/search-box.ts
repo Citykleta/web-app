@@ -1,5 +1,5 @@
 import {Component} from './types';
-import {debounce, UIPoint} from '../util';
+import {debounce, GeoLocation, StatePoint, stringify, UIPoint} from '../util';
 
 //todo
 const loadingIndicator = `<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
@@ -12,22 +12,24 @@ const loadingIndicator = `<svg version="1.1" id="loader-1" xmlns="http://www.w3.
     </path>
   </svg>`;
 
-const template = `<div aria-owns="place-suggestions-box" role="combobox" aria-expanded="false" aria-haspopup="listbox">
+export const template = (p?: GeoLocation | StatePoint) => `<div aria-owns="place-suggestions-box" role="combobox" aria-expanded="false" aria-haspopup="listbox">
 <div class="loading-indicator hidden" aria-hidden="true">
 ${loadingIndicator}
 </div>
-<input aria-controls="place-suggestions-box" type="search">
+<input aria-controls="place-suggestions-box" value="${p ? stringify(p) : ''}" placeholder="ex: teatro karl Marx">
+<button><span class="visually-hidden">Select My Location</span>O</button>
 </div>
 <ul role="listbox" id="place-suggestions-box"></ul>`;
 
 interface Suggest<T> {
-    (query: string): Promise<T[]>;
+    (query: string): Promise<T[]    >;
 }
 
 interface SearchBoxController<T> {
     suggestions: T[];
     selectedSuggestion: T;
-    busy: boolean;
+    value: T;
+    isBusy: boolean;
     readonly suggester: Suggest<T>;
 
     suggest(query: string): Promise<T[]>;
@@ -40,7 +42,7 @@ interface SearchBoxController<T> {
 }
 
 const SearchBoxControllerPrototype = {
-    async suggest(query: string) {
+    async suggest<T>(this: SearchBoxController<T>, query: string) {
         try {
             this.isBusy = true;
             this.suggestions = await this.suggester(query);
@@ -52,14 +54,14 @@ const SearchBoxControllerPrototype = {
         }
         return this.suggestions;
     },
-    selectSuggestion(suggestion) {
+    selectSuggestion<T>(this: SearchBoxController<T>, suggestion: T) {
         if (this.suggestions.includes(suggestion)) {
             this.selectedSuggestion = suggestion;
         } else {
             this.selectedSuggestion = null;
         }
     },
-    selectPreviousSuggestion() {
+    selectPreviousSuggestion<T>(this: SearchBoxController<T>) {
         if (this.selectedSuggestion) {
             const index = this.suggestions.indexOf(this.selectedSuggestion) - 1;
             const actualIndex = index >= 0 ? index : this.suggestions.length - 1;
@@ -68,7 +70,7 @@ const SearchBoxControllerPrototype = {
             return this.selectSuggestion(this.suggestions[0]);
         }
     },
-    selectNextSuggestion() {
+    selectNextSuggestion<T>(this: SearchBoxController<T>) {
         if (this.selectedSuggestion) {
             const index = this.suggestions.indexOf(this.selectedSuggestion) + 1;
             const actualIndex = index >= this.suggestions.length ? 0 : index;
@@ -84,15 +86,20 @@ interface SuggestionsBoxInput<T> {
     onSelect: Function;
 }
 
-export const searchBoxController = <T>(input: SuggestionsBoxInput<T>, renderer): SearchBoxController<T> => {
+export interface SearchBoxComponent extends SearchBoxController<UIPoint>, Component {
+}
+
+export const searchBoxController = (input: SuggestionsBoxInput<UIPoint>, renderer): SearchBoxComponent => {
     let isBusy = false;
     let suggestions = [];
     let selectedSuggestion = null;
+    let value = null;
 
     const render = () => renderer({
         isBusy,
         suggestions,
-        selectedSuggestion
+        selectedSuggestion,
+        value
     });
 
     return Object.create(SearchBoxControllerPrototype, {
@@ -114,7 +121,7 @@ export const searchBoxController = <T>(input: SuggestionsBoxInput<T>, renderer):
             get() {
                 return suggestions;
             },
-            set(value: T[]) {
+            set(value: UIPoint[]) {
                 suggestions = value;
                 render();
             }
@@ -123,10 +130,21 @@ export const searchBoxController = <T>(input: SuggestionsBoxInput<T>, renderer):
             get() {
                 return selectedSuggestion;
             },
-            set(value: T) {
+            set(value: UIPoint) {
                 if (value !== selectedSuggestion) {
                     selectedSuggestion = value;
                     input.onSelect(value);
+                    render();
+                }
+            }
+        },
+        value: {
+            get() {
+                return value;
+            },
+            set(p: UIPoint) {
+                if (value !== p) {
+                    value = p;
                     render();
                 }
             }
@@ -142,10 +160,16 @@ const createOption = (val: UIPoint, idx: number) => {
     return item;
 };
 
-export const factory = (suggest: Suggest<UIPoint>, onSelect: Function): Component => {
+export interface SearchBoxComponentInput {
+    suggest: Suggest<UIPoint>;
+    onSelect: Function;
+    value?: UIPoint;
+}
+
+export const factory = ({suggest, value: initialValue = null, onSelect}: SearchBoxComponentInput): SearchBoxComponent => {
     const container = document.createElement('div');
     container.classList.add('search-box');
-    container.innerHTML = template;
+    container.innerHTML = template();
 
     const comboBox = container.querySelector('[role=combobox]');
     const input = container.querySelector('input');
@@ -154,8 +178,9 @@ export const factory = (suggest: Suggest<UIPoint>, onSelect: Function): Componen
 
     let suggestionsElements = [];
     let suggestions = [];
+    let currentValue = initialValue;
 
-    const renderer = ({suggestions: newSuggestions, isBusy, selectedSuggestion}) => {
+    const renderer = ({suggestions: newSuggestions, isBusy, value, selectedSuggestion}) => {
         loadingIndicator.classList.toggle('hidden', isBusy === false);
         if (suggestions.length !== newSuggestions.length || newSuggestions.some((s, i) => s !== suggestions[i])) {
             const range = document.createRange();
@@ -176,12 +201,24 @@ export const factory = (suggest: Suggest<UIPoint>, onSelect: Function): Componen
         });
 
         input.setAttribute('aria-activedescendant', index >= 0 ? suggestionsElements[index].getAttribute('id') : '');
+
+        if (currentValue !== value) {
+            currentValue = value;
+            input.value = stringify(value);
+        }
     };
 
-    const controller = searchBoxController<UIPoint>({
+    const instance = Object.assign(searchBoxController({
         suggest,
         onSelect
-    }, renderer);
+    }, renderer), {
+        dom() {
+            return container;
+        },
+        clean() {
+
+        }
+    });
 
     input.addEventListener('keydown', ev => {
         const {key} = ev;
@@ -190,19 +227,19 @@ export const factory = (suggest: Suggest<UIPoint>, onSelect: Function): Componen
             case 'ArrowUp': {
                 ev.preventDefault();
                 if (key === 'ArrowDown') {
-                    controller.selectPreviousSuggestion();
+                    instance.selectNextSuggestion();
                 } else {
-                    controller.selectNextSuggestion();
+                    instance.selectPreviousSuggestion();
                 }
                 break;
             }
             case 'Escape': {
-                controller.selectSuggestion(null);
+                instance.selectSuggestion(null);
                 break;
             }
             case 'Enter': {
-                input.value = controller.selectedSuggestion.name;
-                controller.suggestions = [];
+                instance.value = instance.selectedSuggestion;
+                instance.suggestions = [];
             }
         }
     });
@@ -210,16 +247,10 @@ export const factory = (suggest: Suggest<UIPoint>, onSelect: Function): Componen
     const handleInput = debounce(ev => {
         const {target} = ev;
         const {value} = target;
-        return controller.suggest(value);
+        return instance.suggest(value);
     });
 
     input.addEventListener('input', handleInput);
 
-    return {
-        clean() {
-        },
-        dom() {
-            return container;
-        }
-    };
+    return instance;
 };

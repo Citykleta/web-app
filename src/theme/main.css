@@ -174,15 +174,19 @@ input {
     display: flex;
     align-items: stretch;
     margin: 0;
-    padding: 0.5em;
+    padding: 0.25em;
 }
 
-.itinerary-stop-point h3 {
-    margin: 0 0 0.5em 0;
+.itinerary-stop-point > * {
+    padding: 0.25em;
+}
+
+.itinerary-stop-point > label {
+    flex-grow: 1;
+    margin: 0;
 }
 
 .itinerary-stop-point button {
-    align-self: center;
     box-shadow: 0 0 2px 0 var(--theme-color);
     color: var(--theme-color);
 }
@@ -196,9 +200,14 @@ input {
     border-bottom: 1px solid var(--background-2);
 }
 
-.itinerary-stop-point > div {
+.actions-list {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+}
+
+.actions-list > button {
+    margin: 0.25em 0;
 }
 
 .point-info {
@@ -253,6 +262,7 @@ input {
 
 [role=combobox] {
     --loading-offset: 2rem;
+    display: flex;
     position: relative;
 }
 
@@ -316,4 +326,15 @@ input {
 .info {
     color: var(--color-1);
     font-size: 0.9em;
+}
+
+.visually-hidden {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
 }

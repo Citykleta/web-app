@@ -2,7 +2,16 @@ import {ActionType} from './types';
 import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {API, ApplicationState} from '../services/store';
-import {Route, GeoCoord} from '../util';
+import {GeoCoord, isGeoCoord, Route} from '../util';
+
+export interface SetItineraryPointFocusAction extends Action<ActionType.FOCUS_ITINERARY_POINT> {
+    id: number
+}
+
+export const setItineraryPointFocus = (id: number): SetItineraryPointFocusAction => ({
+    type: ActionType.FOCUS_ITINERARY_POINT,
+    id
+});
 
 export interface AddItineraryPointAction extends Action<ActionType.ADD_ITINERARY_POINT> {
     point: GeoCoord,
@@ -24,13 +33,14 @@ export const removeItineraryPoint = (id: number): RemoveItineraryPointAction => 
     id
 });
 
-export interface ChangeItineraryPointLocationAction extends Action<ActionType.CHANGE_ITINERARY_POINT_LOCATION> {
+// todo update with meta data too
+export interface UpdateItineraryPointAction extends Action<ActionType.UPDATE_ITINERARY_POINT> {
     id: number,
     location: GeoCoord
 }
 
-export const changeItineraryPointLocation = (id: number, location: GeoCoord): ChangeItineraryPointLocationAction => ({
-    type: ActionType.CHANGE_ITINERARY_POINT_LOCATION,
+export const changeItineraryPoint = (id: number, location: GeoCoord): UpdateItineraryPointAction => ({
+    type: ActionType.UPDATE_ITINERARY_POINT,
     id,
     location
 });
@@ -74,13 +84,17 @@ export const resetRoutes = (): ResetRoutesAction => ({
 type ItineraryStopsAction =
     AddItineraryPointAction |
     RemoveItineraryPointAction |
-    ChangeItineraryPointLocationAction;
+    UpdateItineraryPointAction;
 
 // thunks to handle side effects of stop points change
 const eventuallyUpdateRoutes = <K extends ItineraryStopsAction>(actionCreator: ActionCreator<K>) =>
     (...args): ThunkAction<any, ApplicationState, API, K> => async (dispatch, getState) => {
         dispatch(actionCreator(...args));
-        if (getState().itinerary.stops.length >= 2) {
+        const stops = getState()
+            .itinerary
+            .stops
+            .filter(isGeoCoord);
+        if (stops.length >= 2) {
             return dispatch(fetchRoutesFromAPI());
         }
     };
@@ -94,7 +108,8 @@ export const fetchRoutesFromAPI = () => async (dispatch, getState, API: API) => 
     const {directions} = API;
     dispatch(fetchRoutes());
     try {
-        const res = await directions.search(getState().itinerary.stops);
+        const {stops} = getState().itinerary;
+        const res = await directions.search(stops.filter(isGeoCoord));
         return dispatch(fetchRoutesWithSuccess(res));
     } catch (e) {
         return dispatch(fetchRoutesWithFailure(e));
@@ -116,7 +131,7 @@ export const moveItineraryPoint = (sourceId: number, targetId: number, position:
 
 export const addItineraryPointWithSideEffects = eventuallyUpdateRoutes<AddItineraryPointAction>(addItineraryPoint);
 export const removeItineraryPointWithSideEffects = eventuallyUpdateRoutes<RemoveItineraryPointAction>(removeItineraryPoint);
-export const changeItineraryPointLocationWithSideEffects = eventuallyUpdateRoutes<ChangeItineraryPointLocationAction>(changeItineraryPointLocation);
+export const changeItineraryPointWithSideEffects = eventuallyUpdateRoutes<UpdateItineraryPointAction>(changeItineraryPoint);
 
 //todo test
 export const moveItineraryPointWithSideEffects = eventuallyUpdateRoutes<any>(moveItineraryPoint);
