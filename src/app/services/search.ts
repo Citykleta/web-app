@@ -1,7 +1,6 @@
 import {ApplicationState, EnhancedDispatch} from './store';
 import {Store} from 'redux';
 import {
-    fetchSuggestions,
     FetchSuggestionsAction,
     fetchSuggestionsFromAPI,
     fetchSuggestionsWithSuccess, selectSuggestion

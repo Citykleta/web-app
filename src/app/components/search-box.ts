@@ -63,7 +63,7 @@ const SearchBoxControllerPrototype = {
     },
     selectPreviousSuggestion<T>(this: SearchBoxController<T>) {
         if (this.selectedSuggestion) {
-            const index = this.suggestions.indexOf(this.selectedSuggestion) - 1;
+             const index = this.suggestions.indexOf(this.selectedSuggestion) - 1;
             const actualIndex = index >= 0 ? index : this.suggestions.length - 1;
             return this.selectSuggestion(this.suggestions[actualIndex]);
         } else {

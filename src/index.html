@@ -5,11 +5,26 @@
     <title>Citykleta app dev mode</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
     <meta name="viewport" content="initial-scale=1,width=device-width,user-scalable=0"/>
-    <script async type="module" src="app-module.js"></script>
+    <link href="mapbox-gl.css" rel="stylesheet"/>
+    <link href="search-panel.css" rel="preload" as="style"/>
+    <link href="navigation-bar.css" rel="preload" as="style"/>
+    <link href="location-details.css" rel="preload" as="style"/>
+    <link href="search-box.css" rel="preload" as="style"/>
+    <link href="app.css" rel="preload" as="style"/>
     <link href="theme.css" rel="stylesheet"/>
+    <script async type="module" src="app-module.js"></script>
 </head>
+<style>
+    body{
+        background: #81bde6;
+        box-sizing: border-box;
+        height: 100vh;
+        margin: 0;
+        width: 100%;
+    }
+</style>
 <body>
-<div id="map-container">
-</div>
+<!--<div id="map-container">-->
+<!--</div>-->
 </body>
 </html>

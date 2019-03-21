@@ -1,0 +1,118 @@
+:host {
+    --background-color:inherit;
+    --border-color:var(--color-theme-1);
+    --color:inherit;
+    --suggestion-bg-color:inherit;
+    --suggestion-color:inherit;
+    --suggestion-border-color:var(--gray-theme-3);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+[role=combobox] {
+    display: flex;
+}
+
+#loading-indicator {
+    align-items: center;
+    background: var(--background-color);
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    padding: 2px;
+    width: 2rem;
+}
+
+svg {
+    animation: 1s linear rotateSpinner;
+    animation-iteration-count: infinite;
+    background: inherit;
+    stroke: var(--color);
+}
+
+svg path{
+    fill:var(--color);
+}
+
+#loading-indicator.hidden > svg {
+    visibility: hidden;
+}
+
+input {
+    background: var(--background-color);
+    border: none;
+    border-bottom: 2px solid var(--border-color, currentColor);
+    box-shadow: none;
+    color: var(--color);
+    flex-grow: 1;
+    font-size: 0.9em;
+    font-weight: lighter;
+    outline: none;
+}
+
+/*input:focus{*/
+    /*--background-color: var(--color-theme-compl-2);*/
+    /*--color: var(--gray-theme-3);*/
+/*}*/
+
+svg {
+    fill: currentColor;
+    width: 100%;
+}
+
+ul:empty, ol:empty {
+    border-color: transparent;
+}
+
+ol {
+    /*border: 1px solid var(--background-2);*/
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /*position: absolute;*/
+    /*top: 100%;*/
+}
+
+li {
+    font-size: 0.95em;
+    padding: 0.5em 1em;
+    background: var(--suggestion-bg-color);
+    color: var(--suggestion-color);
+    transition: all 0.2s;
+}
+
+li[aria-selected=true] {
+    --suggestion-bg-color: var(--color-theme-3);
+    --suggestion-color: var(--background-theme);
+}
+
+li:not(:last-child) {
+    border-bottom: 1px solid var(--suggestion-border-color);
+}
+
+button {
+    /*todo get it from outside (inherit)*/
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    color:var(--border-color);
+
+    /* end todo */
+    align-self: center;
+    width: 2rem;
+    height:2rem;
+    padding: 2px;
+    margin-left: 1em;
+}
+
+@keyframes rotateSpinner {
+    from {
+        transform: rotateZ(0);
+    }
+
+    from {
+        transform: rotateZ(360deg);
+    }
+}
+

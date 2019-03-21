@@ -50,8 +50,6 @@ export const factory = (registry: ServiceRegistry): Component => {
 
     itineraryStopChangedHandler();
 
-    // (<HTMLInputElement>document.querySelector('.itinerary-stop-point')).focus();
-
     return {
         clean() {
             unsubscribe();

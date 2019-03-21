@@ -43,7 +43,7 @@ export const stringify = (p: GeoLocation | StatePoint): string => {
 
 export const debounce = (fn, time = 300) => {
     let timer = null;
-    return (...args) => {
+    return function (...args) {
         if (timer) {
             clearTimeout(timer);
         }

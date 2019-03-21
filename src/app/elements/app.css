@@ -1,0 +1,11 @@
+:host{
+    display: inline-block;
+    margin: 1em;
+    min-width: 350px;
+}
+
+.panel{
+    background: var(--background-theme, white);
+    border-right: 2px solid var(--gray-theme-2);
+    border-bottom: 2px solid var(--gray-theme-2);
+}
