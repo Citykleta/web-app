@@ -12,5 +12,8 @@
   "include": [
     "./src/app/",
     "./test"
+  ],
+  "exclude": [
+    "./src/app/components/"
   ]
 }

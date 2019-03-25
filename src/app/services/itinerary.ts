@@ -7,7 +7,11 @@ import {
     AddItineraryPointAction,
     RemoveItineraryPointAction,
     moveItineraryPointWithSideEffects,
-    InsertionPosition, changeItineraryPointWithSideEffects, UpdateItineraryPointAction, setItineraryPointFocus
+    InsertionPosition,
+    changeItineraryPointWithSideEffects,
+    UpdateItineraryPointAction,
+    setItineraryPointFocus,
+    addItineraryPoint
 } from '../actions/itinerary';
 import {GeoCoord, UIPoint, StatePoint, isGeoCoord, GeoLocation} from '../util';
 
@@ -19,7 +23,7 @@ export interface ItineraryService {
 
     moveAfter(p: UIPoint | StatePoint): Promise<any>;
 
-    addPoint(p: GeoCoord, before ?: UIPoint): Promise<any>;
+    addPoint(p: GeoLocation, before ?: UIPoint): Promise<any>;
 
     removePoint(p: UIPoint | StatePoint): Promise<any>;
 
@@ -38,7 +42,6 @@ export const provider = (store: Store<ApplicationState>): ItineraryService => {
         startMove(p: UIPoint | StatePoint) {
             const {stops} = store.getState().itinerary;
             movingPoint = <UIPoint>stops
-                .filter(isGeoCoord)
                 .find(i => i.id === p.id) || null;
         },
         async moveBefore(p: UIPoint | StatePoint) {

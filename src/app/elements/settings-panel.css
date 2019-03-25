@@ -1,0 +1,12 @@
+:host{
+    padding: 1em;
+}
+
+label{
+    display: flex;
+    justify-content: space-between;
+}
+
+label > span:first-child::after{
+    content: ':';
+}

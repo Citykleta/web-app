@@ -1,37 +1,38 @@
 :host {
     --background-color:inherit;
-    --border-color:var(--color-theme-1);
+    --border-color:var(--color-theme);
     --color:inherit;
     --suggestion-bg-color:inherit;
     --suggestion-color:inherit;
-    --suggestion-border-color:var(--gray-theme-3);
+    --suggestion-border-color:var(--background-theme-1);
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
+:host(.overlay) [role=listbox]{
+    background: inherit;
+    box-shadow: 2px 2px 5px 0 var(--background-theme-3);
+    position: absolute;
+    top: 100%;
+    z-index: 9;
+}
+
 [role=combobox] {
+    border-bottom: 2px solid var(--border-color, currentColor);
     display: flex;
 }
 
 #loading-indicator {
     align-items: center;
-    background: var(--background-color);
-    border-bottom: 2px solid var(--border-color);
     display: flex;
     padding: 2px;
     width: 2rem;
 }
 
-svg {
+#loading-indicator > svg {
     animation: 1s linear rotateSpinner;
     animation-iteration-count: infinite;
-    background: inherit;
-    stroke: var(--color);
-}
-
-svg path{
-    fill:var(--color);
 }
 
 #loading-indicator.hidden > svg {
@@ -39,9 +40,8 @@ svg path{
 }
 
 input {
-    background: var(--background-color);
+    background: inherit;
     border: none;
-    border-bottom: 2px solid var(--border-color, currentColor);
     box-shadow: none;
     color: var(--color);
     flex-grow: 1;
@@ -50,13 +50,11 @@ input {
     outline: none;
 }
 
-/*input:focus{*/
-    /*--background-color: var(--color-theme-compl-2);*/
-    /*--color: var(--gray-theme-3);*/
-/*}*/
-
 svg {
-    fill: currentColor;
+    background: transparent;
+    fill:var(--color);
+    height: 100%;
+    stroke: var(--color);
     width: 100%;
 }
 
@@ -65,13 +63,10 @@ ul:empty, ol:empty {
 }
 
 ol {
-    /*border: 1px solid var(--background-2);*/
     list-style: none;
     margin: 0;
     padding: 0;
     width: 100%;
-    /*position: absolute;*/
-    /*top: 100%;*/
 }
 
 li {
@@ -83,27 +78,31 @@ li {
 }
 
 li[aria-selected=true] {
-    --suggestion-bg-color: var(--color-theme-3);
-    --suggestion-color: var(--background-theme);
+    --suggestion-bg-color: var(--color-theme-1);
+    --suggestion-color: var(--font-color-theme-2);
 }
 
 li:not(:last-child) {
     border-bottom: 1px solid var(--suggestion-border-color);
 }
 
-button {
-    /*todo get it from outside (inherit)*/
-    background: var(--background-color);
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    color:var(--border-color);
+#my-location:focus, #my-location:hover{
+    --color:var(--font-color-theme-2);
+    background: var(--color-theme-compl);
+}
 
-    /* end todo */
+#my-location{
+    --color: var(--color-theme-compl);
     align-self: center;
-    width: 2rem;
-    height:2rem;
+    background: inherit;
+    border: 2px solid var(--color-theme-compl);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    margin: 0.3rem;
     padding: 2px;
-    margin-left: 1em;
+    transition: background 0.3s, color 0.3s;
+    width: 1.8rem;
 }
 
 @keyframes rotateSpinner {

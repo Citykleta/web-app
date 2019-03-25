@@ -7,7 +7,7 @@ import {SearchService} from '../services/search';
 export const template = ({selectedSuggestion, search}) => {
     return html`
 <link rel="stylesheet" href="search-panel.css">
-    <citykleta-search-box @selection-change="${ev => search.selectSuggestion(ev.detail.suggestion)}"></citykleta-search-box>
+    <citykleta-search-box .value="${selectedSuggestion}" @selection-change="${ev => search.selectSuggestion(ev.detail.suggestion)}"></citykleta-search-box>
     <citykleta-location .location="${selectedSuggestion}" class="${classMap({hidden: selectedSuggestion === null})}"></citykleta-location>
 `;
 };
@@ -15,7 +15,6 @@ export const template = ({selectedSuggestion, search}) => {
 export const propDef = {
     selectedSuggestion: {type: Object}
 };
-
 
 export class SearchPanel extends LitElement {
 

@@ -1,11 +1,18 @@
-:host{
+:host {
+    --background-color: var(--background-theme, white);
+    --border-color: var(--background-theme-3);
+    --color: var(--font-color-theme, black);
+    color: var(--color);
     display: inline-block;
     margin: 1em;
-    min-width: 350px;
+    min-width: 400px;
+
 }
 
-.panel{
-    background: var(--background-theme, white);
-    border-right: 2px solid var(--gray-theme-2);
-    border-bottom: 2px solid var(--gray-theme-2);
+.panel {
+    background: var(--background-color);
+    border-right: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
 }

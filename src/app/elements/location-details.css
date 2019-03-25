@@ -1,10 +1,12 @@
 :host {
     --background: var(--background-theme-1);
+    --color:var(--font-color-theme-1);
     background: var(--background);
+    box-shadow: 0 0 3px 0 var(--background-theme-2) inset;
 }
 
 dl {
-    color:var(--gray-theme-2);
+    color:var(--color);
     display: grid;
     font-size: 0.95em;
     grid: repeat(2, 1fr) / repeat(2, 1fr);
@@ -13,7 +15,7 @@ dl {
 }
 
 dd {
-    font-weight: lighter;
+    font-weight: 300;
     font-style: italic;
     text-align: right;
 }

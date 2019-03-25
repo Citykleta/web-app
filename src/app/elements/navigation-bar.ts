@@ -3,7 +3,6 @@ import {ServiceRegistry} from '../services/service-registry';
 import {ToolType} from '../tools/interfaces';
 import {NavigationService} from '../services/navigation';
 import {classMap} from 'lit-html/directives/class-map';
-import {ActionType} from '../actions/types';
 
 const navigationItem = (navigation: NavigationService, selectedTool) =>
     ({label, type}: { label: string, type: ToolType }) =>
@@ -30,7 +29,7 @@ export class NavigationBar extends LitElement {
 
     static get properties() {
         return {
-            selectedTool: {type: String}
+            selectedTool: {type: String, attribute:'selected-tool', reflect:true}
         };
     }
 

@@ -1,27 +1,28 @@
 :root {
     --background-theme: #fff;
-    --background-theme-1: #f8f8f8;
+    --background-theme-1: #f4f4f4;
     --background-theme-2: #ccc;
     --background-theme-3: #919191;
-    --gray-theme-1: #484848;
-    --gray-theme-2: #5b5b5b;
-    --gray-theme-3: #f0f0f0;
-    --color-theme-1: #ff426f;
-    --color-theme-2: #df3b67;
-    --color-theme-3: #c53760;
-    --color-theme-compl-1: #55b2ff;
-    --color-theme-compl-2: #4c92d6;
-    --color-theme-compl-3: #3c73a8;
+    --color-theme: #ff426f;
+    --color-theme-1: #df3b67;
+    --color-theme-compl: #55b2ff;
+    --color-theme-compl-1: #4c92d6;
+    --font-color-theme: #1d1d1d;
+    --font-color-theme-1: #555555;
+    --font-color-theme-2: var(--background-theme);
 }
 
-.theme-dark {
-    --background-theme: #383838;
-    --background-theme-1: #494949;
-    --background-theme-2: #747474;
-    --background-theme-3: #eaeaea;
-    --gray-theme-1: #f5f5f5;
-    --gray-theme-2: #fff;
-    --gray-theme-3: #fff;
+citykleta-app.dark {
+    --background-theme: #333333;
+    --background-theme-1: #4c4c4c;
+    --background-theme-2: #8a8a8a;
+    --background-theme-3: #d0d0d0;
+    --color-theme: salmon;
+    --color-theme-1: #ff6c5b;
+    --color-theme-compl: #64e667;
+    --color-theme-compl-1: #64d367;
+    --font-color-theme: #f2f2f2;
+    --font-color-theme-1: #d7d7d7;
 }
 
 body {

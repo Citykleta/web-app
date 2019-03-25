@@ -1,21 +1,25 @@
 import {html, css, LitElement} from 'lit-element';
 import {classMap} from 'lit-html/directives/class-map';
-import {GeoLocation} from '../util';
+import {GeoLocation, stringify} from '../util';
 import {debounce} from '../util';
-import {loadingIndicator} from './icons';
+import {loadingIndicator, myLocation, pin} from './icons';
 import {ServiceRegistry} from '../services/service-registry';
 import {suggester} from '../services/search';
 
 export const propDef = {
     isBusy: {
-        type: Boolean
+        type: Boolean,
+        attribute: false
     },
     suggestions: {
-        type: Array
+        type: Array,
+        attribute: false
     },
     selectedSuggestion: {
-        type: Object
-    }
+        type: Object,
+        attribute: false
+    },
+    value: {type: Object}
 };
 
 export interface SuggestionFunction {
@@ -28,16 +32,29 @@ export class SearchBox extends LitElement {
         return propDef;
     }
 
-    private readonly suggester: SuggestionFunction;
+    private get selectedSuggestion() {
+        return this._selectedSuggestion;
+    }
 
+    private set selectedSuggestion(value) {
+        const oldValue = this._selectedSuggestion;
+        this._selectedSuggestion = value;
+
+        const event = new CustomEvent('selection-change', {
+            detail: {
+                suggestion: value
+            }
+        });
+        this.dispatchEvent(event);
+        this.focus();
+        this.requestUpdate('selectedSuggestion', oldValue);
+    }
+
+    private readonly suggester: SuggestionFunction;
     private isBusy = false;
     private suggestions: GeoLocation[] = [];
-    private selectedSuggestion: GeoLocation = null;
-
-    private reset() {
-        this.suggestions = [];
-        this.selectedSuggestion = null;
-    }
+    private value: GeoLocation = null;
+    private _selectedSuggestion = null;
 
     private handleKeyDown(ev) {
         const {key} = ev;
@@ -53,26 +70,25 @@ export class SearchBox extends LitElement {
                     } else {
                         actualIndex = index - 1 >= 0 ? index - 1 : this.suggestions.length - 1;
                     }
-                    this.selectSuggestion(this.suggestions[actualIndex]);
+                    this.selectedSuggestion = this.suggestions[actualIndex];
                 }
                 break;
             }
             case 'Escape': {
-                this.selectSuggestion(null);
+                this.selectedSuggestion = null;
                 break;
             }
             case 'Enter': {
-                this.reset();
+                this.commitValue(this.selectedSuggestion);
+                this.suggestions = [];
             }
         }
-
     }
 
     constructor(registry: ServiceRegistry) {
         super();
         this.suggester = suggester(registry);
-        // this.addEventListener('blur', this.reset);
-        this.addEventListener('keydown', this.handleKeyDown)
+        this.addEventListener('keydown', this.handleKeyDown);
     }
 
     async suggest(query: string) {
@@ -88,15 +104,16 @@ export class SearchBox extends LitElement {
 
     }
 
-    selectSuggestion(suggestion: GeoLocation) {
-        this.selectedSuggestion = suggestion;
-        const event = new CustomEvent('selection-change', {
+    commitValue(newVal: GeoLocation) {
+        this.value = newVal;
+        this.shadowRoot.querySelector('input').value = stringify(this.value);
+        const event = new CustomEvent('value-change', {
             detail: {
-                suggestion: this.selectedSuggestion
+                value: newVal
             }
         });
+
         this.dispatchEvent(event);
-        this.focus();
     }
 
     focus() {
@@ -104,17 +121,29 @@ export class SearchBox extends LitElement {
     }
 
     render() {
-        const{suggestions} = this;
-        const onInput = debounce(() => {this.suggest(this.shadowRoot.querySelector('input').value);});
-        const suggestionElements = suggestions.map((val, index) => html`<li @click="${() => {this.selectSuggestion(val);}}" role="option" aria-selected="${val === this.selectedSuggestion}" id="${`suggestion-${index}`}"><citykleta-location-suggestion .suggestion="${val}"></citykleta-location-suggestion></li>`);
+        const {suggestions} = this;
+        const valueString = stringify(this.value);
+        const onInput = debounce(() => {
+            this.suggest(this.shadowRoot.querySelector('input').value);
+        });
+        const suggestionElements = suggestions.map((val, index) => {
+            const onClick = () => {
+                this.selectedSuggestion = val;
+                this.commitValue(val);
+            };
+            return html`<li @click="${onClick}" role="option" aria-selected="${val === this.selectedSuggestion}" id="${`suggestion-${index}`}">
+                <citykleta-location-suggestion .suggestion="${val}"></citykleta-location-suggestion>
+            </li>`;
+        });
+
         return html`
 <link rel="stylesheet" href="search-box.css">
 <div aria-owns="place-suggestions-box" role="combobox" aria-expanded="${suggestions.length > 0}" aria-haspopup="listbox">
     <div id="loading-indicator" class="${classMap({hidden: !this.isBusy})}" aria-hidden="true">
         ${loadingIndicator()}
     </div>
-    <input @input="${onInput}" aria-controls="place-suggestions-box" placeholder="ex: teatro karl Marx">
-    <button></button>
+    <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" placeholder="ex: teatro karl Marx">
+    <button id="my-location">${pin()}</button>
 </div>
 <ol role="listbox" id="place-suggestions-box">${suggestionElements}</ol>
 `;

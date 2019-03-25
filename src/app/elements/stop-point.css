@@ -1,0 +1,36 @@
+:host{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+:host(.removable) #remove-button{
+    display: flex;
+}
+
+#remove-button{
+    display: none;
+}
+
+.drag-handle{
+    --color:var(--font-color-theme);
+    width: 2rem;
+}
+
+/**
+todo display a drag area on host over instead
+ */
+.drag-handle:hover{
+    --color:var(--color-theme-compl-1);
+    cursor: grab;
+}
+
+.drag-handle svg{
+    fill:var(--color);
+}
+
+citykleta-search-box{
+    background: var(--background-theme-1);
+    flex-grow: 1;
+    margin: 0 0.5rem;
+}
