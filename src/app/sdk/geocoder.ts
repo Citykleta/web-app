@@ -9,7 +9,7 @@ export interface Geocoder {
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
 
 export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_ENDPOINT_ROOT}): Geocoder => {
-    let searchAbortController = new AbortController();
+    let searchAbortController = null;
 
     return {
         async search(query: string = '') {
