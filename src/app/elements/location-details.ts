@@ -6,7 +6,7 @@ export const template = ({location: val}) => {
     return val === null ? html`` : html`
     <link rel="stylesheet" href="location-details.css">
     <h2>${text}</h2>
-    <p>6, some bullshit address</p>
+    <p>${val.address ? val.address.formatted : 'Unknown address'}</p>
     <dl>
         <dt>Longitude</dt>
         <dd>${truncate(val.lng)}</dd>

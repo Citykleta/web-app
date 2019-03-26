@@ -30,7 +30,7 @@ export const stringify = (p: GeoLocation | StatePoint): string => {
 
     if (point.address) {
         const {address} = point;
-        return concatParts([
+        return address.formatted || concatParts([
             concatParts([
                 address.number,
                 address.street
@@ -68,7 +68,8 @@ export interface GeoCoord {
 export interface Address {
     number?: string;
     street?: string;
-    municipality: string;
+    municipality?: string;
+    formatted?: string
 }
 
 export interface GeoLocation extends GeoCoord {
