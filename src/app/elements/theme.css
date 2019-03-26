@@ -4,7 +4,7 @@
     --background-theme-2: #ccc;
     --background-theme-3: #919191;
     --color-theme: #ff426f;
-    --color-theme-1: #df3b67;
+    --color-theme-1: #d53c68;
     --color-theme-compl: #55b2ff;
     --color-theme-compl-1: #4c92d6;
     --font-color-theme: #1d1d1d;
@@ -16,20 +16,46 @@ citykleta-app.dark {
     --background-theme: #333333;
     --background-theme-1: #4c4c4c;
     --background-theme-2: #8a8a8a;
-    --background-theme-3: #d0d0d0;
+    --background-theme-3: #222222;
     --color-theme: salmon;
-    --color-theme-1: #ff6c5b;
+    --color-theme-1: #bb4b3e;
     --color-theme-compl: #64e667;
-    --color-theme-compl-1: #64d367;
+    --color-theme-compl-1: #5e7d5f;
     --font-color-theme: #f2f2f2;
     --font-color-theme-1: #d7d7d7;
+}
+
+citykleta-app.blandine {
+    --background-theme: #fff;
+    --background-theme-1: #f4f4f4;
+    --background-theme-2: #ccc;
+    --background-theme-3: #919191;
+    --color-theme: #54c095;
+    --color-theme-1: #3c8161;
+    --color-theme-compl: #f4b52b;
+    --color-theme-compl-1: #be8c22;
+    --font-color-theme: #1d1d1d;
+    --font-color-theme-1: #555555;
+    --font-color-theme-2: var(--background-theme);
 }
 
 body {
     color: var(--color);
     font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: relative;
 }
 
 body * {
     box-sizing: inherit;
+}
+
+citykleta-app {
+    position: absolute;
+    top:0;
+    z-index: 99;
+    opacity: 0.8;
+}
+
+citykleta-app:focus-within, citykleta-app:hover{
+    opacity: 1;
 }

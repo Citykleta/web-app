@@ -21,7 +21,7 @@
 todo display a drag area on host over instead
  */
 .drag-handle:hover{
-    --color:var(--color-theme-compl-1);
+    --color:var(--color-theme-compl);
     cursor: grab;
 }
 

@@ -7,9 +7,17 @@ export interface Directions {
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
 
 export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_ENDPOINT_ROOT}): Directions => {
-    const pending = [];
+
+    let searchDirectionController = new AbortController();
+    let request = null;
+
     return {
         async search(points: GeoCoord[]) {
+
+            if (request) {
+                searchDirectionController.abort();
+            }
+
             const waypoints = points.map(({lat, lng}) => ({
                 lat: truncate(lat),
                 lng: truncate(lng)
@@ -20,13 +28,16 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                 waypoints
             };
 
-            const res = await fetch(url.toString(), {
+            request = fetch(url.toString(), {
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 },
                 method: 'POST',
                 body: JSON.stringify(body)
             });
+
+            const res = await request;
+            request = null;
 
             if (res.ok !== true) {
                 throw new Error('not ok response');

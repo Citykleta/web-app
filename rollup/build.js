@@ -11,21 +11,16 @@ const plugins = [replace({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev')
 }), node(), cjs()];
 
-if(process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production') {
     plugins.push(terser());
 }
 
 export default {
-    input: './src/app/elements/index.js',
+    input: ['./src/app/elements/index.js', './src/app/map/index.js'],
     output: [{
-        file: './dist/app.js',
-        format: 'iife',
-        name: 'main',
-        sourcemap: true
-    }, {
-        file: './dist/app-module.js',
-        format: 'es',
-        sourcemap: true
+        dir: './dist/',
+        sourcemap: true,
+        format: 'es'
     }],
     plugins
 };

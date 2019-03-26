@@ -10,6 +10,7 @@ import {LocationDetails} from './location-details';
 import {SettingsPanel} from './settings-panel';
 import {ItineraryPanel} from './itinerary-panel';
 import {StopPoint} from './stop-point';
+import {ButtonIcon} from './button-icon';
 
 const withInjector = (registry: ServiceRegistry) => (klass) => class extends klass {
 
@@ -69,6 +70,7 @@ const connectedApp = connect(registry.store, (state: ApplicationState) => ({
 
 const connectToItinerary = connect(registry.store, (state: ApplicationState) => state.itinerary);
 
+customElements.define('citykleta-button-icon',ButtonIcon);
 customElements.define('citykleta-navigation-bar', prodInjector(NavigationBar));
 customElements.define('citykleta-location-suggestion', LocationSuggestionItem);
 customElements.define('citykleta-search-box', prodInjector(SearchBox));
@@ -79,5 +81,5 @@ customElements.define('citykleta-itinerary-panel', connectToItinerary(prodInject
 customElements.define('citykleta-stop-point', prodInjector(StopPoint));
 customElements.define('citykleta-app', connectedApp(App));
 
-const app = document.createElement('citykleta-app');
+export const app = document.createElement('citykleta-app');
 document.querySelector('body').appendChild(app);

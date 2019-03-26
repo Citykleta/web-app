@@ -143,7 +143,7 @@ export class SearchBox extends LitElement {
         ${loadingIndicator()}
     </div>
     <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" placeholder="ex: teatro karl Marx">
-    <button id="my-location">${pin()}</button>
+    <citykleta-button-icon id="my-location">${pin()}</citykleta-button-icon>
 </div>
 <ol role="listbox" id="place-suggestions-box">${suggestionElements}</ol>
 `;

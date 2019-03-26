@@ -33,6 +33,8 @@
 #loading-indicator > svg {
     animation: 1s linear rotateSpinner;
     animation-iteration-count: infinite;
+    stroke: currentColor;
+    fill: currentColor;
 }
 
 #loading-indicator.hidden > svg {
@@ -48,14 +50,6 @@ input {
     font-size: 0.9em;
     font-weight: lighter;
     outline: none;
-}
-
-svg {
-    background: transparent;
-    fill:var(--color);
-    height: 100%;
-    stroke: var(--color);
-    width: 100%;
 }
 
 ul:empty, ol:empty {
@@ -86,23 +80,10 @@ li:not(:last-child) {
     border-bottom: 1px solid var(--suggestion-border-color);
 }
 
-#my-location:focus, #my-location:hover{
-    --color:var(--font-color-theme-2);
-    background: var(--color-theme-compl);
-}
-
 #my-location{
     --color: var(--color-theme-compl);
     align-self: center;
-    background: inherit;
-    border: 2px solid var(--color-theme-compl);
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    margin: 0.3rem;
-    padding: 2px;
-    transition: background 0.3s, color 0.3s;
-    width: 1.8rem;
+    margin: 0.2rem;
 }
 
 @keyframes rotateSpinner {

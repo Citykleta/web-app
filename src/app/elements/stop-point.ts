@@ -11,7 +11,7 @@ export const template = ({location: val, onValue, remove}) => {
         ${pin()}
     </span>
     <citykleta-search-box @value-change="${onValue}" class="overlay" .value="${val}"></citykleta-search-box>
-    <button @click="${remove}" id="remove-button">X</button>
+    <citykleta-button-icon @click="${remove}" class="danger" id="remove-button">X</citykleta-button-icon>
     `;
 };
 

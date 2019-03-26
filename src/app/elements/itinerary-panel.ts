@@ -3,6 +3,7 @@ import {ServiceRegistry} from '../services/service-registry';
 import {UIPointOrPlaceholder} from '../reducers/itinerary';
 import {classMap} from 'lit-html/directives/class-map';
 import {ItineraryService} from '../services/itinerary';
+import {plus} from './icons';
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
@@ -50,7 +51,7 @@ export const template = ({stops, addPoint, itinerary}) => {
     });
     return html`<link rel="stylesheet" href="itinerary-panel.css">
 <ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop)}" @dragover="${dragOver(stop)}" @drop="${drop(stop)}" @dragleave="${dragLeave(stop)}"><citykleta-stop-point class=${classList} .value="${stop}" .location="${stop}"></citykleta-stop-point></li>`)}</ol>
-<div><button @click="${addPoint}">+</button></div>`;
+<div><citykleta-button-icon @click="${addPoint}">+</citykleta-button-icon></div>`;
 };
 
 export const propDef = {
