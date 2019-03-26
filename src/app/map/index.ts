@@ -28,7 +28,7 @@ const map = new mapboxgl.Map({
 map.on('load', () => {
     map.addSource('suggestions', EMPTY_SOURCE);
     map.addSource('directions-stops', EMPTY_SOURCE);
-    map.addSource('direction-path', EMPTY_SOURCE);
+    map.addSource('directions-path', EMPTY_SOURCE);
 
     map.addLayer({
         id: 'suggestions',
@@ -41,10 +41,10 @@ map.on('load', () => {
 
     map.addLayer({
         id: 'directions-path',
-        type: 'circle',
+        type: 'line',
         source: 'directions-path',
         paint: {
-            'circle-color': 'blue',
+            'line-color': 'blue',
             'line-width': 7
         }
     });

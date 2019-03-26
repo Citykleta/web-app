@@ -66,6 +66,8 @@
   "dependencies": {
     "evil-icons": "^1.10.1",
     "hybrids": "^2.0.0",
+    "ionicons": "^4.5.5",
+    "octicons": "^8.5.0",
     "redux-subscriber": "^1.1.0"
   }
 }

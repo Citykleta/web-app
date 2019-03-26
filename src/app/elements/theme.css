@@ -54,6 +54,7 @@ citykleta-app {
     top:0;
     z-index: 99;
     opacity: 0.8;
+    max-width: 450px;
 }
 
 citykleta-app:focus-within, citykleta-app:hover{
