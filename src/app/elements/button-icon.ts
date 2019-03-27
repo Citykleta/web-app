@@ -1,6 +1,4 @@
 import {html, LitElement, css} from 'lit-element';
-import {ToolType} from '../tools/interfaces';
-import {Theme} from '../reducers/settings';
 
 export const propDef = {};
 

@@ -59,7 +59,7 @@ const connect = (store, stateToProp = state => state) => (klass) => class extend
     }
 };
 
-const connectToSelectedSuggestion = connect(registry.store, (state: ApplicationState) => ({
+const connectedSearch = connect(registry.store, (state: ApplicationState) => ({
     selectedSuggestion: state.search.selectedSuggestion
 }));
 
@@ -68,16 +68,20 @@ const connectedApp = connect(registry.store, (state: ApplicationState) => ({
     selectedTool: state.tool.selectedTool
 }));
 
-const connectToItinerary = connect(registry.store, (state: ApplicationState) => state.itinerary);
+const connectedItinerary = connect(registry.store, (state: ApplicationState) => ({
+        selectedSuggestion: state.search.selectedSuggestion,
+        ...state.itinerary
+    })
+);
 
-customElements.define('citykleta-button-icon',ButtonIcon);
+customElements.define('citykleta-button-icon', ButtonIcon);
 customElements.define('citykleta-navigation-bar', prodInjector(NavigationBar));
 customElements.define('citykleta-location-suggestion', LocationSuggestionItem);
 customElements.define('citykleta-search-box', prodInjector(SearchBox));
 customElements.define('citykleta-location', LocationDetails);
-customElements.define('citykleta-search-panel', connectToSelectedSuggestion(prodInjector(SearchPanel)));
+customElements.define('citykleta-search-panel', connectedSearch(prodInjector(SearchPanel)));
 customElements.define('citykleta-settings-panel', prodInjector(SettingsPanel));
-customElements.define('citykleta-itinerary-panel', connectToItinerary(prodInjector(ItineraryPanel)));
+customElements.define('citykleta-itinerary-panel', connectedItinerary(prodInjector(ItineraryPanel)));
 customElements.define('citykleta-stop-point', prodInjector(StopPoint));
 customElements.define('citykleta-app', connectedApp(App));
 

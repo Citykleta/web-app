@@ -9,7 +9,7 @@ const plugins = [replace({
     MAP_STYLE: process.env.NODE_ENV === 'production' ? 'mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb' : 'http://localhost:8080/styles/klokantech-basic/style.json',
 }), replace({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev')
-}), node(), cjs()];
+}), node({}), cjs()];
 
 if (process.env.NODE_ENV === 'production') {
     plugins.push(terser());

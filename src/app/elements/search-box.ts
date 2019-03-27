@@ -2,7 +2,7 @@ import {html, css, LitElement} from 'lit-element';
 import {classMap} from 'lit-html/directives/class-map';
 import {GeoLocation, stringify} from '../util';
 import {debounce} from '../util';
-import {loadingIndicator, myLocation, pin} from './icons';
+import {loadingIndicator, myLocation} from './icons';
 import {ServiceRegistry} from '../services/service-registry';
 import {suggester} from '../services/search';
 
@@ -143,7 +143,7 @@ export class SearchBox extends LitElement {
         ${loadingIndicator()}
     </div>
     <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" placeholder="ex: teatro karl Marx">
-    <citykleta-button-icon id="my-location">${pin()}</citykleta-button-icon>
+    <citykleta-button-icon id="my-location">${myLocation()}</citykleta-button-icon>
 </div>
 <ol role="listbox" id="place-suggestions-box">${suggestionElements}</ol>
 `;

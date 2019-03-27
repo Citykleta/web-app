@@ -3,12 +3,13 @@ import {ServiceRegistry} from '../services/service-registry';
 import {UIPointOrPlaceholder} from '../reducers/itinerary';
 import {classMap} from 'lit-html/directives/class-map';
 import {ItineraryService} from '../services/itinerary';
-import {plus} from './icons';
+import {plus, swap} from './icons';
+import {UIPoint} from '../util';
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
 // todo better event handler for drag/drop operation
-export const template = ({stops, addPoint, itinerary}) => {
+export const template = ({stops, addPoint, itinerary, selectedSuggestion}) => {
 
     let boundingBox = null;
 
@@ -46,29 +47,44 @@ export const template = ({stops, addPoint, itinerary}) => {
         li.classList.remove('drop-target-after');
     };
 
+    const isMulti = stops.length > 2;
+    const swapPoints = () => {
+        const [first, second] = stops;
+        itinerary.startMove(second);
+        itinerary.moveBefore(first);
+    };
     const classList = classMap({
-        removable: stops.length > 2
+        removable: isMulti
     });
+
     return html`<link rel="stylesheet" href="itinerary-panel.css">
-<ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop)}" @dragover="${dragOver(stop)}" @drop="${drop(stop)}" @dragleave="${dragLeave(stop)}"><citykleta-stop-point class=${classList} .value="${stop}" .location="${stop}"></citykleta-stop-point></li>`)}</ol>
-<div><citykleta-button-icon @click="${addPoint}">+</citykleta-button-icon></div>`;
+<div id="stops-list-container">
+    <citykleta-button-icon @click="${swapPoints}" id="swap-button" class="${classMap({
+        hidden: isMulti
+    })}">${swap()}</citykleta-button-icon>
+    <ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop)}" @dragover="${dragOver(stop)}" @drop="${drop(stop)}" @dragleave="${dragLeave(stop)}"><citykleta-stop-point class=${classList} .value="${stop}" .location="${stop}"></citykleta-stop-point></li>`)}</ol>
+</div>
+<div id="add-button-container"><citykleta-button-icon @click="${addPoint}">${plus()}</citykleta-button-icon></div>
+<citykleta-location .location="${selectedSuggestion}" class="${classMap({hidden: selectedSuggestion === null})}"></citykleta-location>`;
 };
 
 export const propDef = {
-    stops: {type: Array}
+    stops: {type: Array},
+    selectedSuggestion: {type: Object}
 };
 
 export class ItineraryPanel extends LitElement {
 
     private stops: UIPointOrPlaceholder[];
+    private selectedSuggestion: UIPoint;
 
     static get properties() {
         return propDef;
     }
 
-    private _itinerary: ItineraryService = null;
+    private readonly _itinerary: ItineraryService = null;
 
-    constructor({itinerary, store}: ServiceRegistry) {
+    constructor({itinerary}: ServiceRegistry) {
         super();
         this._itinerary = itinerary;
     }
@@ -78,7 +94,8 @@ export class ItineraryPanel extends LitElement {
             stops: this.stops, addPoint: () => {
                 this._itinerary.addPoint(null);
             },
-            itinerary: this._itinerary
+            itinerary: this._itinerary,
+            selectedSuggestion: this.selectedSuggestion
         });
     }
 }

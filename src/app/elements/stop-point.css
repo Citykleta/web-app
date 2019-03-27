@@ -6,6 +6,11 @@
 
 :host(.removable) #remove-button{
     display: flex;
+    --size: 1.3rem;
+}
+
+:host(.removable) .drag-handle{
+    display: flex;
 }
 
 #remove-button{
@@ -13,8 +18,9 @@
 }
 
 .drag-handle{
-    --color:var(--font-color-theme);
-    width: 2rem;
+    display: none;
+    width: 1rem;
+    --color:var(--font-color-theme-1);
 }
 
 /**
@@ -27,6 +33,7 @@ todo display a drag area on host over instead
 
 .drag-handle svg{
     fill:var(--color);
+    stroke: var(--color);
 }
 
 citykleta-search-box{

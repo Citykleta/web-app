@@ -1,17 +1,19 @@
 import {html, LitElement} from 'lit-element';
 import {UIPointOrPlaceholder} from '../reducers/itinerary';
-import {pin} from './icons';
+import {dragHandle, pin, remove as removeIcon} from './icons';
 import {ServiceRegistry} from '../services/service-registry';
 import {ItineraryService} from '../services/itinerary';
+import {UIPoint} from '../util';
+import {SearchService} from '../services/search';
 
-export const template = ({location: val, onValue, remove}) => {
+export const template = ({location: val, onSelect, onValue, remove}) => {
     return html`
     <link rel="stylesheet" href="stop-point.css">
     <span draggable="true" class="drag-handle">
-        ${pin()}
+        ${dragHandle()}
     </span>
-    <citykleta-search-box @value-change="${onValue}" class="overlay" .value="${val}"></citykleta-search-box>
-    <citykleta-button-icon @click="${remove}" class="danger" id="remove-button">X</citykleta-button-icon>
+    <citykleta-search-box @selection-change="${onSelect}" @value-change="${onValue}" class="overlay" .value="${val}"></citykleta-search-box>
+    <citykleta-button-icon @click="${remove}" class="danger" id="remove-button">${removeIcon()}</citykleta-button-icon>
     `;
 };
 
@@ -24,27 +26,34 @@ export const propDef = {
 export class StopPoint extends LitElement {
 
     private _itinerary: ItineraryService = null;
+    private _search: SearchService = null;
     location: UIPointOrPlaceholder = null;
 
     static get properties() {
         return propDef;
     }
 
-    constructor({itinerary}: ServiceRegistry) {
+    constructor({itinerary, search}: ServiceRegistry) {
         super();
         this._itinerary = itinerary;
+        this._search = search;
     }
 
     render() {
         // overwrite suggestion id with actual stop point id
-        const onValue = (ev) => {
+        const onValue = (ev: CustomEvent<{ value: UIPoint }>) => {
             this._itinerary.updatePoint(this.location.id, Object.assign({}, ev.detail.value, {id: this.location.id}));
+        };
+
+        const onSelect = (ev: CustomEvent<{ suggestion: UIPoint }>) => {
+            this._search.selectSuggestion(ev.detail.suggestion);
         };
 
         const remove = () => this._itinerary.removePoint(this.location);
 
         return template({
             onValue,
+            onSelect,
             location: this.location,
             remove
         });

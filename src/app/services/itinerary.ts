@@ -1,5 +1,5 @@
-import {Action, Store} from 'redux';
-import {API, ApplicationState, EnhancedDispatch} from './store';
+import {Store} from 'redux';
+import {ApplicationState, EnhancedDispatch} from './store';
 import {
     addItineraryPointWithSideEffects,
     removeItineraryPointWithSideEffects,
@@ -10,10 +10,9 @@ import {
     InsertionPosition,
     changeItineraryPointWithSideEffects,
     UpdateItineraryPointAction,
-    setItineraryPointFocus,
-    addItineraryPoint
+    setItineraryPointFocus
 } from '../actions/itinerary';
-import {GeoCoord, UIPoint, StatePoint, isGeoCoord, GeoLocation} from '../util';
+import {UIPoint, StatePoint, GeoLocation} from '../util';
 
 // todo does not need to be async
 export interface ItineraryService {

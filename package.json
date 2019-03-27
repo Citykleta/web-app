@@ -41,7 +41,6 @@
   "devDependencies": {
     "@mapbox/mapbox-sdk": "^0.5.0",
     "@mapbox/polyline": "^1.0.0",
-    "colorguard": "^1.2.1",
     "cpx": "^1.5.0",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0",
@@ -65,6 +64,8 @@
   },
   "dependencies": {
     "evil-icons": "^1.10.1",
+    "feather-icons": "^4.19.0",
+    "grommet-icons": "^4.2.0",
     "hybrids": "^2.0.0",
     "ionicons": "^4.5.5",
     "octicons": "^8.5.0",
