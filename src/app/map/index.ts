@@ -57,7 +57,7 @@ store.subscribe(() => {
     if (selectedSuggestion !== currentSelectedSuggestion && selectedSuggestion !== null) {
         map.flyTo({
             center: [selectedSuggestion.lng, selectedSuggestion.lat],
-            zoom: 15.5
+            zoom: 13.5
         });
     }
 });

@@ -1,4 +1,7 @@
-:host{
+import {css} from 'lit-element';
+
+// language=CSS
+export const style = css`:host{
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -40,4 +43,4 @@ citykleta-search-box{
     background: var(--background-theme-1);
     flex-grow: 1;
     margin: 0 0.5rem;
-}
+}`;

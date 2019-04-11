@@ -1,3 +1,7 @@
+import {css} from 'lit-element';
+
+// language=CSS
+export const style = css`
 :host {
     --background: var(--background-theme-1);
     --color:var(--font-color-theme-1);
@@ -23,3 +27,4 @@ dd {
 dt::after {
     content: ':';
 }
+`;

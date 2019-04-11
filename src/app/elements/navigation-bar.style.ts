@@ -1,4 +1,7 @@
-:host {
+import {css} from 'lit-element';
+
+// language=CSS
+export const style = css`:host {
     --background-color: var(--background-theme-1);
     --border-color: var(--background-theme-3, currentColor);
     font-weight: lighter;
@@ -32,4 +35,4 @@ li.active {
     box-shadow: none;
     font-weight: normal;
     margin-top: -0.2rem;
-}
+}`;

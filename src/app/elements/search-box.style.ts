@@ -1,4 +1,7 @@
-:host {
+import {css} from 'lit-element';
+
+// language=CSS
+export const style = css`:host {
     --background-color:inherit;
     --border-color:var(--color-theme);
     --color:inherit;
@@ -94,5 +97,4 @@ li:not(:last-child) {
     from {
         transform: rotateZ(360deg);
     }
-}
-
+}`;

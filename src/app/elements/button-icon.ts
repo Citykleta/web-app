@@ -1,19 +1,15 @@
-import {html, LitElement, css} from 'lit-element';
+import {html, LitElement} from 'lit-element';
+import {style} from './button-icon.style';
 
 export const propDef = {};
 
-export const template = () => {
-    return html`
-        <link rel="stylesheet" href="button-icon.css">
-        <button><slot></slot></button>
-`;
-};
+export const template = () => html`<button><slot></slot></button>`;
 
 export class ButtonIcon extends LitElement {
 
-    // static get styles(){
-    //     return css``;
-    // }
+    static get styles() {
+        return style;
+    }
 
     static get properties() {
         return propDef;

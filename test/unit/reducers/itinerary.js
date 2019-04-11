@@ -5,7 +5,6 @@ import { addItineraryPoint, changeItineraryPoint, fetchRoutesWithSuccess, Insert
 export default ({ test }) => {
     test('should return the previous state if action is not related to itinerary', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -18,7 +17,6 @@ export default ({ test }) => {
     });
     test('add a point without specifying the insertion position', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -31,7 +29,6 @@ export default ({ test }) => {
             lat: 987
         }));
         t.eq(actual, {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -46,7 +43,6 @@ export default ({ test }) => {
     });
     test('add a point specifying a valid insertion position', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -59,7 +55,6 @@ export default ({ test }) => {
             lat: 987,
         }, 2));
         t.eq(actual, {
-            focus: null,
             stops: [{
                     lng: 789,
                     lat: 987,
@@ -74,7 +69,6 @@ export default ({ test }) => {
     });
     test('change an existing point coordinates', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -87,7 +81,6 @@ export default ({ test }) => {
             lat: 987
         }));
         t.eq(actual, {
-            focus: null,
             stops: [{
                     id: 2,
                     lng: 789,
@@ -98,7 +91,6 @@ export default ({ test }) => {
     });
     test('change a non existing point coordinates: should not modify state', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -114,7 +106,6 @@ export default ({ test }) => {
     });
     test('remove an existing point', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -127,7 +118,6 @@ export default ({ test }) => {
     });
     test('remove a non existing point', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -153,7 +143,6 @@ export default ({ test }) => {
                 lat: 66
             }];
         const initialState = {
-            focus: null,
             routes: [],
             stops
         };
@@ -175,7 +164,6 @@ export default ({ test }) => {
                 lat: 66
             }];
         const initialState = {
-            focus: null,
             routes: [],
             stops
         };
@@ -197,7 +185,6 @@ export default ({ test }) => {
                 lat: 66
             }];
         const initialState = {
-            focus: null,
             routes: [],
             stops
         };
@@ -219,7 +206,6 @@ export default ({ test }) => {
                 lat: 66
             }];
         const initialState = {
-            focus: null,
             routes: [],
             stops
         };
@@ -241,7 +227,6 @@ export default ({ test }) => {
                 lat: 66
             }];
         const initialState = {
-            focus: null,
             routes: [],
             stops
         };
@@ -272,7 +257,6 @@ export default ({ test }) => {
     });
     test('reset routes and stop points', t => {
         const initialState = {
-            focus: null,
             stops: [{
                     lng: 1234,
                     lat: 4321,
@@ -281,11 +265,16 @@ export default ({ test }) => {
             routes: [{ geometry: 'bar' }]
         };
         const actual = reducer(initialState, resetRoutes());
-        t.eq(actual, { routes: [], stops: [] });
+        t.eq(actual, {
+            routes: [], stops: [{
+                    id: 0
+                }, {
+                    id: 1
+                }]
+        });
     });
     test('set routes', t => {
         const initialState = {
-            focus: null,
             stops: [{ id: 1, lat: 1234, lng: 5432 }],
             routes: []
         };
@@ -293,7 +282,6 @@ export default ({ test }) => {
                 geometry: 'geom'
             }]));
         t.eq(actual, {
-            focus: null,
             stops: [{ id: 1, lat: 1234, lng: 5432 }],
             routes: [{
                     geometry: 'geom'

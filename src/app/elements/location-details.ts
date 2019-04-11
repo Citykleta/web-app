@@ -1,10 +1,10 @@
 import {html, LitElement} from 'lit-element';
 import {GeoLocation, truncate} from '../util';
+import {style} from './location-details.style';
 
 export const template = ({location: val}) => {
     const text = val ? val.name || (val.address && val.address.street) || 'Unknown place' : 'N/A';
     return val === null ? html`` : html`
-    <link rel="stylesheet" href="location-details.css">
     <h2>${text}</h2>
     <p>${val.address ? val.address.formatted : 'Unknown address'}</p>
     <dl>
@@ -22,6 +22,10 @@ export const propDef = {
 };
 
 export class LocationDetails extends LitElement {
+
+    static get styles() {
+        return style;
+    }
 
     static get properties() {
         return propDef;

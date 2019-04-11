@@ -1,5 +1,6 @@
-import {html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import {ToolType} from '../tools/interfaces';
+import {style} from './app.style';
 import {Theme} from '../reducers/settings';
 
 export const propDef = {
@@ -19,14 +20,13 @@ const findPanel = (tool: ToolType) => {
     }
 };
 
-export const template = ({selectedTool}) => {
-    return html`
-<link rel="stylesheet" href="app.css">
-<citykleta-navigation-bar .selectedTool="${selectedTool}"></citykleta-navigation-bar>
-${findPanel(selectedTool)}`;
-};
+export const template = ({selectedTool}) => html`<citykleta-navigation-bar .selectedTool="${selectedTool}"></citykleta-navigation-bar>${findPanel(selectedTool)}`;
 
 export class App extends LitElement {
+
+    static get styles() {
+        return style;
+    }
 
     static get properties() {
         return propDef;
@@ -34,11 +34,11 @@ export class App extends LitElement {
 
     private _theme: Theme = Theme.LIGHT;
 
-    private get theme(){
+    private get theme() {
         return this._theme;
     }
 
-    private set theme(val){
+    private set theme(val) {
         this._theme = val;
         this.classList.toggle('dark', this._theme === Theme.DARK);
     }

@@ -5,17 +5,15 @@ import {ServiceRegistry} from '../services/service-registry';
 import {ItineraryService} from '../services/itinerary';
 import {UIPoint} from '../util';
 import {SearchService} from '../services/search';
+import {style} from './stop-point.style';
 
-export const template = ({location: val, onSelect, onValue, remove}) => {
-    return html`
-    <link rel="stylesheet" href="stop-point.css">
+export const template = ({location: val, onSelect, onValue, remove}) => html`
     <span draggable="true" class="drag-handle">
         ${dragHandle()}
     </span>
     <citykleta-search-box @selection-change="${onSelect}" @value-change="${onValue}" class="overlay" .value="${val}"></citykleta-search-box>
     <citykleta-button-icon @click="${remove}" class="danger" id="remove-button">${removeIcon()}</citykleta-button-icon>
     `;
-};
 
 export const propDef = {
     location: {
@@ -28,6 +26,10 @@ export class StopPoint extends LitElement {
     private _itinerary: ItineraryService = null;
     private _search: SearchService = null;
     location: UIPointOrPlaceholder = null;
+
+    static get styles() {
+        return style;
+    }
 
     static get properties() {
         return propDef;

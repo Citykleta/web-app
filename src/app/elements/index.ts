@@ -86,4 +86,5 @@ customElements.define('citykleta-stop-point', prodInjector(StopPoint));
 customElements.define('citykleta-app', connectedApp(App));
 
 export const app = document.createElement('citykleta-app');
+// app.classList.add('blandine');
 document.querySelector('body').appendChild(app);

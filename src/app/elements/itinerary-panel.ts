@@ -5,6 +5,7 @@ import {classMap} from 'lit-html/directives/class-map';
 import {ItineraryService} from '../services/itinerary';
 import {plus, swap} from './icons';
 import {UIPoint} from '../util';
+import {style} from './itinerary-panel.style';
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
@@ -57,8 +58,7 @@ export const template = ({stops, addPoint, itinerary, selectedSuggestion}) => {
         removable: isMulti
     });
 
-    return html`<link rel="stylesheet" href="itinerary-panel.css">
-<div id="stops-list-container">
+    return html`<div id="stops-list-container">
     <citykleta-button-icon @click="${swapPoints}" id="swap-button" class="${classMap({
         hidden: isMulti
     })}">${swap()}</citykleta-button-icon>
@@ -77,6 +77,10 @@ export class ItineraryPanel extends LitElement {
 
     private stops: UIPointOrPlaceholder[];
     private selectedSuggestion: UIPoint;
+
+    static get styles(){
+        return style;
+    }
 
     static get properties() {
         return propDef;

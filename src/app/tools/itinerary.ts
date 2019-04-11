@@ -6,14 +6,6 @@ export const itineraryTool = (registry: ServiceRegistry): ClickTool => {
     return {
         type: ToolType.ITINERARY,
         actionClick(p) {
-            const {focus} = store.getState().itinerary;
-            if (focus !== null) {
-                itinerary.updatePoint(focus, p);
-                const searchbox = document.querySelector(`#itinerary-stop-point-${focus} input`);
-                if(searchbox){
-                    (<HTMLInputElement>searchbox).focus();
-                }
-            }
         }
     };
 };

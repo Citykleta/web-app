@@ -9,13 +9,11 @@ import {Route, StatePoint, truncate, UIPoint} from '../util';
 export type UIPointOrPlaceholder = UIPoint | StatePoint;
 
 export interface ItineraryState {
-    focus: number;
     stops: UIPointOrPlaceholder[];
     routes: Route[];
 }
 
 const defaultState: ItineraryState = {
-    focus: null,
     stops: [{
         id: 0
     }, {

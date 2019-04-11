@@ -5,6 +5,7 @@ import {debounce} from '../util';
 import {loadingIndicator, myLocation} from './icons';
 import {ServiceRegistry} from '../services/service-registry';
 import {suggester} from '../services/search';
+import {style} from './search-box.style';
 
 export const propDef = {
     isBusy: {
@@ -27,6 +28,10 @@ export interface SuggestionFunction {
 }
 
 export class SearchBox extends LitElement {
+
+    static get styles() {
+        return style;
+    }
 
     static get properties() {
         return propDef;
@@ -137,7 +142,6 @@ export class SearchBox extends LitElement {
         });
 
         return html`
-<link rel="stylesheet" href="search-box.css">
 <div aria-owns="place-suggestions-box" role="combobox" aria-expanded="${suggestions.length > 0}" aria-haspopup="listbox">
     <div id="loading-indicator" class="${classMap({hidden: !this.isBusy})}" aria-hidden="true">
         ${loadingIndicator()}
