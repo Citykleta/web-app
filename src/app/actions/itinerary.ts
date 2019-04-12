@@ -4,15 +4,6 @@ import {ThunkAction} from 'redux-thunk';
 import {API, ApplicationState} from '../services/store';
 import {GeoCoord, isGeoCoord, Route} from '../util';
 
-export interface SetItineraryPointFocusAction extends Action<ActionType.FOCUS_ITINERARY_POINT> {
-    id: number
-}
-
-export const setItineraryPointFocus = (id: number): SetItineraryPointFocusAction => ({
-    type: ActionType.FOCUS_ITINERARY_POINT,
-    id
-});
-
 export interface AddItineraryPointAction extends Action<ActionType.ADD_ITINERARY_POINT> {
     point: GeoCoord,
     beforeId?: number
@@ -33,13 +24,12 @@ export const removeItineraryPoint = (id: number): RemoveItineraryPointAction => 
     id
 });
 
-// todo update with meta data too
 export interface UpdateItineraryPointAction extends Action<ActionType.UPDATE_ITINERARY_POINT> {
     id: number,
     location: GeoCoord
 }
 
-export const changeItineraryPoint = (id: number, location: GeoCoord): UpdateItineraryPointAction => ({
+export const updateItineraryPoint = (id: number, location: GeoCoord): UpdateItineraryPointAction => ({
     type: ActionType.UPDATE_ITINERARY_POINT,
     id,
     location
@@ -131,7 +121,6 @@ export const moveItineraryPoint = (sourceId: number, targetId: number, position:
 
 export const addItineraryPointWithSideEffects = eventuallyUpdateRoutes<AddItineraryPointAction>(addItineraryPoint);
 export const removeItineraryPointWithSideEffects = eventuallyUpdateRoutes<RemoveItineraryPointAction>(removeItineraryPoint);
-export const changeItineraryPointWithSideEffects = eventuallyUpdateRoutes<UpdateItineraryPointAction>(changeItineraryPoint);
+export const changeItineraryPointWithSideEffects = eventuallyUpdateRoutes<UpdateItineraryPointAction>(updateItineraryPoint);
 
-//todo test
 export const moveItineraryPointWithSideEffects = eventuallyUpdateRoutes<any>(moveItineraryPoint);

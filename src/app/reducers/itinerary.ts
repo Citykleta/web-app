@@ -26,11 +26,6 @@ const matchId = id => item => item.id === id;
 
 export const reducer: Reducer<ItineraryState> = (previousState = defaultState, action) => {
     switch (action.type) {
-        case ActionType.FOCUS_ITINERARY_POINT: {
-            return Object.assign(previousState, {
-                focus: action.id
-            });
-        }
         case ActionType.RESET_ROUTES: {
             return Object.assign({}, defaultState);
         }

@@ -9,8 +9,7 @@ import {
     moveItineraryPointWithSideEffects,
     InsertionPosition,
     changeItineraryPointWithSideEffects,
-    UpdateItineraryPointAction,
-    setItineraryPointFocus
+    UpdateItineraryPointAction
 } from '../actions/itinerary';
 import {UIPoint, StatePoint, GeoLocation} from '../util';
 
@@ -27,8 +26,6 @@ export interface ItineraryService {
     removePoint(p: UIPoint | StatePoint): Promise<any>;
 
     updatePoint(id: number, value: GeoLocation): Promise<any>;
-
-    setFocus(id: number): any;
 
     reset(): void;
 }
@@ -65,9 +62,6 @@ export const provider = (store: Store<ApplicationState>): ItineraryService => {
         },
         async updatePoint(id: number, location: GeoLocation) {
             return (<EnhancedDispatch<UpdateItineraryPointAction>>store.dispatch)(changeItineraryPointWithSideEffects(id, location));
-        },
-        setFocus(id) {
-            store.dispatch(setItineraryPointFocus(id));
         },
         reset() {
             store.dispatch(resetRoutes());

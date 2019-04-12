@@ -1,19 +1,21 @@
-import {test, skip} from 'zora';
+import {test} from 'zora';
 import toolAction from './actions/tool-box';
-import itineraryAction from './actions/itinerary';
-import settingsAction from './actions/settings';
-import itineraryReducer from './reducers/itinerary';
 import toolBoxReducer from './reducers/tool-box';
-import itineraryService from './services/itinerary';
 import toolboxService from './services/tool-box';
+import itineraryAction from './actions/itinerary';
+import itineraryReducer from './reducers/itinerary';
+import settingsAction from './actions/settings';
 import settingsReducer from './reducers/settings';
+import searchAction from './actions/search';
+import searchReducer from './reducers/search';
 
 test.indent();
 
 test('ITINERARY ACTIONS', itineraryAction);
 test('ITINERARY REDUCER', itineraryReducer);
-skip('ITINERARY SERVICE', itineraryService);
-test('TOOL_BOX ACTIONS', toolAction);
+test('SEARCH ACTIONS', searchAction);
+test('SEARCH REDUCER', searchReducer);
+test('TOOL-BOX ACTIONS', toolAction);
 test('TOOL-BOX REDUCER', toolBoxReducer);
 test('TOOL-BOX SERVICE', toolboxService);
 test('SETTINGS ACTIONS', settingsAction);

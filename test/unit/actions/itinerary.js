@@ -1,5 +1,5 @@
 import { ActionType } from '../../../src/app/actions/types';
-import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPoint, changeItineraryPointWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes } from '../../../src/app/actions/itinerary';
+import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPointWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes, updateItineraryPoint } from '../../../src/app/actions/itinerary';
 import { directionsAPIStub, testStore } from '../utils';
 import { Theme } from '../../../src/app/reducers/settings';
 const setState = (state) => ({
@@ -59,7 +59,7 @@ export default (a) => {
                 lat: 23.115898
             }
         };
-        t.eq(changeItineraryPoint(42, {
+        t.eq(updateItineraryPoint(42, {
             lng: -82.396679,
             lat: 23.115898
         }), expected);
@@ -387,7 +387,7 @@ export default (a) => {
             directions: sdkMock
         });
         // @ts-ignore
-        await store.dispatch(changeItineraryPoint(1, { lng: 666, lat: 666 }));
+        await store.dispatch(updateItineraryPoint(1, { lng: 666, lat: 666 }));
         t.eq(store.getActions(), [{
                 type: ActionType.UPDATE_ITINERARY_POINT,
                 id: 1,
@@ -437,5 +437,80 @@ export default (a) => {
                 lng: 4321,
                 lat: 1234
             }], 'should have forwarded the stop points lists');
+    });
+    test('create MOVE_ITINERARY_POINT action', t => {
+        const action = moveItineraryPoint(3, 5, InsertionPosition.AFTER);
+        t.eq(action, {
+            type: ActionType.MOVE_ITINERARY_POINT,
+            sourceId: 3,
+            targetId: 5,
+            position: InsertionPosition.AFTER
+        });
+    });
+    test('move itinerary point with side effects should trigger side effects when there are at least two points', async (t) => {
+        // given a fake store
+        const sdkMock = directionsAPIStub();
+        sdkMock.resolve([{
+                geometry: 'geometry'
+            }]);
+        const store = testStore(setState({
+            stops: [
+                { id: 1, lng: 666, lat: 666 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
+            directions: sdkMock
+        });
+        //@ts-ignore
+        await store.dispatch(moveItineraryPointWithSideEffects(2, 1, InsertionPosition.BEFORE));
+        t.eq(store.getActions(), [{
+                type: ActionType.MOVE_ITINERARY_POINT,
+                sourceId: 2,
+                targetId: 1,
+                position: InsertionPosition.BEFORE
+            }, {
+                type: ActionType.FETCH_ROUTES
+            }, {
+                type: ActionType.FETCH_ROUTES_SUCCESS,
+                routes: [{
+                        geometry: 'geometry'
+                    }]
+            }]);
+        t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
+        t.eq(sdkMock.calls[0], [{
+                id: 1,
+                lng: 666,
+                lat: 666
+            }, {
+                id: 2,
+                lng: 4321,
+                lat: 1234
+            }], 'should have forwarded the stop points lists');
+    });
+    test('move itinerary point with side effects should not trigger side effects when there is only one point', async (t) => {
+        // given a fake store
+        const sdkMock = directionsAPIStub();
+        sdkMock.resolve([{
+                geometry: 'geometry'
+            }]);
+        const store = testStore(setState({
+            stops: [
+                { id: 1 },
+                { id: 2, lng: 4321, lat: 1234 }
+            ],
+            routes: []
+        }), {
+            directions: sdkMock
+        });
+        //@ts-ignore
+        await store.dispatch(moveItineraryPointWithSideEffects(2, 1, InsertionPosition.BEFORE));
+        t.eq(store.getActions(), [{
+                type: ActionType.MOVE_ITINERARY_POINT,
+                sourceId: 2,
+                targetId: 1,
+                position: InsertionPosition.BEFORE
+            }]);
+        t.eq(sdkMock.calls.length, 0, 'should not have fetched routes');
     });
 };

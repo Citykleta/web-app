@@ -9,7 +9,6 @@ export default ({test}: Assert) => {
             toolType: ToolType.ITINERARY,
             type: ActionType.SELECT_TOOL
         };
-
         t.eq(selectTool(ToolType.ITINERARY), expected);
     });
 }

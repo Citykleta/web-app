@@ -4,7 +4,7 @@ import {selectTool} from '../../../src/app/actions/tool-box';
 import {ToolType} from '../../../src/app/tools/interfaces';
 import {
     addItineraryPoint,
-    changeItineraryPoint,
+    updateItineraryPoint,
     fetchRoutesWithSuccess,
     InsertionPosition,
     moveItineraryPoint,
@@ -94,7 +94,7 @@ export default ({test}: Assert) => {
             routes: []
         };
 
-        const actual = reducer(initialState, changeItineraryPoint(2, {
+        const actual = reducer(initialState, updateItineraryPoint(2, {
             lng: 789,
             lat: 987
         }));
@@ -119,7 +119,7 @@ export default ({test}: Assert) => {
             routes: []
         };
 
-        const actual = reducer(initialState, changeItineraryPoint(666, {
+        const actual = reducer(initialState, updateItineraryPoint(666, {
             lng: 789,
             lat: 987
         }));
