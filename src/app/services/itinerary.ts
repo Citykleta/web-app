@@ -11,7 +11,7 @@ import {
     changeItineraryPointWithSideEffects,
     UpdateItineraryPointAction
 } from '../actions/itinerary';
-import {UIPoint, StatePoint, GeoLocation} from '../util';
+import {UIPoint, StatePoint, GeoLocation} from '../utils';
 
 // todo does not need to be async
 export interface ItineraryService {

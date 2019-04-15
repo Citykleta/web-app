@@ -1,4 +1,4 @@
-import {truncate, Route, GeoCoord} from '../util';
+import {truncate, Route, GeoCoord} from '../utils';
 
 export interface Directions {
     search(points: GeoCoord[]): Promise<Route[]>;

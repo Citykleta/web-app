@@ -1,5 +1,5 @@
 import {ApplicationState} from '../services/store';
-import {UIPoint} from '../util';
+import {UIPoint} from '../utils';
 
 export const EMPTY_SOURCE = Object.freeze({
     type: 'geojson',

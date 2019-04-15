@@ -4,7 +4,7 @@ import {
     AddItineraryPointAction, UpdateItineraryPointAction, FetchRoutesSuccessAction,
     RemoveItineraryPointAction, InsertionPosition
 } from '../actions/itinerary';
-import {Route, StatePoint, truncate, UIPoint} from '../util';
+import {Route, StatePoint, truncate, UIPoint} from '../utils';
 
 export type UIPointOrPlaceholder = UIPoint | StatePoint;
 

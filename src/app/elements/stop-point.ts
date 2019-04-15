@@ -3,7 +3,7 @@ import {UIPointOrPlaceholder} from '../reducers/itinerary';
 import {dragHandle, pin, remove as removeIcon} from './icons';
 import {ServiceRegistry} from '../services/service-registry';
 import {ItineraryService} from '../services/itinerary';
-import {UIPoint} from '../util';
+import {UIPoint} from '../utils';
 import {SearchService} from '../services/search';
 import {style} from './stop-point.style';
 

@@ -1,6 +1,6 @@
 import polyline from '@mapbox/polyline';
 import {EMPTY_SOURCE} from './utils';
-import {Route} from '../util';
+import {Route} from '../utils';
 import {ApplicationState} from '../services/store';
 
 export const id = 'directions-path';

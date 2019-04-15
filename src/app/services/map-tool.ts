@@ -1,6 +1,6 @@
 import {ServiceRegistry} from './service-registry';
 import {itineraryTool} from '../tools/itinerary';
-import {GeoCoord, truncate} from '../util';
+import {GeoCoord, truncate} from '../utils';
 import {Tool} from '../tools/interfaces';
 
 export interface MapToolService {

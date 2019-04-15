@@ -1,4 +1,4 @@
-import {GeoCoord, GeoLocation} from '../util';
+import {GeoCoord, GeoLocation} from '../utils';
 
 export interface Geocoder {
     search(query: string): Promise<GeoLocation[]>;

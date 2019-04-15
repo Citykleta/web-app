@@ -3,7 +3,7 @@ import {ApplicationState} from '../../src/app/services/store';
 import {AnyAction, applyMiddleware, createStore, Store} from 'redux';
 import thunk from 'redux-thunk';
 import {Theme} from '../../src/app/reducers/settings';
-import {GeoCoord, Route} from '../../src/app/util';
+import {GeoCoord, Route} from '../../src/app/utils';
 
 interface DirectionsAPIStub extends Directions {
     readonly calls: any[];

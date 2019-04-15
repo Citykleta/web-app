@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit-element';
-import {GeoLocation, truncate} from '../util';
+import {GeoLocation, truncate} from '../utils';
 import {style} from './location-details.style';
 
 export const template = ({location: val}) => {

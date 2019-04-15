@@ -27,7 +27,7 @@ import {directionsAPIStub, testStore} from '../utils';
 import {Theme} from '../../../src/app/reducers/settings';
 import {UIPointOrPlaceholder} from '../../../src/app/reducers/itinerary';
 import {ApplicationState} from '../../../src/app/services/store';
-import {Route} from '../../../src/app/util';
+import {Route} from '../../../src/app/utils';
 
 const setState = (state: { stops: UIPointOrPlaceholder[], routes: Route[], focus?: number }): ApplicationState => ({
     itinerary: Object.assign({focus: null}, state),

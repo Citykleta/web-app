@@ -1,6 +1,6 @@
 import {Action} from 'redux';
 import {ActionType} from './types';
-import {GeoLocation} from '../util';
+import {GeoLocation} from '../utils';
 import {API} from '../services/store';
 
 export interface FetchSuggestionsAction extends Action<ActionType.FETCH_SUGGESTIONS> {

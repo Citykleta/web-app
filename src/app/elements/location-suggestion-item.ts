@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit-element';
-import {GeoLocation} from '../util';
+import {GeoLocation} from '../utils';
 
 export const template = ({suggestion: val}) => {
     const text = val.name || (val.address && val.address.street) || 'Unknown place';

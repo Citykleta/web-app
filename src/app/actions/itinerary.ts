@@ -2,7 +2,7 @@ import {ActionType} from './types';
 import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {API, ApplicationState} from '../services/store';
-import {GeoCoord, isGeoCoord, Route} from '../util';
+import {GeoCoord, isGeoCoord, Route} from '../utils';
 
 export interface AddItineraryPointAction extends Action<ActionType.ADD_ITINERARY_POINT> {
     point: GeoCoord,

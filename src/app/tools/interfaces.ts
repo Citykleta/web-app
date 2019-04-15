@@ -1,4 +1,4 @@
-import {GeoCoord} from '../util';
+import {GeoCoord} from '../utils';
 
 export enum ToolType {
     ITINERARY = 'ITINERARY',

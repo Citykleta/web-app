@@ -1,7 +1,7 @@
 // todo use service worker instead
 
 import {Geocoder} from './geocoder';
-import {GeoCoord} from '../util';
+import {GeoCoord} from '../utils';
 
 const wait = (time = 300) => new Promise(resolve => {
     setTimeout(() => resolve(), time);

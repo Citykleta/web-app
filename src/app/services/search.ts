@@ -5,7 +5,7 @@ import {
     fetchSuggestionsFromAPI,
     fetchSuggestionsWithSuccess, selectSuggestion
 } from '../actions/search';
-import {GeoLocation} from '../util';
+import {GeoLocation} from '../utils';
 import {ServiceRegistry} from './service-registry';
 
 export interface SearchService {

@@ -1,5 +1,5 @@
 import {Reducer} from 'redux';
-import {UIPoint} from '../util';
+import {UIPoint} from '../utils';
 import {ActionType} from '../actions/types';
 
 export interface SearchState {

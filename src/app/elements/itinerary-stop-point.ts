@@ -4,7 +4,7 @@ import {UIPointOrPlaceholder} from '../reducers/itinerary';
 import {classMap} from 'lit-html/directives/class-map';
 import {ItineraryService} from '../services/itinerary';
 import {plus, swap} from './icons';
-import {UIPoint} from '../util';
+import {UIPoint} from '../utils';
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 

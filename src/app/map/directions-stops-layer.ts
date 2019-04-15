@@ -1,4 +1,4 @@
-import {isGeoCoord, UIPoint} from '../util';
+import {isGeoCoord, UIPoint} from '../utils';
 import {ApplicationState} from '../services/store';
 
 export const id = 'directions-stops';

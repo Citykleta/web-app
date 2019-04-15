@@ -8,6 +8,7 @@ import settingsAction from './actions/settings';
 import settingsReducer from './reducers/settings';
 import searchAction from './actions/search';
 import searchReducer from './reducers/search';
+import mapUtil from './map/utils';
 
 test.indent();
 
@@ -20,5 +21,6 @@ test('TOOL-BOX REDUCER', toolBoxReducer);
 test('TOOL-BOX SERVICE', toolboxService);
 test('SETTINGS ACTIONS', settingsAction);
 test('SETTINGS REDUCER', settingsReducer);
+test('MAP UTILS', mapUtil);
 
 

@@ -1,7 +1,7 @@
 import {html, css, LitElement} from 'lit-element';
 import {classMap} from 'lit-html/directives/class-map';
-import {GeoLocation, stringify} from '../util';
-import {debounce} from '../util';
+import {GeoLocation, stringify} from '../utils';
+import {debounce} from '../utils';
 import {loadingIndicator, myLocation} from './icons';
 import {ServiceRegistry} from '../services/service-registry';
 import {suggester} from '../services/search';
