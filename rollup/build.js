@@ -6,7 +6,7 @@ import {terser} from 'rollup-plugin-terser';
 const plugins = [replace({
     delimiters: ['<@', '@>'],
     include: './src/conf/*.js',
-    MAP_STYLE: process.env.NODE_ENV === 'production' ? 'mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb' : 'http://localhost:8080/styles/klokantech-basic/style.json',
+    MAP_STYLE: process.env.NODE_ENV === 'production' ? process.env.MAPBOX_STYLE : 'http://localhost:8080/styles/klokantech-basic/style.json',
     MAPBOX_PUBLIC_TOKEN: process.env.MAPBOX_PUBLIC_TOKEN || 'pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw'
 }), replace({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev')
