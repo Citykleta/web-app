@@ -6,8 +6,8 @@
   ],
   "build": {
     "env": {
-      "MAPBOX_PUBLIC_TOKEN": "pk.eyJ1IjoibG9yZW56b2ZveCIsImEiOiJjanFwYWs3NXAyeG94NDhxanE5NHJodDZvIn0.hSLz7F4CLkY5jOdnf03PEw",
-      "MAPBOX_STYLE": "mapbox://styles/lorenzofox/cjrryj82s4yyl2snsv6sixrxb"
+      "MAPBOX_PUBLIC_TOKEN": "@mapbox-token",
+      "MAPBOX_STYLE": "@mapbox-style"
     }
   },
   "builds": [
