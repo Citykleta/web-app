@@ -7,9 +7,9 @@ import {Directions, factory as directionsAPI} from '../sdk/directions';
 import {SettingsState, Theme} from '../reducers/settings';
 import {Geocoder,} from '../sdk/geocoder';
 import {factory as geocoderAPI} from '../sdk/geocoder';
-// import {factory as geocoderAPI} from '../sdk/geocoder-mock';
 import {SearchState} from '../reducers/search';
 import {ToolType} from '../tools/interfaces';
+import apiConf from '../../conf/api';
 
 export interface ApplicationState {
     tool: ToolBoxState;
@@ -29,8 +29,12 @@ const debugMiddleware = store => next => action => {
 };
 
 export const store = (api: API = {
-    directions: directionsAPI(),
-    geocoder: geocoderAPI()
+    directions: directionsAPI({
+        endpoint: apiConf.endpoint
+    }),
+    geocoder: geocoderAPI({
+        endpoint: apiConf.endpoint
+    })
 }) => (initialState: ApplicationState = {
     tool: {
         selectedTool: ToolType.SEARCH

@@ -21,17 +21,11 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
             searchAbortController = new AbortController();
 
             try {
-                const url = new URL('/search/locations', endpoint);
-                const body = {
-                    query
-                };
-
+                const url = new URL(`/search/poi?query=${query}`, endpoint);
                 const res = await fetch(url.toString(), {
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
                     },
-                    method: 'POST',
-                    body: JSON.stringify(body),
                     signal: searchAbortController.signal
                 });
 
@@ -39,21 +33,30 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                     throw new Error('not ok response');
                 }
 
-                return res.json();
+                const raw = await res.json();
+
+                return raw.map(({name, address, category, geometry}) => {
+
+                    const [lng, lat] = geometry.coordinates;
+                    return {
+                        name,
+                        address,
+                        category,
+                        lng,
+                        lat
+                    };
+                });
             } finally {
                 searchAbortController = null;
             }
         },
         async reverse(coordinates: GeoCoord) {
-            const url = new URL('/search/reverse', endpoint);
-            const body = coordinates;
+            const url = new URL(`/search/reverse?lng=${coordinates.lng}&lat=${coordinates.lat}`, endpoint);
 
             const res = await fetch(url.toString(), {
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
-                },
-                method: 'POST',
-                body: JSON.stringify(body)
+                }
             });
 
             if (res.ok !== true) {
