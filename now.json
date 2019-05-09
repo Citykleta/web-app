@@ -4,7 +4,7 @@
   "alias": "app.citykleta-test.com",
   "build": {
     "env": {
-      "MAPBOX_PUBLIC_TOKEN": "@mapbox-token",
+      "MAPBOX_PUBLIC_TOKEN": "@mapbox-public-token",
       "MAPBOX_STYLE": "@mapbox-style"
     }
   },
