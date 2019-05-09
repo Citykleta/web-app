@@ -10,7 +10,7 @@ import {style} from './itinerary-panel.style';
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
 // todo better event handler for drag/drop operation
-export const template = ({stops, addPoint, itinerary, selectedSuggestion}) => {
+export const template = ({stops, addPoint, itinerary}) => {
 
     let boundingBox = null;
 
@@ -64,8 +64,7 @@ export const template = ({stops, addPoint, itinerary, selectedSuggestion}) => {
     })}">${swap()}</citykleta-button-icon>
     <ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop)}" @dragover="${dragOver(stop)}" @drop="${drop(stop)}" @dragleave="${dragLeave(stop)}"><citykleta-stop-point class=${classList} .value="${stop}" .location="${stop}"></citykleta-stop-point></li>`)}</ol>
 </div>
-<div id="add-button-container"><citykleta-button-icon @click="${addPoint}">${plus()}</citykleta-button-icon></div>
-<citykleta-location .location="${selectedSuggestion}" class="${classMap({hidden: selectedSuggestion === null})}"></citykleta-location>`;
+<div id="add-button-container"><citykleta-button-icon @click="${addPoint}">${plus()}</citykleta-button-icon></div>`;
 };
 
 export const propDef = {
@@ -98,8 +97,7 @@ export class ItineraryPanel extends LitElement {
             stops: this.stops, addPoint: () => {
                 this._itinerary.addPoint(null);
             },
-            itinerary: this._itinerary,
-            selectedSuggestion: this.selectedSuggestion
+            itinerary: this._itinerary
         });
     }
 }

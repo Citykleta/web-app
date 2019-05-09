@@ -7,9 +7,7 @@ export const style = css`
         --border-color: var(--background-theme-3);
         --color: var(--font-color-theme, black);
         color: var(--color);
-        display: inline-block;
-        margin: 1em;
-        min-width: 400px;
+        padding: 0.6em;
     }
 
     .panel {

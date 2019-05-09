@@ -17,7 +17,6 @@ export const template = ({onChange, theme}) => html`
 
 export const propDef = {};
 
-
 export class SettingsPanel extends LitElement {
 
     static get styles() {

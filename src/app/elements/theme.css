@@ -40,6 +40,7 @@ citykleta-app.blandine {
 }
 
 body {
+    box-sizing: border-box;
     color: var(--color);
     font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     position: relative;
@@ -51,12 +52,14 @@ body * {
 
 citykleta-app {
     position: absolute;
-    top:0;
+    top: 0;
     z-index: 99;
+    max-height: 100vh;
     opacity: 0.8;
-    max-width: 450px;
+    overflow-y: scroll;
+    width: 460px;
 }
 
-citykleta-app:focus-within, citykleta-app:hover{
+citykleta-app:focus-within, citykleta-app:hover {
     opacity: 1;
 }

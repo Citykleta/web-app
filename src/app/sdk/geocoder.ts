@@ -35,15 +35,17 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
 
                 const raw = await res.json();
 
-                return raw.map(({name, address, category, geometry}) => {
+                return raw.map(({name, id, address, description, category, geometry}) => {
 
                     const [lng, lat] = geometry.coordinates;
                     return {
+                        osmId: id,
                         name,
                         address,
                         category,
                         lng,
-                        lat
+                        lat,
+                        description
                     };
                 });
             } finally {

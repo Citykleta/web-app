@@ -11,6 +11,7 @@ export const style = css`:host {
     display: flex;
     flex-direction: column;
     position: relative;
+    /*max-height: 50vh; !*todo*!    */
 }
 
 :host(.overlay) [role=listbox]{
@@ -62,6 +63,7 @@ ul:empty, ol:empty {
 ol {
     list-style: none;
     margin: 0;
+    overflow-y: auto;
     padding: 0;
     width: 100%;
 }

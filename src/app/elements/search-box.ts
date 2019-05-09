@@ -66,7 +66,6 @@ export class SearchBox extends LitElement {
         switch (key) {
             case 'ArrowDown':
             case 'ArrowUp': {
-                ev.preventDefault();
                 if (this.suggestions.length) {
                     const index = this.suggestions.indexOf(this.selectedSuggestion);
                     let actualIndex = index;

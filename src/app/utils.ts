@@ -3,7 +3,7 @@ import {UIPointOrPlaceholder} from './reducers/itinerary';
 export const truncate = (value: number): number => Math.trunc(value * 10 ** 6) / 10 ** 6;
 
 export const concatParts = (parts: string[], separator = ', '): string => parts
-    .filter(s => s !== '' || s === void 0)
+    .filter(s => !!s)
     .join(separator);
 
 export const isSameLocation = (a: GeoCoord, b: GeoCoord): boolean => {
@@ -18,6 +18,13 @@ export const isSameLocation = (a: GeoCoord, b: GeoCoord): boolean => {
     return truncate(a.lng) === truncate(b.lng) && truncate(a.lat) === truncate(b.lat);
 };
 
+export const formatAddress = (address: Address): string => concatParts([
+    concatParts([
+        address.street,
+        address.number ? `#${address.number}` : address.number
+    ], ' '),
+    address.municipality]);
+
 export const stringify = (p: GeoLocation | StatePoint): string => {
     const point = <GeoLocation>p;
     if (point === null || !isGeoCoord(point)) {
@@ -30,7 +37,8 @@ export const stringify = (p: GeoLocation | StatePoint): string => {
 
     if (point.address) {
         const {address} = point;
-        return address.formatted || concatParts([
+        return formatAddress(address);
+        return concatParts([
             concatParts([
                 address.number,
                 address.street
@@ -69,7 +77,6 @@ export interface Address {
     number?: string;
     street?: string;
     municipality?: string;
-    formatted?: string
 }
 
 export interface GeoLocation extends GeoCoord {
