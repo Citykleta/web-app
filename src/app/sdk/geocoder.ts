@@ -23,9 +23,6 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
             try {
                 const url = new URL(`/search/poi?query=${query}`, endpoint);
                 const res = await fetch(url.toString(), {
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
                     signal: searchAbortController.signal
                 });
 
@@ -55,11 +52,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
         async reverse(coordinates: GeoCoord) {
             const url = new URL(`/search/reverse?lng=${coordinates.lng}&lat=${coordinates.lat}`, endpoint);
 
-            const res = await fetch(url.toString(), {
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
-            });
+            const res = await fetch(url.toString());
 
             if (res.ok !== true) {
                 throw new Error('not ok response'); //todo handler error in a different way

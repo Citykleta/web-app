@@ -20,7 +20,10 @@ if (isProduction) {
 }
 
 export default {
-    input: ['./src/app/elements/index.js', './src/app/map/index.js'],
+    input: [
+        './src/app/elements/index.js',
+        './src/app/map/index.js'
+    ],
     output: [{
         dir: './dist/',
         sourcemap: true,
