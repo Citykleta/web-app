@@ -34,7 +34,7 @@ export const fetchSuggestionsFromAPI = (query: string) => async (dispatch, getSt
     const {geocoder} = API;
     dispatch(fetchSuggestions(query));
     try {
-        const res = await geocoder.search(query);
+        const res = await geocoder.search_poi(query);
         return dispatch(fetchSuggestionsWithSuccess(res));
     } catch (e) {
         return dispatch(fetchSuggestionsWithFailure(e));

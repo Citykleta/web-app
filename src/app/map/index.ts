@@ -39,6 +39,10 @@ map.on('load', () => {
     map.addLayer(stopsStyle);
 });
 
+map.on('click', ev => {
+    console.log(ev.lngLat);
+})
+
 let currentSelectedSuggestion = null;
 
 const mapUpdater = eventuallyUpdate(map);

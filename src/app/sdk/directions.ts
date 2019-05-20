@@ -25,7 +25,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                     lng: truncate(lng)
                 }));
 
-                const url = new URL('/search/directions', endpoint);
+                const url = new URL('/direction', endpoint);
                 const body = {
                     waypoints
                 };

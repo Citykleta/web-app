@@ -38,18 +38,12 @@ export const stringify = (p: GeoLocation | StatePoint): string => {
     if (point.address) {
         const {address} = point;
         return formatAddress(address);
-        return concatParts([
-            concatParts([
-                address.number,
-                address.street
-            ], ' '),
-            address.municipality]);
     }
 
     return `${truncate(point.lng)},${truncate(point.lat)}`;
 };
 
-export const debounce = (fn, time = 300) => {
+export const debounce = (fn, time = 100) => {
     let timer = null;
     return function (...args) {
         if (timer) {

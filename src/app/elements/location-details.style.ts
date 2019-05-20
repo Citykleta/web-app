@@ -11,8 +11,13 @@ export const style = css`
 
     .location {
         color: var(--color);
-        font-size: 0.95em;
+        font-size: 0.9em;
         margin: 0;
+    }
+    
+    .description {
+        font-size: 0.95em;
+        font-style: italic;
     }
     
     .location span:last-child {

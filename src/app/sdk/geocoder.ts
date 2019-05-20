@@ -1,7 +1,9 @@
 import {GeoCoord, GeoLocation} from '../utils';
 
 export interface Geocoder {
-    search(query: string): Promise<GeoLocation[]>;
+    search_poi(query: string): Promise<GeoLocation[]>;
+
+    search_address(query: string): Promise<any>;
 
     reverse(coordinates: GeoCoord): Promise<GeoLocation[]>;
 }
@@ -12,7 +14,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
     let searchAbortController = null;
 
     return {
-        async search(query: string = '') {
+        async search_poi(query: string = '') {
 
             if (searchAbortController) {
                 searchAbortController.abort();
@@ -21,7 +23,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
             searchAbortController = new AbortController();
 
             try {
-                const url = new URL(`/search/poi?query=${query}`, endpoint);
+                const url = new URL(`/poi?search=${encodeURIComponent(query)}`, endpoint);
                 const res = await fetch(url.toString(), {
                     signal: searchAbortController.signal
                 });
@@ -49,8 +51,18 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                 searchAbortController = null;
             }
         },
+        async search_address(query: string = '') {
+            const url = new URL(`/address?search=${encodeURIComponent(query)}`);
+            const res = await fetch(url.toString());
+
+            if (res.ok !== true) {
+                throw new Error('something went wrong');
+            }
+
+            return res.json;
+        },
         async reverse(coordinates: GeoCoord) {
-            const url = new URL(`/search/reverse?lng=${coordinates.lng}&lat=${coordinates.lat}`, endpoint);
+            const url = new URL(`/location?lng=${coordinates.lng}&lat=${coordinates.lat}`, endpoint);
 
             const res = await fetch(url.toString());
 

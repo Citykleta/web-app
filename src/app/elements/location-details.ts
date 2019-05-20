@@ -10,7 +10,7 @@ export const template = ({location: val}) => {
         <h2>${text}</h2>
     </header>
     <p>${address}</p>
-    <p>${val.description}</p>
+    <p class="description">${val.description}</p>
     <p class="location">
         <span>Location</span>:
         <span>${truncate(val.lng)} / ${truncate(val.lat)}</span>
