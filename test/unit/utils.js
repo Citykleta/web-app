@@ -57,6 +57,7 @@ export const defaultState = () => ({
         theme: Theme.LIGHT
     },
     search: {
+        searchResult: [],
         selectedSuggestion: null,
         suggestions: []
     }

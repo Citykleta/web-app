@@ -3,19 +3,28 @@ import {EMPTY_SOURCE} from './utils';
 import {Route} from '../utils';
 import {ApplicationState} from '../services/store';
 
-export const id = 'directions-path';
+export const sourceId = 'directions-path';
 
-export const style = {
-    id,
+export const lineStyle = {
+    id: 'directions-line',
     type: 'line',
-    source: id,
+    source: sourceId,
     paint: {
         'line-color': 'blue',
         'line-width': 7
     }
 };
 
-export const slicer = (state:ApplicationState) => state.itinerary.routes;
+export const pointStyle = {
+    id: 'directions-point',
+    type: 'circle',
+    source: sourceId,
+    paint: {
+        'circle-color': 'blue'
+    }
+};
+
+export const slicer = (state: ApplicationState) => state.itinerary.routes;
 
 export const getLayerData = (routes: Route[]) => {
 

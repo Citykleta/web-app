@@ -1,9 +1,9 @@
 import {GeoCoord, GeoLocation} from '../utils';
 
 export interface Geocoder {
-    search_poi(query: string): Promise<GeoLocation[]>;
+    searchPOI(query: string): Promise<GeoLocation[]>;
 
-    search_address(query: string): Promise<any>;
+    searchAddress(query: string): Promise<any>;
 
     reverse(coordinates: GeoCoord): Promise<GeoLocation[]>;
 }
@@ -14,7 +14,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
     let searchAbortController = null;
 
     return {
-        async search_poi(query: string = '') {
+        async searchPOI(query: string = '') {
 
             if (searchAbortController) {
                 searchAbortController.abort();
@@ -34,6 +34,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
 
                 const raw = await res.json();
 
+                // todo normalize ouptut and let each component format the response as it wants
                 return raw.map(({name, id, address, description, category, geometry}) => {
 
                     const [lng, lat] = geometry.coordinates;
@@ -51,19 +52,23 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                 searchAbortController = null;
             }
         },
-        async search_address(query: string = '') {
-            const url = new URL(`/address?search=${encodeURIComponent(query)}`);
+        async searchAddress(query: string = '') {
+            const url = new URL(`/address?search=${encodeURIComponent(query)}`, endpoint);
+            // if we have requested an address lookup we stop any ongoing points of interest lookup
+            if (searchAbortController) {
+                searchAbortController.abort();
+            }
+
             const res = await fetch(url.toString());
 
             if (res.ok !== true) {
                 throw new Error('something went wrong');
             }
 
-            return res.json;
+            return res.json();
         },
         async reverse(coordinates: GeoCoord) {
             const url = new URL(`/location?lng=${coordinates.lng}&lat=${coordinates.lat}`, endpoint);
-
             const res = await fetch(url.toString());
 
             if (res.ok !== true) {

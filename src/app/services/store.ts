@@ -52,6 +52,7 @@ export const store = (api: API = {
     },
     search: {
         suggestions: [],
+        searchResult:[],
         selectedSuggestion: null
     }
 }): Store<ApplicationState> => createStore(reducer, initialState, applyMiddleware(thunk.withExtraArgument<API>(api),

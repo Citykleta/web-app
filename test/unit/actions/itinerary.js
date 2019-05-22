@@ -11,6 +11,7 @@ const setState = (state) => ({
         selectedTool: null
     },
     search: {
+        searchResult: [],
         selectedSuggestion: null,
         suggestions: []
     }

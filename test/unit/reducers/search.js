@@ -3,7 +3,8 @@ import { addItineraryPoint } from '../../../src/app/actions/itinerary';
 import { fetchSuggestionsWithSuccess, selectSuggestion } from '../../../src/app/actions/search';
 const defaultState = () => ({
     suggestions: [],
-    selectedSuggestion: null
+    selectedSuggestion: null,
+    searchResult: []
 });
 export default ({ test }) => {
     test('should return state is if the action type is not related to search', t => {

@@ -21,6 +21,7 @@ const setState = (state: { stops: UIPointOrPlaceholder[], routes: Route[], focus
         selectedTool: null
     },
     search: {
+        searchResult:[],
         selectedSuggestion: null,
         suggestions: []
     }

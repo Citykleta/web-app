@@ -11,7 +11,10 @@ export const style = css`:host {
     display: flex;
     flex-direction: column;
     position: relative;
-    /*max-height: 50vh; !*todo*!    */
+}
+
+[aria-expanded=false] + [role=listbox]{
+    display: none;
 }
 
 :host(.overlay) [role=listbox]{

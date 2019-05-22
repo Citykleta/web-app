@@ -43,7 +43,7 @@ export const stringify = (p: GeoLocation | StatePoint): string => {
     return `${truncate(point.lng)},${truncate(point.lat)}`;
 };
 
-export const debounce = (fn, time = 100) => {
+export const debounce = (fn, time = 250) => {
     let timer = null;
     return function (...args) {
         if (timer) {

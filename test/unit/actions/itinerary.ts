@@ -38,6 +38,7 @@ const setState = (state: { stops: UIPointOrPlaceholder[], routes: Route[], focus
         selectedTool: null
     },
     search: {
+        searchResult: [],
         selectedSuggestion: null,
         suggestions: []
     }
@@ -515,17 +516,17 @@ export default (a: Assert) => {
         }], 'should have forwarded the stop points lists');
     });
 
-    test('create MOVE_ITINERARY_POINT action', t=>{
-        const action = moveItineraryPoint(3,5, InsertionPosition.AFTER);
-        t.eq(action,{
-            type:ActionType.MOVE_ITINERARY_POINT,
-            sourceId:3,
-            targetId:5,
-            position:InsertionPosition.AFTER
+    test('create MOVE_ITINERARY_POINT action', t => {
+        const action = moveItineraryPoint(3, 5, InsertionPosition.AFTER);
+        t.eq(action, {
+            type: ActionType.MOVE_ITINERARY_POINT,
+            sourceId: 3,
+            targetId: 5,
+            position: InsertionPosition.AFTER
         });
     });
 
-    test('move itinerary point with side effects should trigger side effects when there are at least two points', async t =>{
+    test('move itinerary point with side effects should trigger side effects when there are at least two points', async t => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
@@ -545,9 +546,9 @@ export default (a: Assert) => {
         await store.dispatch(moveItineraryPointWithSideEffects(2, 1, InsertionPosition.BEFORE));
         t.eq(store.getActions(), [{
             type: ActionType.MOVE_ITINERARY_POINT,
-            sourceId:2,
-            targetId:1,
-            position:InsertionPosition.BEFORE
+            sourceId: 2,
+            targetId: 1,
+            position: InsertionPosition.BEFORE
         }, {
             type: ActionType.FETCH_ROUTES
         }, {
@@ -568,7 +569,7 @@ export default (a: Assert) => {
         }], 'should have forwarded the stop points lists');
     });
 
-    test('move itinerary point with side effects should not trigger side effects when there is only one point', async t =>{
+    test('move itinerary point with side effects should not trigger side effects when there is only one point', async t => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
@@ -588,9 +589,9 @@ export default (a: Assert) => {
         await store.dispatch(moveItineraryPointWithSideEffects(2, 1, InsertionPosition.BEFORE));
         t.eq(store.getActions(), [{
             type: ActionType.MOVE_ITINERARY_POINT,
-            sourceId:2,
-            targetId:1,
-            position:InsertionPosition.BEFORE
+            sourceId: 2,
+            targetId: 1,
+            position: InsertionPosition.BEFORE
         }]);
         t.eq(sdkMock.calls.length, 0, 'should not have fetched routes');
     });

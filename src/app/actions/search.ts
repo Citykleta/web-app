@@ -4,7 +4,7 @@ import {GeoLocation} from '../utils';
 import {API} from '../services/store';
 
 export interface FetchSuggestionsAction extends Action<ActionType.FETCH_SUGGESTIONS> {
-    query: string
+    query: string;
 }
 
 export const fetchSuggestions = (query: string): FetchSuggestionsAction => ({
@@ -34,7 +34,7 @@ export const fetchSuggestionsFromAPI = (query: string) => async (dispatch, getSt
     const {geocoder} = API;
     dispatch(fetchSuggestions(query));
     try {
-        const res = await geocoder.search_poi(query);
+        const res = await geocoder.searchPOI(query);
         return dispatch(fetchSuggestionsWithSuccess(res));
     } catch (e) {
         return dispatch(fetchSuggestionsWithFailure(e));
@@ -49,3 +49,42 @@ export const selectSuggestion = (suggestion: GeoLocation): SelectSuggestionActio
     type: ActionType.SELECT_SUGGESTION,
     suggestion
 });
+
+export interface FetchSearchResultAction extends Action<ActionType.FETCH_SEARCH_RESULT> {
+    query: string;
+}
+
+export const fetchSearchResult = (query: string): FetchSearchResultAction => ({
+    type: ActionType.FETCH_SEARCH_RESULT,
+    query
+});
+
+//todo type result
+export interface FetchSearchResultSuccessAction extends Action<ActionType.FETCH_SEARCH_RESULT_SUCCESS> {
+    result: any[];
+}
+
+export const fetchSearchResultWithSuccess = (result: any[]): FetchSearchResultSuccessAction => ({
+    type: ActionType.FETCH_SEARCH_RESULT_SUCCESS,
+    result
+});
+
+export interface FetchSearchResultFailureAction extends Action<ActionType.FETCH_SEARCH_RESULT_FAILURE> {
+    error: any;
+}
+
+export const fetchSearchResultWithFailure = (error: any): FetchSearchResultFailureAction => ({
+    type: ActionType.FETCH_SEARCH_RESULT_FAILURE,
+    error
+});
+
+export const fetchSearchResultFromAPI = (query: string) => async (dispatch, getState, API: API) => {
+    const {geocoder} = API;
+    dispatch(fetchSearchResult(query));
+    try {
+        const res = await geocoder.searchAddress(query);
+        return dispatch(fetchSearchResultWithSuccess(res));
+    } catch (e) {
+        return dispatch(fetchSearchResultWithFailure(e));
+    }
+};

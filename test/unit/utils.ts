@@ -80,6 +80,7 @@ export const defaultState = (): ApplicationState => ({
         theme: Theme.LIGHT
     },
     search: {
+        searchResult:[],
         selectedSuggestion: null,
         suggestions: []
     }

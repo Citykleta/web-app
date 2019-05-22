@@ -1,11 +1,12 @@
 import {Assert} from 'zora';
-import {reducer} from '../../../src/app/reducers/search';
+import {reducer, SearchState} from '../../../src/app/reducers/search';
 import {addItineraryPoint} from '../../../src/app/actions/itinerary';
 import {fetchSuggestionsWithSuccess, selectSuggestion} from '../../../src/app/actions/search';
 
-const defaultState = () => ({
+const defaultState = (): SearchState => ({
     suggestions: [],
-    selectedSuggestion: null
+    selectedSuggestion: null,
+    searchResult:[]
 });
 
 export default ({test}: Assert) => {

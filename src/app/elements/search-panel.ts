@@ -5,10 +5,15 @@ import {classMap} from 'lit-html/directives/class-map';
 import {SearchService} from '../services/search';
 import {style} from './search-panel.style';
 
-export const template = ({selectedSuggestion, search}) => html`
-    <citykleta-search-box .value="${selectedSuggestion}" @selection-change="${ev => search.selectSuggestion(ev.detail.suggestion)}"></citykleta-search-box>
+export const template = ({selectedSuggestion, search}) => {
+
+    const test = ev => search.search(ev.detail.value);
+
+    return html`
+    <citykleta-search-box @search-submitted="${test}" @selection-change="${ev => search.selectSuggestion(ev.detail.suggestion)}"></citykleta-search-box>
     <citykleta-location .location="${selectedSuggestion}" class="${classMap({hidden: selectedSuggestion === null})}"></citykleta-location>
 `;
+};
 
 export const propDef = {
     selectedSuggestion: {type: Object}
