@@ -66,7 +66,6 @@ ul:empty, ol:empty {
 ol {
     list-style: none;
     margin: 0;
-    overflow-y: auto;
     padding: 0;
     width: 100%;
 }

@@ -54,6 +54,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
         },
         async searchAddress(query: string = '') {
             const url = new URL(`/address?search=${encodeURIComponent(query)}`, endpoint);
+
             // if we have requested an address lookup we stop any ongoing points of interest lookup
             if (searchAbortController) {
                 searchAbortController.abort();

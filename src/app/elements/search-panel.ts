@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit-element';
 import {ServiceRegistry} from '../services/service-registry';
-import {GeoLocation, stringify} from '../utils';
+import {GeoLocation} from '../utils';
 import {classMap} from 'lit-html/directives/class-map';
 import {SearchService} from '../services/search';
 import {style} from './search-panel.style';

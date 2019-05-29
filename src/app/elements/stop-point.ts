@@ -11,7 +11,7 @@ export const template = ({location: val, onSelect, onValue, remove}) => html`
     <span draggable="true" class="drag-handle">
         ${dragHandle()}
     </span>
-    <citykleta-search-box @selection-change="${onSelect}" @value-change="${onValue}" class="overlay" .value="${val}"></citykleta-search-box>
+    <citykleta-search-box @selection-change="${onSelect}" @value-change="${onValue}" .value="${val}"></citykleta-search-box>
     <citykleta-button-icon @click="${remove}" class="danger" id="remove-button">${removeIcon()}</citykleta-button-icon>
     `;
 
