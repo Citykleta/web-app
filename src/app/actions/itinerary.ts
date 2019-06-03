@@ -2,14 +2,17 @@ import {ActionType} from './types';
 import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {API, ApplicationState} from '../services/store';
-import {GeoCoord, isGeoCoord, Route} from '../utils';
+import {Route, SearchResult} from '../utils';
+import {createSearchResultInstance} from '../elements/search-result/entities';
+
+const hasValue = p => p.item !== null;
 
 export interface AddItineraryPointAction extends Action<ActionType.ADD_ITINERARY_POINT> {
-    point: GeoCoord,
+    point: SearchResult,
     beforeId?: number
 }
 
-export const addItineraryPoint = (point: GeoCoord, beforeId: number = null): AddItineraryPointAction => ({
+export const addItineraryPoint = (point: SearchResult, beforeId: number = null): AddItineraryPointAction => ({
     type: ActionType.ADD_ITINERARY_POINT,
     point,
     beforeId
@@ -26,10 +29,10 @@ export const removeItineraryPoint = (id: number): RemoveItineraryPointAction => 
 
 export interface UpdateItineraryPointAction extends Action<ActionType.UPDATE_ITINERARY_POINT> {
     id: number,
-    location: GeoCoord
+    location: SearchResult
 }
 
-export const updateItineraryPoint = (id: number, location: GeoCoord): UpdateItineraryPointAction => ({
+export const updateItineraryPoint = (id: number, location: SearchResult): UpdateItineraryPointAction => ({
     type: ActionType.UPDATE_ITINERARY_POINT,
     id,
     location
@@ -83,7 +86,7 @@ const eventuallyUpdateRoutes = <K extends ItineraryStopsAction>(actionCreator: A
         const stops = getState()
             .itinerary
             .stops
-            .filter(isGeoCoord);
+            .filter(hasValue);
         if (stops.length >= 2) {
             return dispatch(fetchRoutesFromAPI());
         }
@@ -98,8 +101,12 @@ export const fetchRoutesFromAPI = () => async (dispatch, getState, API: API) => 
     const {directions} = API;
     dispatch(fetchRoutes());
     try {
-        const {stops} = getState().itinerary;
-        const res = await directions.search(stops.filter(isGeoCoord));
+        const {stops} = getState()
+            .itinerary;
+        const points = stops
+            .filter(hasValue)
+            .map(({item}) => createSearchResultInstance(item).center());
+        const res = await directions.search(points);
         return dispatch(fetchRoutesWithSuccess(res));
     } catch (e) {
         return dispatch(fetchRoutesWithFailure(e));

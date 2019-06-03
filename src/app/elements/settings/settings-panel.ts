@@ -1,9 +1,9 @@
 import {html, LitElement} from 'lit-element';
-import {ServiceRegistry} from '../services/service-registry';
-import {Theme} from '../reducers/settings';
+import {ServiceRegistry} from '../../services/service-registry';
+import {Theme} from '../../reducers/settings';
 import {Store} from 'redux';
-import {ApplicationState} from '../services/store';
-import {changeTheme} from '../actions/settings';
+import {ApplicationState} from '../../services/store';
+import {changeTheme} from '../../actions/settings';
 import {style} from './settings-panel.style';
 
 export const template = ({onChange, theme}) => html`

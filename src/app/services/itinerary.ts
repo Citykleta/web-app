@@ -1,66 +1,65 @@
 import {Store} from 'redux';
 import {ApplicationState, EnhancedDispatch} from './store';
 import {
+    AddItineraryPointAction,
     addItineraryPointWithSideEffects,
+    changeItineraryPointWithSideEffects,
+    InsertionPosition,
+    moveItineraryPointWithSideEffects,
+    RemoveItineraryPointAction,
     removeItineraryPointWithSideEffects,
     resetRoutes,
-    AddItineraryPointAction,
-    RemoveItineraryPointAction,
-    moveItineraryPointWithSideEffects,
-    InsertionPosition,
-    changeItineraryPointWithSideEffects,
     UpdateItineraryPointAction
 } from '../actions/itinerary';
-import {UIPoint, StatePoint, GeoLocation} from '../utils';
+import {ItineraryPoint, SearchResult} from '../utils';
 
-// todo does not need to be async
 export interface ItineraryService {
-    startMove(p: UIPoint | StatePoint): void;
+    startMove(id: number): void;
 
-    moveBefore(p: UIPoint | StatePoint): Promise<any>;
+    moveBefore(id: number): Promise<any>;
 
-    moveAfter(p: UIPoint | StatePoint): Promise<any>;
+    moveAfter(id: number): Promise<any>;
 
-    addPoint(p: GeoLocation, before ?: UIPoint): Promise<any>;
+    addPoint(p: SearchResult, beforeId ?: number): Promise<any>;
 
-    removePoint(p: UIPoint | StatePoint): Promise<any>;
+    removePoint(id: number): Promise<any>;
 
-    updatePoint(id: number, value: GeoLocation): Promise<any>;
+    updatePoint(id: number, value: SearchResult): Promise<any>;
 
     reset(): void;
 }
 
 export const provider = (store: Store<ApplicationState>): ItineraryService => {
 
-    let movingPoint: UIPoint = null;
+    let movingPoint: ItineraryPoint = null;
 
     return {
-        startMove(p: UIPoint | StatePoint) {
+        startMove(id) {
             const {stops} = store.getState().itinerary;
-            movingPoint = <UIPoint>stops
-                .find(i => i.id === p.id) || null;
+            movingPoint = stops
+                .find(i => i.id === id) || null;
         },
-        async moveBefore(p: UIPoint | StatePoint) {
+        async moveBefore(id) {
             if (movingPoint) {
                 // @ts-ignore
-                store.dispatch(moveItineraryPointWithSideEffects(movingPoint.id, p.id, InsertionPosition.BEFORE));
+                store.dispatch(moveItineraryPointWithSideEffects(movingPoint.id, id, InsertionPosition.BEFORE));
             }
             movingPoint = null;
         },
-        async moveAfter(p: UIPoint | StatePoint) {
+        async moveAfter(id) {
             if (movingPoint) {
                 // @ts-ignore
-                store.dispatch(moveItineraryPointWithSideEffects(movingPoint.id, p.id, InsertionPosition.AFTER));
+                store.dispatch(moveItineraryPointWithSideEffects(movingPoint.id, id, InsertionPosition.AFTER));
             }
             movingPoint = null;
         },
-        async addPoint(point, before?: UIPoint) {
-            return (<EnhancedDispatch<AddItineraryPointAction>>store.dispatch)(addItineraryPointWithSideEffects(point, before ? before.id : null));
+        async addPoint(point, beforeId?) {
+            return (<EnhancedDispatch<AddItineraryPointAction>>store.dispatch)(addItineraryPointWithSideEffects(point, beforeId !== undefined ? beforeId : null));
         },
-        async removePoint(point: UIPoint | StatePoint) {
-            return (<EnhancedDispatch<RemoveItineraryPointAction>>store.dispatch)(removeItineraryPointWithSideEffects(point.id));
+        async removePoint(id) {
+            return (<EnhancedDispatch<RemoveItineraryPointAction>>store.dispatch)(removeItineraryPointWithSideEffects(id));
         },
-        async updatePoint(id: number, location: GeoLocation) {
+        async updatePoint(id: number, location: SearchResult) {
             return (<EnhancedDispatch<UpdateItineraryPointAction>>store.dispatch)(changeItineraryPointWithSideEffects(id, location));
         },
         reset() {

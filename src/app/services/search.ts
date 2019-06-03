@@ -1,42 +1,35 @@
 import {ApplicationState, EnhancedDispatch} from './store';
 import {Store} from 'redux';
 import {
-    fetchSearchResultFromAPI, fetchSearchResultWithSuccess,
-    FetchSuggestionsAction,
-    fetchSuggestionsFromAPI,
-    fetchSuggestionsWithSuccess, selectSuggestion
+    FetchPointsOfInterestAction,
+    fetchPointsOfInterestFromAPI,
+    fetchPointsOfInterestWithSuccess,
+    fetchSearchResultFromAPI,
+    fetchSearchResultWithSuccess,
+    selectSearchResult
 } from '../actions/search';
-import {GeoLocation} from '../utils';
-import {ServiceRegistry} from './service-registry';
+import {SearchResult} from '../utils';
 
 export interface SearchService {
-    searchSuggestion(query: string): Promise<any>;
+    searchPointOfInterest(query: string): Promise<any>;
 
-    search(query: string): Promise<any>;
+    searchAddress(query: string): Promise<any>;
 
-    selectSuggestion(p: GeoLocation);
+    selectSearchResult(r: SearchResult);
 }
 
 export const provider = (store: Store<ApplicationState>): SearchService => {
     return {
-        async searchSuggestion(query: string): Promise<any> {
-            return query ? (<EnhancedDispatch<FetchSuggestionsAction>>store.dispatch)(fetchSuggestionsFromAPI(query))
-                : store.dispatch(fetchSuggestionsWithSuccess([]));
+        async searchPointOfInterest(query: string): Promise<any> {
+            return query ? (<EnhancedDispatch<FetchPointsOfInterestAction>>store.dispatch)(fetchPointsOfInterestFromAPI(query))
+                : store.dispatch(fetchPointsOfInterestWithSuccess([])); // todo should cancel any pending request ? ...
         },
-        selectSuggestion(p: GeoLocation) {
-            return store.dispatch(selectSuggestion(p));
-        },
-        async search(query: string) {
-            return query ? (<EnhancedDispatch<FetchSuggestionsAction>>store.dispatch)(fetchSearchResultFromAPI(query))
+        async searchAddress(query: string) {
+            return query ? (<EnhancedDispatch<FetchPointsOfInterestAction>>store.dispatch)(fetchSearchResultFromAPI(query))
                 : store.dispatch(fetchSearchResultWithSuccess([]));
+        },
+        selectSearchResult(r) {
+            return store.dispatch(selectSearchResult(r));
         }
-    };
-};
-
-export const suggester = (registry: ServiceRegistry) => {
-    const {search, store} = registry;
-    return async (q: string) => {
-        await search.searchSuggestion(q);
-        return store.getState().search.suggestions;
     };
 };

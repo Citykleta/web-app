@@ -27,7 +27,7 @@ export const style = css`:host{
 }
 
 /**
-todo display a drag area on host over instead
+todo display a drag area on host hover instead
  */
 .drag-handle:hover{
     --color:var(--color-theme-compl);

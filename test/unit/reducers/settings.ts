@@ -2,10 +2,12 @@ import {Assert} from 'zora';
 import {reducer, Theme} from '../../../src/app/reducers/settings';
 import {addItineraryPoint} from '../../../src/app/actions/itinerary';
 import {changeTheme} from '../../../src/app/actions/settings';
+import {GeoCoordSearchResult} from '../../../src/app/utils';
 
 export default ({test}: Assert) => {
     test('should return state is if the action type is different than CHANGE_THEME', t => {
-        const actual = reducer({theme: Theme.LIGHT}, addItineraryPoint({
+        const actual = reducer({theme: Theme.LIGHT}, addItineraryPoint(<GeoCoordSearchResult>{
+            type:'lng_lat',
             lng: 2323,
             lat: 23432
         }));

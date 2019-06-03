@@ -19,7 +19,7 @@ const fakeMap = () => {
 export default (a) => {
     const { test } = a;
     test('pointListToFeature should transform a point collection into a valid GeoJSON feature collection', t => {
-        const points = [{ id: 1, lng: 12345, lat: 54321 }, { id: 2, lng: 7890, lat: 9876 }];
+        const points = [{ lng: 12345, lat: 54321 }, { lng: 7890, lat: 9876 }];
         t.eq(pointListToFeature(points), {
             type: 'FeatureCollection',
             features: [{

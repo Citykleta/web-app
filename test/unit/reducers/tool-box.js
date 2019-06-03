@@ -5,6 +5,7 @@ import { selectTool } from '../../../src/app/actions/tool-box';
 export default ({ test }) => {
     test('should return state is if the action type is different than SELECT_TOOL', t => {
         const actual = reducer({ selectedTool: ToolType.SEARCH }, addItineraryPoint({
+            type: 'lng_lat',
             lng: 2323,
             lat: 23432
         }));

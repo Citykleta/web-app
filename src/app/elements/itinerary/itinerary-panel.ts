@@ -1,11 +1,10 @@
 import {html, LitElement} from 'lit-element';
-import {ServiceRegistry} from '../services/service-registry';
-import {UIPointOrPlaceholder} from '../reducers/itinerary';
+import {ServiceRegistry} from '../../services/service-registry';
 import {classMap} from 'lit-html/directives/class-map';
-import {ItineraryService} from '../services/itinerary';
-import {plus, swap} from './icons';
-import {UIPoint} from '../utils';
+import {ItineraryService} from '../../services/itinerary';
+import {plus, swap} from '../common/icons';
 import {style} from './itinerary-panel.style';
+import {ItineraryPoint} from '../../utils';
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
@@ -14,13 +13,13 @@ export const template = ({stops, addPoint, itinerary}) => {
 
     let boundingBox = null;
 
-    const dragstart = (p: UIPointOrPlaceholder) => (ev: DragEvent) => {
-        ev.dataTransfer.setData('text/json', JSON.stringify(p));
+    const dragstart = (id: number) => (ev: DragEvent) => {
+        ev.dataTransfer.setData('text/json', String(id));
         ev.dataTransfer.dropEffect = 'move';
-        itinerary.startMove(p);
+        itinerary.startMove(id);
     };
 
-    const dragOver = (p: UIPointOrPlaceholder) => (ev: DragEvent) => {
+    const dragOver = (id: number) => (ev: DragEvent) => {
         ev.preventDefault();
         const li = (<HTMLLIElement>ev.currentTarget);
         boundingBox = li.getBoundingClientRect();
@@ -29,19 +28,19 @@ export const template = ({stops, addPoint, itinerary}) => {
         li.classList.toggle('drop-target-after', !isBefore);
     };
 
-    const drop = (p: UIPointOrPlaceholder) => (ev: DragEvent) => {
+    const drop = (id: number) => (ev: DragEvent) => {
         ev.preventDefault();
         if (isTopPart(ev, boundingBox)) {
-            itinerary.moveBefore(p);
+            itinerary.moveBefore(id);
         } else {
-            itinerary.moveAfter(p);
+            itinerary.moveAfter(id);
         }
         const li = (<HTMLLIElement>ev.currentTarget);
         li.classList.remove('drop-target-before');
         li.classList.remove('drop-target-after');
     };
 
-    const dragLeave = (p: UIPointOrPlaceholder) => (ev: DragEvent) => {
+    const dragLeave = (id: number) => (ev: DragEvent) => {
         ev.preventDefault();
         const li = (<HTMLLIElement>ev.currentTarget);
         li.classList.remove('drop-target-before');
@@ -51,20 +50,20 @@ export const template = ({stops, addPoint, itinerary}) => {
     const isMulti = stops.length > 2;
     const swapPoints = () => {
         const [first, second] = stops;
-        itinerary.startMove(second);
-        itinerary.moveBefore(first);
+        itinerary.startMove(second.id);
+        itinerary.moveBefore(first.id);
     };
     const classList = classMap({
         removable: isMulti
     });
 
     return html`<div id="stops-list-container">
-    <citykleta-button-icon @click="${swapPoints}" id="swap-button" class="${classMap({
+    <citykleta-button-icon label="swap departure with destination" @click="${swapPoints}" id="swap-button" class="${classMap({
         hidden: isMulti
     })}">${swap()}</citykleta-button-icon>
-    <ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop)}" @dragover="${dragOver(stop)}" @drop="${drop(stop)}" @dragleave="${dragLeave(stop)}"><citykleta-stop-point class=${classList} .value="${stop}" .location="${stop}"></citykleta-stop-point></li>`)}</ol>
+    <ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop.id)}" @dragover="${dragOver(stop.id)}" @drop="${drop(stop.id)}" @dragleave="${dragLeave(stop.id)}"><citykleta-stop-point class=${classList} .location="${stop}"></citykleta-stop-point></li>`)}</ol>
 </div>
-<div id="add-button-container"><citykleta-button-icon @click="${addPoint}">${plus()}</citykleta-button-icon></div>`;
+<div id="add-button-container"><citykleta-button-icon label="add a stop point in the itinerary" @click="${addPoint}">${plus()}</citykleta-button-icon></div>`;
 };
 
 export const propDef = {
@@ -74,22 +73,20 @@ export const propDef = {
 
 export class ItineraryPanel extends LitElement {
 
-    private stops: UIPointOrPlaceholder[];
-    private selectedSuggestion: UIPoint;
-
-    static get styles(){
-        return style;
-    }
-
-    static get properties() {
-        return propDef;
-    }
-
+    private stops: ItineraryPoint[];
     private readonly _itinerary: ItineraryService = null;
 
     constructor({itinerary}: ServiceRegistry) {
         super();
         this._itinerary = itinerary;
+    }
+
+    static get styles() {
+        return style;
+    }
+
+    static get properties() {
+        return propDef;
     }
 
     render() {

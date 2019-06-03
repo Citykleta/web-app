@@ -48,18 +48,20 @@ export const defaultState = () => ({
     itinerary: {
         routes: [],
         stops: [{
-                id: 0
+                id: 0,
+                item: null
             }, {
-                id: 1
+                id: 1,
+                item: null
             }]
     },
     settings: {
         theme: Theme.LIGHT
     },
     search: {
+        isSearching: false,
         searchResult: [],
-        selectedSuggestion: null,
-        suggestions: []
+        selectedSearchResult: null
     }
 });
 export const spy = (fn) => {

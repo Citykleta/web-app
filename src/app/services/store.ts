@@ -5,8 +5,7 @@ import {ToolBoxState} from '../reducers/tool-box';
 import reducer from '../reducers/index';
 import {Directions, factory as directionsAPI} from '../sdk/directions';
 import {SettingsState, Theme} from '../reducers/settings';
-import {Geocoder,} from '../sdk/geocoder';
-import {factory as geocoderAPI} from '../sdk/geocoder';
+import {factory as geocoderAPI, Geocoder,} from '../sdk/geocoder';
 import {SearchState} from '../reducers/search';
 import {ToolType} from '../tools/interfaces';
 import apiConf from '../../conf/api';
@@ -41,9 +40,11 @@ export const store = (api: API = {
     },
     itinerary: {
         stops: [{
-            id: 0
+            id: 0,
+            item: null
         }, {
-            id: 1
+            id: 1,
+            item: null
         }],
         routes: []
     },
@@ -51,9 +52,9 @@ export const store = (api: API = {
         theme: Theme.LIGHT
     },
     search: {
-        suggestions: [],
-        searchResult:[],
-        selectedSuggestion: null
+        isSearching: false,
+        searchResult: [],
+        selectedSearchResult: null
     }
 }): Store<ApplicationState> => createStore(reducer, initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
     debugMiddleware

@@ -1,23 +1,26 @@
 import {Reducer} from 'redux';
 import {ActionType} from '../actions/types';
 import {
-    AddItineraryPointAction, UpdateItineraryPointAction, FetchRoutesSuccessAction,
-    RemoveItineraryPointAction, InsertionPosition
+    AddItineraryPointAction,
+    FetchRoutesSuccessAction,
+    InsertionPosition,
+    RemoveItineraryPointAction,
+    UpdateItineraryPointAction
 } from '../actions/itinerary';
-import {Route, StatePoint, truncate, UIPoint} from '../utils';
-
-export type UIPointOrPlaceholder = UIPoint | StatePoint;
+import {ItineraryPoint, Route} from '../utils';
 
 export interface ItineraryState {
-    stops: UIPointOrPlaceholder[];
+    stops: ItineraryPoint[];
     routes: Route[];
 }
 
 const defaultState: ItineraryState = {
     stops: [{
-        id: 0
+        id: 0,
+        item: null
     }, {
-        id: 1
+        id: 1,
+        item: null
     }],
     routes: []
 };
@@ -38,7 +41,10 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
         case ActionType.UPDATE_ITINERARY_POINT: {
             const {id, location} = <UpdateItineraryPointAction>action;
             return Object.assign({}, previousState, {
-                stops: previousState.stops.map(p => p.id !== id ? p : Object.assign({}, p, location))
+                stops: previousState.stops.map(p => p.id !== id ? p : {
+                    id,
+                    item: Object.assign({}, p.item, location)
+                })
             });
         }
         case ActionType.ADD_ITINERARY_POINT: {
@@ -48,10 +54,13 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
             const insertIndex = beforeIndex >= 0 ? beforeIndex : newStops.length;
             const id = newStops.reduce((acc, curr) => Math.max(curr.id, acc), -1) + 1;
 
-            newStops.splice(insertIndex, 0, Object.assign({id}, point !== null ? {
-                lng: truncate(point.lng),
-                lat: truncate(point.lat)
-            } : {}));
+            const newPoint = {id, item: null};
+
+            if (point) {
+                newPoint.item = point;
+            }
+
+            newStops.splice(insertIndex, 0, newPoint);
 
             return Object.assign({}, previousState, {
                 stops: newStops
@@ -59,7 +68,7 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
         }
         case ActionType.MOVE_ITINERARY_POINT: {
             const {stops} = previousState;
-            const newStops = stops.map(s => Object.assign({}, s));
+            const newStops = [...stops];
             const {sourceId, targetId, position} = action;
             const sourceItem = newStops.find(matchId(sourceId));
             const targetItem = newStops.find(matchId(targetId));

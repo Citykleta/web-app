@@ -1,11 +1,11 @@
-import {GeoCoord, GeoLocation} from '../utils';
+import {GeoCoord, PointOfInterestSearchResult, SearchResult} from '../utils';
 
 export interface Geocoder {
-    searchPOI(query: string): Promise<GeoLocation[]>;
+    searchPointsOfInterest(query: string): Promise<PointOfInterestSearchResult[]>;
 
-    searchAddress(query: string): Promise<any>;
+    searchAddress(query: string): Promise<SearchResult[]>;
 
-    reverse(coordinates: GeoCoord): Promise<GeoLocation[]>;
+    reverse(coordinates: GeoCoord): Promise<any[]>;//todo
 }
 
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
@@ -14,7 +14,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
     let searchAbortController = null;
 
     return {
-        async searchPOI(query: string = '') {
+        async searchPointsOfInterest(query: string = '') {
 
             if (searchAbortController) {
                 searchAbortController.abort();
@@ -33,21 +33,7 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                 }
 
                 const raw = await res.json();
-
-                // todo normalize ouptut and let each component format the response as it wants
-                return raw.map(({name, id, address, description, category, geometry}) => {
-
-                    const [lng, lat] = geometry.coordinates;
-                    return {
-                        osmId: id,
-                        name,
-                        address,
-                        category,
-                        lng,
-                        lat,
-                        description
-                    };
-                });
+                return raw.map(i => Object.assign(i, {municipality: i.address.municipality}));
             } finally {
                 searchAbortController = null;
             }

@@ -1,4 +1,6 @@
-import {UIPointOrPlaceholder} from './reducers/itinerary';
+import polyline from '@mapbox/polyline';
+
+export const decodeLine = (lineString: string) => polyline.decode(lineString).map(pair => pair.reverse());
 
 export const truncate = (value: number): number => Math.trunc(value * 10 ** 6) / 10 ** 6;
 
@@ -6,42 +8,12 @@ export const concatParts = (parts: string[], separator = ', '): string => parts
     .filter(s => !!s)
     .join(separator);
 
-export const isSameLocation = (a: GeoCoord, b: GeoCoord): boolean => {
-    if (a === b) {
-        return true;
-    }
-
-    if (a === null || b === null) {
-        return false;
-    }
-
-    return truncate(a.lng) === truncate(b.lng) && truncate(a.lat) === truncate(b.lat);
-};
-
 export const formatAddress = (address: Address): string => concatParts([
     concatParts([
         address.street,
         address.number ? `#${address.number}` : address.number
     ], ' '),
     address.municipality]);
-
-export const stringify = (p: GeoLocation | StatePoint): string => {
-    const point = <GeoLocation>p;
-    if (point === null || !isGeoCoord(point)) {
-        return '';
-    }
-
-    if (point.name) {
-        return point.name + (point.address && point.address.municipality ? `, ${point.address.municipality}` : '');
-    }
-
-    if (point.address) {
-        const {address} = point;
-        return formatAddress(address);
-    }
-
-    return `${truncate(point.lng)},${truncate(point.lat)}`;
-};
 
 export const debounce = (fn, time = 250) => {
     let timer = null;
@@ -51,15 +23,6 @@ export const debounce = (fn, time = 250) => {
         }
         timer = setTimeout(() => fn(...args), time);
     };
-};
-
-export const isGeoCoord = (input: GeoCoord | StatePoint): input is GeoCoord => {
-    if (!input) {
-        return false;
-    } else {
-        const p = <GeoCoord>input;
-        return p.lat !== void 0 && p.lng !== void 0;
-    }
 };
 
 export interface GeoCoord {
@@ -73,19 +36,65 @@ export interface Address {
     municipality?: string;
 }
 
-export interface GeoLocation extends GeoCoord {
-    name?: string;
-    address?: Address;
-    category?: string; // todo use an enum (restaurant, cafe, etc)
+export type SearchResultType = 'corner' | 'street_block' | 'street' | 'point_of_interest' | 'lng_lat';
+
+export interface SearchResult {
+    type: SearchResultType,
+    municipality?: string
 }
 
-export interface StatePoint {
-    id: number
+interface GeoJSONPoint {
+    type: 'Point',
+    coordinates: [number, number]
 }
 
-export interface UIPoint extends GeoLocation, StatePoint {
+interface GeoJSONLineString {
+    type: 'LineString',
+    coordinates: string
 }
 
+export interface CornerSearchResult extends SearchResult {
+    type: 'corner',
+    geometry: GeoJSONPoint,
+    streets: [string, string]
+}
+
+export interface BlockSearchResult extends SearchResult {
+    type: 'street_block',
+    name: string,
+    geometry: GeoJSONLineString,
+    intersections: [
+        { type: 'corner', geometry: GeoJSONPoint, name: string },
+        { type: 'corner', geometry: GeoJSONPoint, name: string }
+        ]
+}
+
+export interface StreetSearchResult extends SearchResult {
+    type: 'street',
+    name: string,
+    geometry: GeoJSONLineString
+}
+
+export interface PointOfInterestSearchResult extends SearchResult {
+    type: 'point_of_interest'
+    name: string;
+    geometry: GeoJSONPoint;
+    address: Address;
+    category: string;
+    description: string;
+}
+
+export interface GeoCoordSearchResult extends SearchResult {
+    type: 'lng_lat',
+    lng: number,
+    lat: number,
+    address?: Address
+}
+
+export interface ItineraryPoint {
+    id: number;
+    item: SearchResult
+}
 
 //todo formalize routes type
 export interface Route {

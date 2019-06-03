@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit-element';
-import {formatAddress, GeoLocation, stringify, truncate} from '../utils';
+import {formatAddress, SearchResult, truncate} from '../../utils';
 import {style} from './location-details.style';
 
 export const template = ({location: val}) => {
@@ -11,6 +11,7 @@ export const template = ({location: val}) => {
     </header>
     <p>${address}</p>
     <p class="description">${val.description}</p>
+    <p>debug category: ${val.category}</p>
     <p class="location">
         <span>Location</span>:
         <span>${truncate(val.lng)} / ${truncate(val.lat)}</span>
@@ -26,6 +27,8 @@ export const propDef = {
 
 export class LocationDetails extends LitElement {
 
+    location: SearchResult = null;
+
     static get styles() {
         return style;
     }
@@ -33,8 +36,6 @@ export class LocationDetails extends LitElement {
     static get properties() {
         return propDef;
     }
-
-    location: GeoLocation = null;
 
     render() {
         return template(this);

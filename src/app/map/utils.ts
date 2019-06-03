@@ -1,5 +1,5 @@
 import {ApplicationState} from '../services/store';
-import {UIPoint} from '../utils';
+import {GeoCoord} from '../utils';
 
 export const EMPTY_SOURCE = Object.freeze({
     type: 'geojson',
@@ -23,12 +23,12 @@ export const eventuallyUpdate = map => (layer: string, slicer: Function, updateF
     };
 };
 
-export const pointListToFeature = (points: UIPoint[]) => ({
+export const pointListToFeature = (points: GeoCoord[]) => ({
     type: 'FeatureCollection',
     features: points.map(pointToFeature)
 });
 
-const pointToFeature = (point: UIPoint) => ({
+const pointToFeature = (point: GeoCoord) => ({
     type: 'Feature',
     geometry: {
         type: 'Point',

@@ -3,10 +3,12 @@ import {reducer} from '../../../src/app/reducers/tool-box';
 import {ToolType} from '../../../src/app/tools/interfaces';
 import {addItineraryPoint} from '../../../src/app/actions/itinerary';
 import {selectTool} from '../../../src/app/actions/tool-box';
+import {GeoCoordSearchResult} from '../../../src/app/utils';
 
 export default ({test}: Assert) => {
     test('should return state is if the action type is different than SELECT_TOOL', t => {
-        const actual = reducer({selectedTool: ToolType.SEARCH}, addItineraryPoint({
+        const actual = reducer({selectedTool: ToolType.SEARCH}, addItineraryPoint(<GeoCoordSearchResult>{
+            type: 'lng_lat',
             lng: 2323,
             lat: 23432
         }));

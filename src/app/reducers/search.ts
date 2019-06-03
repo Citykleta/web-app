@@ -1,43 +1,48 @@
 import {Reducer} from 'redux';
-import {UIPoint} from '../utils';
+import {SearchResult} from '../utils';
 import {ActionType} from '../actions/types';
 
-// todo type search results
+
 export interface SearchState {
-    suggestions: UIPoint[];
-    selectedSuggestion: UIPoint;
-    searchResult: any[];
+    searchResult: SearchResult[];
+    isSearching: boolean;
+    selectedSearchResult: SearchResult;
 }
 
 const defaultState: SearchState = {
-    suggestions: [],
     searchResult: [],
-    selectedSuggestion: null
+    isSearching: false,
+    selectedSearchResult: null
 };
 
 export const reducer: Reducer<SearchState> = (previousState = defaultState, action) => {
     switch (action.type) {
-        case ActionType.FETCH_SUGGESTIONS_SUCCESS:
+        case ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS:
             return Object.assign({}, previousState, {
-                suggestions: action.suggestions.map((s, i) => Object.assign(s, {
+                searchResult: action.pointsOfInterest.map((s, i) => Object.assign(s, {
                     id: i
                 })),
-                searchResult: [] // init
+                selectedSearchResult: null
             });
-        case ActionType.SELECT_SUGGESTION:
-            const {suggestion} = action;
+        case ActionType.FETCH_SEARCH_RESULT: {
             return Object.assign({}, previousState, {
-                selectedSuggestion: suggestion ? Object.assign({}, suggestion) : null
+                searchResult: [],
+                isSearching: true,
+                selectedSearchResult: null
             });
+        }
         case ActionType.FETCH_SEARCH_RESULT_SUCCESS:
-            const {result} = action;
+            const {result: searchResult} = action;
             return Object.assign({}, previousState, {
-                searchResult: result.map((s, i) => Object.assign(s, {
-                    id: i
-                })),
-                // todo maybe this should be driven by global state
-                suggestions: [], // init
-                selectedSuggestion: null
+                searchResult,
+                isSearching: false,
+                selectedSearchResult: null
+            });
+        case ActionType.FETCH_SEARCH_RESULT_FAILURE:
+            return Object.assign({}, previousState, {isSearching: false});
+        case ActionType.SELECT_SEARCH_RESULT:
+            return Object.assign({}, previousState, {
+                selectedSearchResult: action.searchResult
             });
         default:
             return previousState;

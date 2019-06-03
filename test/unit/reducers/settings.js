@@ -4,6 +4,7 @@ import { changeTheme } from '../../../src/app/actions/settings';
 export default ({ test }) => {
     test('should return state is if the action type is different than CHANGE_THEME', t => {
         const actual = reducer({ theme: Theme.LIGHT }, addItineraryPoint({
+            type: 'lng_lat',
             lng: 2323,
             lat: 23432
         }));

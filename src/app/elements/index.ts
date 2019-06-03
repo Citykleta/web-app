@@ -1,16 +1,15 @@
-import {ServiceRegistry} from '../services/service-registry';
-import registry from '../services/service-registry';
+import registry, {ServiceRegistry} from '../services/service-registry';
 import {ApplicationState} from '../services/store';
-import {LocationSuggestionItem} from './location-suggestion-item';
-import {SearchBox} from './search-box';
-import {SearchPanel} from './search-panel';
+import {LocationSuggestionItem} from './common/location-suggestion-item';
+import {SearchBox} from './search-box/search-box';
+import {SearchPanel} from './search/search-panel';
 import {App} from './app';
 import {NavigationBar} from './navigation-bar';
-import {LocationDetails} from './location-details';
-import {SettingsPanel} from './settings-panel';
-import {ItineraryPanel} from './itinerary-panel';
-import {StopPoint} from './stop-point';
-import {ButtonIcon} from './button-icon';
+import {LocationDetails} from './search/location-details';
+import {SettingsPanel} from './settings/settings-panel';
+import {ItineraryPanel} from './itinerary/itinerary-panel';
+import {StopPoint} from './itinerary/stop-point';
+import {ButtonIcon} from './common/button-icon';
 
 const withInjector = (registry: ServiceRegistry) => (klass) => class extends klass {
 
@@ -37,12 +36,12 @@ const copyProps = (src, target) => {
 
 const connect = (store, stateToProp = state => state) => (klass) => class extends klass {
 
+    private subscription: Function = null;
+
     constructor(...args) {
         super(...args);
         copyProps(stateToProp(store.getState()), this);
     }
-
-    private subscription: Function = null;
 
     connectedCallback() {
         super.connectedCallback();
@@ -59,9 +58,9 @@ const connect = (store, stateToProp = state => state) => (klass) => class extend
     }
 };
 
-const connectedSearch = connect(registry.store, (state: ApplicationState) => ({
-    selectedSuggestion: state.search.selectedSuggestion
-}));
+const connectedSearch = connect(registry.store, (state: ApplicationState) => {
+    return state.search;
+});
 
 const connectedApp = connect(registry.store, (state: ApplicationState) => ({
     theme: state.settings.theme,
@@ -69,7 +68,6 @@ const connectedApp = connect(registry.store, (state: ApplicationState) => ({
 }));
 
 const connectedItinerary = connect(registry.store, (state: ApplicationState) => ({
-        selectedSuggestion: state.search.selectedSuggestion,
         ...state.itinerary
     })
 );

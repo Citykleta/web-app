@@ -71,18 +71,20 @@ export const defaultState = (): ApplicationState => ({
     itinerary: {
         routes: [],
         stops: [{
-            id: 0
+            id: 0,
+            item: null
         }, {
-            id: 1
+            id: 1,
+            item: null
         }]
     },
     settings: {
         theme: Theme.LIGHT
     },
     search: {
-        searchResult:[],
-        selectedSuggestion: null,
-        suggestions: []
+        isSearching: false,
+        searchResult: [],
+        selectedSearchResult: null
     }
 });
 
