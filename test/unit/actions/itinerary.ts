@@ -4,6 +4,7 @@ import {
     addItineraryPoint,
     AddItineraryPointAction,
     addItineraryPointWithSideEffects,
+    changeItineraryPointWithSideEffects,
     fetchRoutes,
     FetchRoutesAction,
     FetchRoutesFailureAction,
@@ -14,8 +15,10 @@ import {
     InsertionPosition,
     moveItineraryPoint,
     MoveItineraryPointAction,
+    moveItineraryPointWithSideEffects,
     removeItineraryPoint,
     RemoveItineraryPointAction,
+    removeItineraryPointWithSideEffects,
     resetRoutes,
     updateItineraryPoint,
     UpdateItineraryPointAction
@@ -190,8 +193,8 @@ export default (a: Assert) => {
 
         // expectations
         t.eq(sdkMock.calls.length, 1, 'should have been called once');
-        t.eq(sdkMock.calls[0], [{id: 1, lng: 1234, lat: 4321}, {
-            id: 2,
+        t.eq(sdkMock.calls[0], [{type: 'lng_lat', lng: 1234, lat: 4321}, {
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the arguments');
@@ -227,8 +230,8 @@ export default (a: Assert) => {
             error
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have been called once');
-        t.eq(sdkMock.calls[0], [{id: 1, lng: 1234, lat: 4321}, {
-            id: 2,
+        t.eq(sdkMock.calls[0], [{type: 'lng_lat', lng: 1234, lat: 4321}, {
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the arguments');
@@ -279,12 +282,14 @@ export default (a: Assert) => {
 
         //@ts-ignore
         await store.dispatch(addItineraryPointWithSideEffects({
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }));
         t.eq(store.getActions(), [{
             type: ActionType.ADD_ITINERARY_POINT,
             point: {
+                type: 'lng_lat',
                 lat: 1234,
                 lng: 4321
             },
@@ -299,17 +304,16 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            id: 1,
+            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            id: 2,
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
     });
 
-    /*
     test('move itinerary point before with side effects should trigger side effects', async t => {
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
@@ -317,8 +321,8 @@ export default (a: Assert) => {
         }]);
         const store = testStore(setState({
             stops: [
-                {id: 1,item:{type:'lng_lat',lng: 666, lat: 666}},
-                {id: 2, lng: 4321, lat: 1234}
+                {id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}},
+                {id: 2, item: {type: 'lng_lat', lng: 4321, lat: 1234}}
             ],
             routes: []
         }), {
@@ -342,11 +346,11 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            id: 1,
+            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            id: 2,
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -359,8 +363,8 @@ export default (a: Assert) => {
         }]);
         const store = testStore(setState({
             stops: [
-                {id: 1, lng: 666, lat: 666},
-                {id: 2, lng: 4321, lat: 1234}
+                {id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}},
+                {id: 2, item: {type: 'lng_lat', lng: 4321, lat: 1234}}
             ],
             routes: []
         }), {
@@ -384,21 +388,23 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            id: 1,
+            type: 'lng_lat',
             lng: 666,
             lat: 666
-        }, {
-            id: 2,
-            lng: 4321,
-            lat: 1234
-        }], 'should have forwarded the stop points lists');
+        },
+            {
+                type: 'lng_lat',
+                lng: 4321,
+                lat: 1234
+            }
+        ], 'should have forwarded the stop points lists');
     });
 
     test('remove itinerary point with side effects should not have side effect if there is less than 2 stops', async t => {
         // given
         const sdkMock = directionsAPIStub();
         const store = testStore(setState({
-            stops: [{id: 1, lng: 666, lat: 666}],
+            stops: [{id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}}],
             routes: []
         }), {
             directions: sdkMock
@@ -422,8 +428,8 @@ export default (a: Assert) => {
         }]);
         const store = testStore(setState({
             stops: [
-                {id: 1, lng: 666, lat: 666},
-                {id: 2, lng: 4321, lat: 1234}
+                {id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}},
+                {id: 2, item: {type: 'lng_lat', lng: 4321, lat: 1234}}
             ],
             routes: []
         }), {
@@ -445,11 +451,11 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            id: 1,
+            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            id: 2,
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -459,7 +465,7 @@ export default (a: Assert) => {
         // given
         const sdkMock = directionsAPIStub();
         const store = testStore(setState({
-            stops: [{id: 1, lng: 666, lat: 666}],
+            stops: [{id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}}],
             routes: []
         }), {
             directions: sdkMock
@@ -484,8 +490,8 @@ export default (a: Assert) => {
         }]);
         const store = testStore(setState({
             stops: [
-                {id: 1, lng: 666, lat: 666},
-                {id: 2, lng: 4321, lat: 1234}
+                {id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}},
+                {id: 2, item: {type: 'lng_lat', lng: 4321, lat: 1234}}
             ],
             routes: []
         }), {
@@ -493,11 +499,12 @@ export default (a: Assert) => {
         });
 
         //@ts-ignore
-        await store.dispatch(changeItineraryPointWithSideEffects(1, {lng: 666, lat: 666}));
+        await store.dispatch(changeItineraryPointWithSideEffects(1, {type: 'lng_lat', lng: 666, lat: 666}));
         t.eq(store.getActions(), [{
             type: ActionType.UPDATE_ITINERARY_POINT,
             id: 1,
             location: {
+                type: 'lng_lat',
                 lng: 666,
                 lat: 666
             }
@@ -511,11 +518,11 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            id: 1,
+            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            id: 2,
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -539,8 +546,8 @@ export default (a: Assert) => {
         }]);
         const store = testStore(setState({
             stops: [
-                {id: 1, lng: 666, lat: 666},
-                {id: 2, lng: 4321, lat: 1234}
+                {id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 666, lat: 666}},
+                {id: 2, item: {type: 'lng_lat', lng: 4321, lat: 1234}}
             ],
             routes: []
         }), {
@@ -564,11 +571,11 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            id: 1,
+            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            id: 2,
+            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -582,8 +589,8 @@ export default (a: Assert) => {
         }]);
         const store = testStore(setState({
             stops: [
-                {id: 1},
-                {id: 2, lng: 4321, lat: 1234}
+                {id: 1, item: null},
+                {id: 2, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 4321, lat: 1234}}
             ],
             routes: []
         }), {
@@ -600,5 +607,4 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 0, 'should not have fetched routes');
     });
-    */
 }

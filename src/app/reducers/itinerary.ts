@@ -3,6 +3,7 @@ import {ActionType} from '../actions/types';
 import {
     AddItineraryPointAction,
     FetchRoutesSuccessAction,
+    GoToAction,
     InsertionPosition,
     RemoveItineraryPointAction,
     UpdateItineraryPointAction
@@ -84,6 +85,32 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState, a
             const {id} = <RemoveItineraryPointAction>action;
             return Object.assign({}, previousState, {
                 stops: previousState.stops.reduce((prev, curr) => prev.concat(curr.id !== id ? [curr] : []), [])
+            });
+        }
+        case ActionType.GO_TO: {
+            const {location} = <GoToAction>action;
+            return Object.assign({}, previousState, {
+                stops: [{
+                    id: 0,
+                    item: null
+                }, {
+                    id: 1,
+                    item: location
+                }],
+                routes: []
+            });
+        }
+        case ActionType.GO_FROM: {
+            const {location} = <GoToAction>action;
+            return Object.assign({}, previousState, {
+                stops: [{
+                    id: 0,
+                    item: location
+                }, {
+                    id: 1,
+                    item: null
+                }],
+                routes: []
             });
         }
         default:

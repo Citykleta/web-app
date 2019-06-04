@@ -15,7 +15,7 @@ import {
     sourceId as suggestionsSourceId
 } from './suggestions-layer';
 import {EMPTY_SOURCE, eventuallyUpdate} from './utils';
-import {createSearchResultInstance} from '../elements/search-result/entities';
+import {createSearchResultInstance} from '../elements/search/search-result';
 
 const {accessToken, ...rest} = mapBoxConf;
 const {store} = registry;
@@ -53,7 +53,7 @@ store.subscribe(() => {
     updateSuggestions(newState);
 
     if (selectedSearchResult !== null) {
-        const center = createSearchResultInstance(selectedSearchResult).center();
+        const center = createSearchResultInstance(selectedSearchResult).toPoint();
         map.jumpTo({
             center: [center.lng, center.lat],
             zoom: Math.max(13.5, map.getZoom())

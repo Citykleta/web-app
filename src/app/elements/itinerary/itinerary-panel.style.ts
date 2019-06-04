@@ -5,7 +5,7 @@ export const style = css`
     ol {
         list-style: none;
         padding: 0;
-        margin-left: 0.5em;
+        margin: 0.5em 0 0 0.5em;
         flex-grow: 1;
     }
 

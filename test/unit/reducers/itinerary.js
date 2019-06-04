@@ -1,53 +1,68 @@
-export default ({ test, skip }) => {
-    skip('should return the previous state if action is not related to itinerary', t => {
-        /*
-        const initialState: ItineraryState = {
+import { reducer } from '../../../src/app/reducers/itinerary';
+import { selectTool } from '../../../src/app/actions/tool-box';
+import { ToolType } from '../../../src/app/tools/interfaces';
+import { addItineraryPoint } from '../../../src/app/actions/itinerary';
+export default ({ test }) => {
+    test('should return the previous state if action is not related to itinerary', t => {
+        const initialState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
-                id: 43
-            }],
+                    item: {
+                        type: 'lng_lat',
+                        lng: 1234,
+                        lat: 4321
+                    },
+                    id: 43
+                }],
             routes: []
         };
         const actual = reducer(initialState, selectTool(ToolType.ITINERARY));
         t.eq(actual, initialState, 'state should not have changed');
-        */
     });
-    /*
     test('add a point without specifying the insertion position', t => {
-        const initialState: ItineraryState = {
+        const initialState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
-                id: 2
-            }],
+                    item: {
+                        type: 'lng_lat',
+                        lng: 1234,
+                        lat: 4321,
+                    },
+                    id: 2
+                }],
             routes: []
         };
-
         const actual = reducer(initialState, addItineraryPoint({
+            type: 'lng_lat',
             lng: 789,
             lat: 987
         }));
-
         t.eq(actual, {
             stops: [{
-                lng: 1234,
-                lat: 4321,
-                id: 2
-            }, {
-                lng: 789,
-                lat: 987,
-                id: 3
-            }],
+                    item: {
+                        type: 'lng_lat',
+                        lng: 1234,
+                        lat: 4321
+                    },
+                    id: 2
+                }, {
+                    item: {
+                        type: 'lng_lat',
+                        lng: 789,
+                        lat: 987,
+                    },
+                    id: 3
+                }],
             routes: []
         });
     });
-
+    /*
     test('add a point specifying a valid insertion position', t => {
         const initialState: ItineraryState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 1234,
+                    lat: 4321
+                },
                 id: 2
             }],
             routes: []

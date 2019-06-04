@@ -15,19 +15,29 @@ export default ({test, skip}: Assert) => {
         });
     });
 
-    skip('create a FETCH_POINTS_OF_INTEREST_SUCCESS action', t => {
-        // t.eq(fetchPointsOfInterestWithSuccess([{
-        //     geometry: {
-        //         type: 'Point',
-        //         coordinates: [1234, 4321]
-        //     }
-        // }]), {
-        //     type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
-        //     pointsOfInterest: [{
-        //         lng: 1234,
-        //         lat: 4321
-        //     }]
-        // });
+    test('create a FETCH_POINTS_OF_INTEREST_SUCCESS action', t => {
+        t.eq(fetchPointsOfInterestWithSuccess([{
+            type: 'point_of_interest',
+            name: 'foo',
+            geometry: {
+                type: 'Point',
+                coordinates: [1234, 4321]
+            },
+            address: {},
+            category: 'bar',
+        }]), {
+            type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
+            pointsOfInterest: [{
+                type: 'point_of_interest',
+                name: 'foo',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [1234, 4321]
+                },
+                address: {},
+                category: 'bar',
+            }]
+        });
     });
 
     test('create a FETCH_POINTS_OF_INTEREST_FAILURE action', t => {

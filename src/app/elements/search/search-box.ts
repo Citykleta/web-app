@@ -7,7 +7,7 @@ import {SearchService} from '../../services/search';
 import {ServiceRegistry} from '../../services/service-registry';
 import {Store} from 'redux';
 import {ApplicationState} from '../../services/store';
-import {createSearchResultInstance} from '../search-result/entities';
+import {createSearchResultInstance} from './search-result';
 
 export const propDef = {
     isBusy: {

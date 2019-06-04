@@ -7,7 +7,7 @@ export const style = css`citykleta-search-box {
 
 citykleta-location {
     border-top: 1px solid var(--background-theme-2);
-    padding: 0 1em 1em 1em;
+    padding: 0 1em;
 }
 
 citykleta-location.hidden {

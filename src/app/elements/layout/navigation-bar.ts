@@ -1,7 +1,7 @@
 import {html, LitElement} from 'lit-element';
-import {ServiceRegistry} from '../services/service-registry';
-import {ToolType} from '../tools/interfaces';
-import {NavigationService} from '../services/navigation';
+import {ServiceRegistry} from '../../services/service-registry';
+import {ToolType} from '../../tools/interfaces';
+import {NavigationService} from '../../services/navigation';
 import {classMap} from 'lit-html/directives/class-map';
 import {style} from './navigation-bar.style';
 

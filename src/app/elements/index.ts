@@ -1,15 +1,16 @@
 import registry, {ServiceRegistry} from '../services/service-registry';
 import {ApplicationState} from '../services/store';
 import {LocationSuggestionItem} from './common/location-suggestion-item';
-import {SearchBox} from './search-box/search-box';
+import {SearchBox} from './search/search-box';
 import {SearchPanel} from './search/search-panel';
 import {App} from './app';
-import {NavigationBar} from './navigation-bar';
-import {LocationDetails} from './search/location-details';
+import {NavigationBar} from './layout/navigation-bar';
+import {LocationDetails} from './common/location-details';
 import {SettingsPanel} from './settings/settings-panel';
 import {ItineraryPanel} from './itinerary/itinerary-panel';
 import {StopPoint} from './itinerary/stop-point';
 import {ButtonIcon} from './common/button-icon';
+import {ActionsBar} from './common/actions-bar';
 
 const withInjector = (registry: ServiceRegistry) => (klass) => class extends klass {
 
@@ -82,6 +83,7 @@ customElements.define('citykleta-settings-panel', prodInjector(SettingsPanel));
 customElements.define('citykleta-itinerary-panel', connectedItinerary(prodInjector(ItineraryPanel)));
 customElements.define('citykleta-stop-point', prodInjector(StopPoint));
 customElements.define('citykleta-app', connectedApp(App));
+customElements.define('citykleta-actions-bar', prodInjector(ActionsBar));
 
 export const app = document.createElement('citykleta-app');
 // app.classList.add('blandine');

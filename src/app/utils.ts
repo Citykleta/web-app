@@ -1,19 +1,10 @@
-import polyline from '@mapbox/polyline';
+import * as p from '@mapbox/polyline';
+
+const polyline = p.default;
 
 export const decodeLine = (lineString: string) => polyline.decode(lineString).map(pair => pair.reverse());
 
 export const truncate = (value: number): number => Math.trunc(value * 10 ** 6) / 10 ** 6;
-
-export const concatParts = (parts: string[], separator = ', '): string => parts
-    .filter(s => !!s)
-    .join(separator);
-
-export const formatAddress = (address: Address): string => concatParts([
-    concatParts([
-        address.street,
-        address.number ? `#${address.number}` : address.number
-    ], ' '),
-    address.municipality]);
 
 export const debounce = (fn, time = 250) => {
     let timer = null;
@@ -81,7 +72,7 @@ export interface PointOfInterestSearchResult extends SearchResult {
     geometry: GeoJSONPoint;
     address: Address;
     category: string;
-    description: string;
+    description?: string;
 }
 
 export interface GeoCoordSearchResult extends SearchResult {

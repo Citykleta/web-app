@@ -8,7 +8,7 @@ export const propDef = {
     }
 };
 
-export const template = ({label}) => html`<button><span id="button-label" hidden>${label}</span><slot aria-hidden="true" aria-labelledby="button-label"></slot></button>`;
+export const template = ({label}) => html`<button><span id="button-label" hidden>${label}</span><slot></slot></button>`;
 
 export class ButtonIcon extends LitElement {
 

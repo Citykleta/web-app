@@ -9,7 +9,7 @@
   "scripts": {
     "test:build": "rollup -c rollup/test.js",
     "test:watch": "npm run test:build -- -w",
-    "test": "node ./test/dist/debug.js | tap-mocha-reporter classic",
+    "test": "cat ./test/dist/debug.js | tape-run",
     "compile": "tsc",
     "compile:watch": "npm run compile -- -w",
     "bundle": "rollup -c rollup/build.js",
@@ -59,10 +59,12 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.0.0",
     "tap-mocha-reporter": "^4.0.1",
+    "tape-run": "^6.0.0",
     "typescript": "^3.5.1",
     "zora": "^3.0.1"
   },
   "dependencies": {
+    "@turf/midpoint": "^5.1.5",
     "evil-icons": "^1.10.1",
     "feather-icons": "^4.21.0",
     "grommet-icons": "^4.2.0",

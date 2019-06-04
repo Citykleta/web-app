@@ -4,6 +4,8 @@ import {
     AddItineraryPointAction,
     addItineraryPointWithSideEffects,
     changeItineraryPointWithSideEffects,
+    goFrom,
+    goTo,
     InsertionPosition,
     moveItineraryPointWithSideEffects,
     RemoveItineraryPointAction,
@@ -25,6 +27,10 @@ export interface ItineraryService {
     removePoint(id: number): Promise<any>;
 
     updatePoint(id: number, value: SearchResult): Promise<any>;
+
+    goTo(location: SearchResult): void;
+
+    goFrom(location: SearchResult): void;
 
     reset(): void;
 }
@@ -64,6 +70,12 @@ export const provider = (store: Store<ApplicationState>): ItineraryService => {
         },
         reset() {
             store.dispatch(resetRoutes());
+        },
+        goTo(location: SearchResult): void {
+            store.dispatch(goTo(location));
+        },
+        goFrom(location: SearchResult): void {
+            store.dispatch(goFrom(location));
         }
     };
 };

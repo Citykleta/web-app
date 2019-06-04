@@ -1,7 +1,7 @@
 import {LitElement} from 'lit-element';
 import {SearchResult} from '../../utils';
 import {style} from './location-suggestion-item.style';
-import {createSearchResultInstance} from '../search-result/entities';
+import {createSearchResultInstance} from '../search/search-result';
 
 export const template = ({suggestion}) =>
     createSearchResultInstance(suggestion).toOption();

@@ -3,7 +3,7 @@ import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {API, ApplicationState} from '../services/store';
 import {Route, SearchResult} from '../utils';
-import {createSearchResultInstance} from '../elements/search-result/entities';
+import {createSearchResultInstance} from '../elements/search/search-result';
 
 const hasValue = p => p.item !== null;
 
@@ -35,6 +35,24 @@ export interface UpdateItineraryPointAction extends Action<ActionType.UPDATE_ITI
 export const updateItineraryPoint = (id: number, location: SearchResult): UpdateItineraryPointAction => ({
     type: ActionType.UPDATE_ITINERARY_POINT,
     id,
+    location
+});
+
+export interface GoToAction extends Action<ActionType.GO_TO> {
+    location: SearchResult;
+}
+
+export const goTo = (location: SearchResult): GoToAction => ({
+    type: ActionType.GO_TO,
+    location
+});
+
+export interface GoFromAction extends Action<ActionType.GO_FROM> {
+    location: SearchResult;
+}
+
+export const goFrom = (location: SearchResult): GoFromAction => ({
+    type: ActionType.GO_FROM,
     location
 });
 
@@ -105,7 +123,7 @@ export const fetchRoutesFromAPI = () => async (dispatch, getState, API: API) => 
             .itinerary;
         const points = stops
             .filter(hasValue)
-            .map(({item}) => createSearchResultInstance(item).center());
+            .map(({item}) => createSearchResultInstance(item).toPoint());
         const res = await directions.search(points);
         return dispatch(fetchRoutesWithSuccess(res));
     } catch (e) {
