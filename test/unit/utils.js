@@ -76,3 +76,8 @@ export const spy = (fn) => {
         }
     });
 };
+export const createTestSearchResult = (lng, lat) => ({
+    type: 'lng_lat',
+    lng,
+    lat
+});

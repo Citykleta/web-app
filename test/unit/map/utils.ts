@@ -5,7 +5,7 @@ import {GeoCoord} from '../../../src/app/utils';
 const fakeSource = () => {
     return {
         calls: [],
-        setData(args) {
+        setData(...args) {
             this.calls.push([...args]);
         }
     };
@@ -43,7 +43,7 @@ export default (a: Assert) => {
         });
     });
 
-    a.skip('eventuallyUpdate: should update a layer when states are different', t => {
+    test('eventuallyUpdate: should update a layer when states are different', t => {
 
         let updateCalls = [];
 

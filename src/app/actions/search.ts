@@ -54,7 +54,7 @@ export interface FetchSearchResultSuccessAction extends Action<ActionType.FETCH_
     result: SearchResult[];
 }
 
-export const fetchSearchResultWithSuccess = (result: any[]): FetchSearchResultSuccessAction => ({
+export const fetchSearchResultWithSuccess = (result: SearchResult[]): FetchSearchResultSuccessAction => ({
     type: ActionType.FETCH_SEARCH_RESULT_SUCCESS,
     result
 });

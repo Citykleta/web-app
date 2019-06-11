@@ -22,7 +22,7 @@ export const provider = (store: Store<ApplicationState>): SearchService => {
     return {
         async searchPointOfInterest(query: string): Promise<any> {
             return query ? (<EnhancedDispatch<FetchPointsOfInterestAction>>store.dispatch)(fetchPointsOfInterestFromAPI(query))
-                : store.dispatch(fetchPointsOfInterestWithSuccess([])); // todo should cancel any pending request ? ...
+                : store.dispatch(fetchPointsOfInterestWithSuccess([]));
         },
         async searchAddress(query: string) {
             return query ? (<EnhancedDispatch<FetchPointsOfInterestAction>>store.dispatch)(fetchSearchResultFromAPI(query))

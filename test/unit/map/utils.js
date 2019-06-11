@@ -2,7 +2,7 @@ import { eventuallyUpdate, pointListToFeature } from '../../../src/app/map/utils
 const fakeSource = () => {
     return {
         calls: [],
-        setData(args) {
+        setData(...args) {
             this.calls.push([...args]);
         }
     };
@@ -37,7 +37,7 @@ export default (a) => {
                 }]
         });
     });
-    a.skip('eventuallyUpdate: should update a layer when states are different', t => {
+    test('eventuallyUpdate: should update a layer when states are different', t => {
         let updateCalls = [];
         const slicer = state => state.search.suggestions;
         const map = fakeMap();

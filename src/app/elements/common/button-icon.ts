@@ -12,7 +12,7 @@ export const template = ({label}) => html`<button><span id="button-label" hidden
 
 export class ButtonIcon extends LitElement {
 
-    private label: string = 'fix me I have no accessible toElement!';
+    private label: string = 'fix me I have no accessible label!';
 
     constructor() {
         super();

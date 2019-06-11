@@ -6,11 +6,15 @@ import {ToolType} from '../../../src/app/tools/interfaces';
 import {
     addItineraryPoint,
     fetchRoutesWithSuccess,
+    goFrom,
+    goTo,
+    InsertionPosition,
     moveItineraryPoint,
     removeItineraryPoint,
     resetRoutes,
     updateItineraryPoint
 } from '../../../src/app/actions/itinerary';
+import {createTestSearchResult as sr} from '../utils';
 
 export default ({test}: Assert) => {
     test('should return the previous state if action is not related to itinerary', t => {
@@ -68,7 +72,6 @@ export default ({test}: Assert) => {
         });
     });
 
-    /*
     test('add a point specifying a valid insertion position', t => {
         const initialState: ItineraryState = {
             stops: [{
@@ -82,19 +85,25 @@ export default ({test}: Assert) => {
             routes: []
         };
 
-        const actual = reducer(initialState, addItineraryPoint({
+        const actual = reducer(initialState, addItineraryPoint(<GeoCoordSearchResult>{
+            type: 'lng_lat',
             lng: 789,
             lat: 987,
         }, 2));
 
         t.eq(actual, {
             stops: [{
-                lng: 789,
-                lat: 987,
-                id: 3
+                id: 3, item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 789,
+                    lat: 987,
+                }
             }, {
-                lng: 1234,
-                lat: 4321,
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 1234,
+                    lat: 4321
+                },
                 id: 2
             }],
             routes: []
@@ -104,14 +113,18 @@ export default ({test}: Assert) => {
     test('change an existing point coordinates', t => {
         const initialState: ItineraryState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 1234,
+                    lat: 4321
+                },
                 id: 2
             }],
             routes: []
         };
 
-        const actual = reducer(initialState, updateItineraryPoint(2, {
+        const actual = reducer(initialState, updateItineraryPoint(2, <GeoCoordSearchResult>{
+            type: 'lng_lat',
             lng: 789,
             lat: 987
         }));
@@ -119,8 +132,11 @@ export default ({test}: Assert) => {
         t.eq(actual, {
             stops: [{
                 id: 2,
-                lng: 789,
-                lat: 987
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 789,
+                    lat: 987
+                }
             }],
             routes: []
         });
@@ -129,14 +145,18 @@ export default ({test}: Assert) => {
     test('change a non existing point coordinates: should not modify state', t => {
         const initialState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 1234,
+                    lat: 4321
+                },
                 id: 2
             }],
             routes: []
         };
 
-        const actual = reducer(initialState, updateItineraryPoint(666, {
+        const actual = reducer(initialState, updateItineraryPoint(666, <GeoCoordSearchResult>{
+            type: 'lng_lat',
             lng: 789,
             lat: 987
         }));
@@ -147,8 +167,11 @@ export default ({test}: Assert) => {
     test('remove an existing point', t => {
         const initialState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 1234,
+                    lat: 4321
+                },
                 id: 2
             }],
             routes: []
@@ -162,8 +185,11 @@ export default ({test}: Assert) => {
     test('remove a non existing point', t => {
         const initialState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
+                item: <GeoCoordSearchResult>{
+                    type: 'lng_lat',
+                    lng: 1234,
+                    lat: 4321
+                },
                 id: 2
             }],
             routes: []
@@ -177,16 +203,25 @@ export default ({test}: Assert) => {
     test('move point should not do anything if target sourceId does not match any', t => {
         const stops = [{
             id: 2,
-            lng: 22,
-            lat: 33
+            item: <GeoCoordSearchResult>{
+                type: 'lng_lat',
+                lng: 22,
+                lat: 33
+            }
         }, {
             id: 3,
-            lng: 44,
-            lat: 55
+            item: <GeoCoordSearchResult>{
+                type: 'lng_lat',
+                lng: 44,
+                lat: 55
+            }
         }, {
             id: 4,
-            lng: 55,
-            lat: 66
+            item: <GeoCoordSearchResult>{
+                type: 'lng_lat',
+                lng: 55,
+                lat: 66
+            }
         }];
 
         const initialState = {
@@ -201,16 +236,25 @@ export default ({test}: Assert) => {
     test('move point should not do anything if source sourceId does not match any', t => {
         const stops = [{
             id: 2,
-            lng: 22,
-            lat: 33
+            item: <GeoCoordSearchResult>{
+                type: 'lng_lat',
+                lng: 22,
+                lat: 33
+            }
         }, {
             id: 3,
-            lng: 44,
-            lat: 55
+            item: <GeoCoordSearchResult>{
+                type: 'lng_lat',
+                lng: 44,
+                lat: 55
+            }
         }, {
             id: 4,
-            lng: 55,
-            lat: 66
+            item: <GeoCoordSearchResult>{
+                type: 'lng_lat',
+                lng: 55,
+                lat: 66
+            }
         }];
 
         const initialState: ItineraryState = {
@@ -225,16 +269,13 @@ export default ({test}: Assert) => {
     test('move before existing itinerary points from higher index to lower index', t => {
         const stops = [{
             id: 2,
-            lng: 22,
-            lat: 33
+            item: sr(22, 33)
         }, {
             id: 3,
-            lng: 44,
-            lat: 55
+            item: sr(44, 55)
         }, {
             id: 4,
-            lng: 55,
-            lat: 66
+            item: sr(55, 66)
         }];
 
         const initialState: ItineraryState = {
@@ -249,16 +290,13 @@ export default ({test}: Assert) => {
     test('move before existing itinerary points from lower index to higher index', t => {
         const stops = [{
             id: 2,
-            lng: 22,
-            lat: 33
+            item: sr(22, 33)
         }, {
             id: 3,
-            lng: 44,
-            lat: 55
+            item: sr(44, 55)
         }, {
             id: 4,
-            lng: 55,
-            lat: 66
+            item: sr(55, 66)
         }];
 
         const initialState: ItineraryState = {
@@ -273,16 +311,13 @@ export default ({test}: Assert) => {
     test('move after existing itinerary points from higher index to lower index', t => {
         const stops = [{
             id: 2,
-            lng: 22,
-            lat: 33
+            item: sr(22, 33)
         }, {
             id: 3,
-            lng: 44,
-            lat: 55
+            item: sr(44, 55)
         }, {
             id: 4,
-            lng: 55,
-            lat: 66
+            item: sr(55, 66)
         }];
 
         const initialState: ItineraryState = {
@@ -297,16 +332,13 @@ export default ({test}: Assert) => {
     test('move after existing itinerary points from lower index to higher index', t => {
         const stops = [{
             id: 2,
-            lng: 22,
-            lat: 33
+            item: sr(22, 33)
         }, {
             id: 3,
-            lng: 44,
-            lat: 55
+            item: sr(44, 55)
         }, {
             id: 4,
-            lng: 55,
-            lat: 66
+            item: sr(55, 66)
         }];
 
         const initialState = {
@@ -322,8 +354,7 @@ export default ({test}: Assert) => {
     test('reset routes and stop points', t => {
         const initialState = {
             stops: [{
-                lng: 1234,
-                lat: 4321,
+                item: sr(1234, 4321),
                 id: 2
             }],
             routes: [{geometry: 'bar'}]
@@ -332,16 +363,20 @@ export default ({test}: Assert) => {
         const actual = reducer(initialState, resetRoutes());
         t.eq(actual, {
             routes: [], stops: [{
-                id: 0
+                id: 0,
+                item: null
             }, {
-                id: 1
+                id: 1,
+                item: null
             }]
         });
     });
 
     test('set routes', t => {
         const initialState: ItineraryState = {
-            stops: [{id: 1, lat: 1234, lng: 5432}],
+            stops: [{
+                id: 1, item: sr(1234, 5432)
+            }],
             routes: []
         };
         const actual = reducer(initialState, fetchRoutesWithSuccess([{
@@ -349,11 +384,54 @@ export default ({test}: Assert) => {
         }]));
 
         t.eq(actual, {
-            stops: [{id: 1, lat: 1234, lng: 5432}],
+            stops: [{
+                id: 1, item: sr(1234, 5432)
+            }],
             routes: [{
                 geometry: 'geom'
             }]
         });
     });
-    */
+
+    test('respond to a GO_TO action, should set the stops state', t => {
+        const initialState: ItineraryState = {
+            stops: [
+                {id: 1, item: sr(1234, 4321)},
+                {id: 1, item: sr(5678, 8765)}
+            ],
+            routes: []
+        };
+
+        t.eq(reducer(initialState, goTo(sr(6666, 7777))), {
+            stops: [{
+                id: 0,
+                item: null
+            }, {
+                id: 1,
+                item: sr(6666, 7777)
+            }],
+            routes: []
+        });
+    });
+
+    test('respond to a GO_FROM action, should set the stops state', t => {
+        const initialState: ItineraryState = {
+            stops: [
+                {id: 1, item: sr(1234, 4321)},
+                {id: 1, item: sr(5678, 8765)}
+            ],
+            routes: []
+        };
+
+        t.eq(reducer(initialState, goFrom(sr(6666, 7777))), {
+            stops: [{
+                id: 0,
+                item: sr(6666, 7777)
+            }, {
+                id: 1,
+                item: null
+            }],
+            routes: []
+        });
+    });
 }

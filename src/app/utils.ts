@@ -71,15 +71,14 @@ export interface PointOfInterestSearchResult extends SearchResult {
     name: string;
     geometry: GeoJSONPoint;
     address: Address;
-    category: string;
+    category?: string;
     description?: string;
 }
 
 export interface GeoCoordSearchResult extends SearchResult {
     type: 'lng_lat',
     lng: number,
-    lat: number,
-    address?: Address
+    lat: number
 }
 
 export interface ItineraryPoint {
