@@ -1,35 +1,45 @@
-const isAssertionResult = (data) => data.actual && data.expected;
+const isAssertionResult = (data) => data.actual !== void 0 && data.expected !== void 0;
 function FailingAssertion(data) {
+    this.description = data.description;
     this.actual = data.actual;
     this.expected = data.expected;
-    this.description = data.description;
-    this.location = data.at;
 }
-const browserReporter = (message) => {
-    switch (message.type) {
-        case "TEST_START" /* TEST_START */:
-            const m = message;
-            console.groupCollapsed(m.data.description);
-            break;
-        case "ASSERTION" /* ASSERTION */:
-            const { data } = message;
-            console.assert(data.pass, `${data.description} should have passed`);
-            if (!data.pass && isAssertionResult(data)) {
-                console.dir(new FailingAssertion(data));
-            }
-            break;
-        case "TEST_END" /* TEST_END */:
-            console.groupEnd();
-            if (message.offset === 0) {
-                console.assert(message.data.failureCount === 0, 'should not have any failure');
-            }
-            break;
-        case "BAIL_OUT" /* BAIL_OUT */:
-            throw message.data;
-    }
-};
 export const reporter = async (stream) => {
-    for await (const m of stream) {
-        browserReporter(m);
+    const stack = [];
+    for await (const message of stream) {
+        switch (message.type) {
+            case "TEST_START" /* TEST_START */:
+                stack.push(message);
+                break;
+            case "ASSERTION" /* ASSERTION */:
+                const { data } = message;
+                if (!data.pass) {
+                    if (isAssertionResult(data)) {
+                        for (const t of stack) {
+                            console.group(t.data.description);
+                        }
+                        const assertionData = data;
+                        console.dir(new FailingAssertion(assertionData));
+                        console.log(assertionData.at);
+                        for (const t of stack) {
+                            console.groupEnd();
+                        }
+                    }
+                }
+                break;
+            case "TEST_END" /* TEST_END */: {
+                if (message.offset === 0) {
+                    const data = (message.data);
+                    console.log(`${data.failureCount} failure(s)`);
+                    console.log(`${data.successCount} successes(s)`);
+                    console.log(`${data.skipCount} skip(s)`);
+                    console.assert(data.failureCount === 0, 'should not have any failing test');
+                }
+                stack.pop();
+                break;
+            }
+            case "BAIL_OUT" /* BAIL_OUT */:
+                throw message.data;
+        }
     }
 };

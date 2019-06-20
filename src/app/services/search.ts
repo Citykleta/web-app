@@ -18,7 +18,20 @@ export interface SearchService {
     selectSearchResult(r: SearchResult);
 }
 
-export const provider = (store: Store<ApplicationState>): SearchService => {
+const searchActions = {
+    fetchPointsOfInterestFromAPI,
+    fetchPointsOfInterestWithSuccess,
+    fetchSearchResultFromAPI,
+    fetchSearchResultWithSuccess,
+    selectSearchResult
+};
+export const provider = (store: Store<ApplicationState>, {
+    fetchPointsOfInterestFromAPI,
+    fetchPointsOfInterestWithSuccess,
+    fetchSearchResultFromAPI,
+    fetchSearchResultWithSuccess,
+    selectSearchResult
+} = searchActions): SearchService => {
     return {
         async searchPointOfInterest(query: string): Promise<any> {
             return query ? (<EnhancedDispatch<FetchPointsOfInterestAction>>store.dispatch)(fetchPointsOfInterestFromAPI(query))

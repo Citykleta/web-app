@@ -35,7 +35,25 @@ export interface ItineraryService {
     reset(): void;
 }
 
-export const provider = (store: Store<ApplicationState>): ItineraryService => {
+const itineraryActions = {
+    moveItineraryPointWithSideEffects,
+    addItineraryPointWithSideEffects,
+    removeItineraryPointWithSideEffects,
+    changeItineraryPointWithSideEffects,
+    goTo,
+    goFrom,
+    resetRoutes
+};
+
+export const provider = (store: Store<ApplicationState>, {
+    moveItineraryPointWithSideEffects,
+    addItineraryPointWithSideEffects,
+    removeItineraryPointWithSideEffects,
+    changeItineraryPointWithSideEffects,
+    goTo,
+    goFrom,
+    resetRoutes
+} = itineraryActions): ItineraryService => {
 
     let movingPoint: ItineraryPoint = null;
 

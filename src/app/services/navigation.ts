@@ -9,7 +9,12 @@ export interface NavigationService {
     unselectAll(): void;
 }
 
-export const provider = (store: Store<ApplicationState>): NavigationService => {
+const navigationActions = {
+    selectTool
+};
+export const provider = (store: Store<ApplicationState>, {
+    selectTool
+} = navigationActions): NavigationService => {
     return {
         selectTool(tool: ToolType) {
             store.dispatch(selectTool(tool));
