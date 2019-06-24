@@ -88,20 +88,24 @@ export const defaultState = (): ApplicationState => ({
     }
 });
 
-export const spy = (fn: Function) => {
+export const stubFactory = name => () => {
+
     const calls = [];
 
-    const outputFn = (...args) => {
-        calls.push([...args]);
-        return fn(...args);
-    };
-
-    return Object.defineProperty(outputFn, 'calls', {
-        get() {
-            return calls;
+    return {
+        [name]: (...args) => {
+            calls.push(args);
+            return args;
+        },
+        hasBeenCalled(count = 1) {
+            return calls.length === count;
+        },
+        getCall(index = 0) {
+            return calls[index];
         }
-    });
+    };
 };
+
 
 export const createTestSearchResult = (lng: number, lat: number): GeoCoordSearchResult => ({
     type: 'lng_lat',

@@ -73,12 +73,11 @@ export interface PointOfInterestSearchResult extends SearchResult {
     address: Address;
     category?: string;
     description?: string;
+    distance?: number;
 }
 
-export interface GeoCoordSearchResult extends SearchResult {
-    type: 'lng_lat',
-    lng: number,
-    lat: number
+export interface GeoCoordSearchResult extends GeoCoord, SearchResult {
+    type: 'lng_lat'
 }
 
 export interface ItineraryPoint {
@@ -90,3 +89,9 @@ export interface ItineraryPoint {
 export interface Route {
     geometry: string;
 }
+
+export const createGeoCoord = (lng: number, lat: number): GeoCoordSearchResult => ({
+    type: 'lng_lat',
+    lng,
+    lat
+});

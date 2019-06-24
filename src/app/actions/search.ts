@@ -1,6 +1,6 @@
 import {Action} from 'redux';
 import {ActionType} from './types';
-import {PointOfInterestSearchResult, SearchResult} from '../utils';
+import {GeoCoord, PointOfInterestSearchResult, SearchResult} from '../utils';
 import {API} from '../services/store';
 
 export interface FetchPointsOfInterestAction extends Action<ActionType.FETCH_POINTS_OF_INTEREST> {
@@ -87,3 +87,41 @@ export const selectSearchResult = (result: SearchResult): SelectSearchResultActi
     type: ActionType.SELECT_SEARCH_RESULT,
     searchResult: result
 });
+
+export interface FetchClosestAction extends Action<ActionType.FETCH_CLOSEST> {
+    location: GeoCoord
+}
+
+export const fetchClosest = (location: GeoCoord): FetchClosestAction => ({
+    type: ActionType.FETCH_CLOSEST,
+    location
+});
+
+export interface FetchClosestSuccessAction extends Action<ActionType.FETCH_CLOSEST_SUCCESS> {
+    result: SearchResult[]
+}
+
+export const fetchClosestWithSuccess = (result: SearchResult[]): FetchClosestSuccessAction => ({
+    type: ActionType.FETCH_CLOSEST_SUCCESS,
+    result
+});
+
+export interface FetchClosestFailureAction extends Action<ActionType.FETCH_CLOSEST_FAILURE> {
+    error: any
+}
+
+export const fetchClosestWithFailure = (error: any): FetchClosestFailureAction => ({
+    type: ActionType.FETCH_CLOSEST_FAILURE,
+    error
+});
+
+export const fetchClosestFromAPI = (location: GeoCoord) => async (dispatch, getState, API: API) => {
+    const {geocoder} = API;
+    dispatch(fetchClosest(location));
+    try {
+        const res = await geocoder.reverse(location);
+        return dispatch(fetchClosestWithSuccess(res));
+    } catch (e) {
+        return dispatch(fetchClosestWithFailure(e));
+    }
+};

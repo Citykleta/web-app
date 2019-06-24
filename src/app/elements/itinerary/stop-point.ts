@@ -10,7 +10,7 @@ export const template = ({location: val, onValue, remove}) => html`
     <span draggable="true" class="drag-handle">
         ${dragHandle()}
     </span>
-    <citykleta-search-box  @value-change="${onValue}" .value="${val.item}"></citykleta-search-box>
+    <citykleta-search-box @focus="${() => console.log('FOOOO')}"  @value-change="${onValue}" .value="${val.item}"></citykleta-search-box>
     <citykleta-button-icon label="remove stop point from the itinerary" @click="${remove}" class="danger" id="remove-button">${removeIcon()}</citykleta-button-icon>
     `;
 

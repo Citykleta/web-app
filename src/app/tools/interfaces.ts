@@ -11,5 +11,5 @@ export interface Tool {
 }
 
 export interface ClickTool extends Tool {
-    actionClick(p: GeoCoord): void;
+    actionClick(p: GeoCoord): any;
 }

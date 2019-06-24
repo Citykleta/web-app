@@ -57,7 +57,7 @@ export const store = (api: API = {
         selectedSearchResult: null
     }
 }): Store<ApplicationState> => createStore(reducer, initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
-    // debugMiddleware
+    debugMiddleware
 ));
 
 

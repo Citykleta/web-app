@@ -31,8 +31,8 @@ export const propDef = {
 export class SearchBox extends LitElement {
 
     value: SearchResult = null;
-    private isBusy = false;
-    private selectedSuggestion: SearchResult = null;
+    selectedSuggestion: SearchResult = null;
+    isBusy = false;
     private _search: SearchService = null;
     private _store: Store<ApplicationState> = null;
 
@@ -53,11 +53,11 @@ export class SearchBox extends LitElement {
 
     private _suggestions: SearchResult[] = [];
 
-    private get suggestions() {
+    get suggestions() {
         return this._suggestions;
     }
 
-    private set suggestions(value) {
+    set suggestions(value) {
         const oldValue = this.suggestions;
         this._suggestions = value;
         this.selectedSuggestion = null;

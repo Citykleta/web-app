@@ -19,8 +19,8 @@ const provider = (): ServiceRegistry => {
     const store = registry.store = storeFactory()();
     registry.itinerary = itineraryProvider(store);
     registry.navigation = navigationProvider(store);
-    registry.mapTools = mapToolProvider(registry);
     registry.search = searchProvider(store);
+    registry.mapTools = mapToolProvider(registry);
     return registry;
 };
 

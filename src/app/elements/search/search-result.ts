@@ -17,6 +17,8 @@ export interface SearchResultInstance {
 
     toPoint(): GeoCoord;
 
+    // geometry(): any; //todo
+
     toString(): string;
 
     header(): TemplateResult;
@@ -134,16 +136,16 @@ const createPointOfInterestSearchResult = (item: PointOfInterestSearchResult): S
 const createLnLatSearchResult = (item: GeoCoordSearchResult): SearchResultInstance => {
     return {
         toOption(): TemplateResult {
-            return html`${truncate(item.lng)},${truncate(item.lat)}`;
+            return html`Pointed location <em class="municipality">${truncate(item.lng)}, ${truncate(item.lat)}</em>`;
         },
         toPoint() {
             return item;
         },
         toString(): string {
-            return `${truncate(item.lng)},${truncate(item.lat)}`;
+            return `Pointed location ${truncate(item.lng)},${truncate(item.lat)}`;
         },
         header(): TemplateResult {
-            return html`Geo Point`;
+            return html`Unknown place`;
         },
         address(): TemplateResult {
             return html``;

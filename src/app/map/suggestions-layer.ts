@@ -32,8 +32,14 @@ export const decodeLineString = geometry => {
     return output;
 };
 
+// todo mutualize with search-result interface
 export const searchFeatureToGeoJSON = (data: any) => {
     switch (data.type) {
+        case 'lng_lat':
+            return {
+                type: 'Point',
+                coordinates: [data.lng, data.lat]
+            };
         case 'point_of_interest':
         case 'corner': {
             return data.geometry;

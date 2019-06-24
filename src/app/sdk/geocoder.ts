@@ -5,7 +5,7 @@ export interface Geocoder {
 
     searchAddress(query: string): Promise<SearchResult[]>;
 
-    reverse(coordinates: GeoCoord): Promise<any[]>;//todo
+    reverse(coordinates: GeoCoord): Promise<SearchResult[]>;
 }
 
 const DEFAULT_ENDPOINT_ROOT = 'https://api.citykleta-test.com';
@@ -62,7 +62,8 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
                 throw new Error('not ok response'); //todo handler error in a different way
             }
 
-            return res.json();
+            const raw = await res.json();
+            return raw.map(i => Object.assign(i, {municipality: i.address.municipality}));
         }
     };
 };

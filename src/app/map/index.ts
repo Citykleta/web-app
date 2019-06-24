@@ -18,7 +18,7 @@ import {EMPTY_SOURCE, eventuallyUpdate} from './utils';
 import {createSearchResultInstance} from '../elements/search/search-result';
 
 const {accessToken, ...rest} = mapBoxConf;
-const {store} = registry;
+const {store, mapTools} = registry;
 
 mapboxgl.accessToken = accessToken;
 
@@ -37,9 +37,8 @@ map.on('load', () => {
 });
 
 map.on('click', ev => {
-    console.log(ev.lngLat);
+    mapTools.actionClick(ev.lngLat);
 });
-
 
 const mapUpdater = eventuallyUpdate(map);
 const updateRoutes = mapUpdater(routesId, routesPathSlicer, getRoutesPathData);

@@ -5,20 +5,24 @@ import {style} from './search-panel.style';
 import {ServiceRegistry} from '../../services/service-registry';
 import {SearchService} from '../../services/search';
 
-export const template = ({selectedSearchResult, onValue}) => {
+export const template = ({selectedSearchResult, isSearching, searchResult, onValue}) => {
     return html`
-    <citykleta-search-box @value-change="${onValue}"></citykleta-search-box>
+    <citykleta-search-box .isBusy="${isSearching}" .suggestions="${searchResult}" .selectedSuggestion="${selectedSearchResult}" @value-change="${onValue}"></citykleta-search-box>
     <citykleta-location .location="${selectedSearchResult}" class="${classMap({hidden: selectedSearchResult === null})}"></citykleta-location>
 `;
 };
 
 export const propDef = {
-    selectedSearchResult: {type: Object}
+    searchResult: {type: Array},
+    selectedSearchResult: {type: Object},
+    isSearching: {type: Boolean}
 };
 
 export class SearchPanel extends LitElement {
 
+    private isSearching = false;
     private selectedSearchResult: SearchResult = null;
+    private searchResult: SearchResult[] = [];
     private readonly _search: SearchService = null;
 
     constructor({search}: ServiceRegistry) {
@@ -36,6 +40,8 @@ export class SearchPanel extends LitElement {
 
     render() {
         return template({
+            isSearching: this.isSearching,
+            searchResult: this.searchResult,
             selectedSearchResult: this.selectedSearchResult,
             onValue: (ev: CustomEvent<{ value: SearchResult }>) => {
                 this._search.selectSearchResult(ev.detail.value);

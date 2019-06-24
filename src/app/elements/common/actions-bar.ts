@@ -16,6 +16,7 @@ export const template = ({goTo, goFrom}) => {
     return html`<ul>
 <li><citykleta-button-icon @click="${goTo}">Go To</citykleta-button-icon></li>
 <li><citykleta-button-icon @click="${goFrom}">Go From</citykleta-button-icon></li>
+<li><citykleta-button-icon @click="${() => console.warn('not implemented')}">Save</citykleta-button-icon></li>
 </ul>`;
 };
 

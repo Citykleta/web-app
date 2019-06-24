@@ -24,13 +24,15 @@ export const reducer: Reducer<SearchState> = (previousState = defaultState, acti
                 })),
                 selectedSearchResult: null
             });
-        case ActionType.FETCH_SEARCH_RESULT: {
+        case ActionType.FETCH_SEARCH_RESULT:
+        case ActionType.FETCH_CLOSEST: {
             return Object.assign({}, previousState, {
                 searchResult: [],
                 isSearching: true,
                 selectedSearchResult: null
             });
         }
+        case ActionType.FETCH_CLOSEST_SUCCESS:
         case ActionType.FETCH_SEARCH_RESULT_SUCCESS:
             const {result: searchResult} = action;
             return Object.assign({}, previousState, {
@@ -38,6 +40,7 @@ export const reducer: Reducer<SearchState> = (previousState = defaultState, acti
                 isSearching: false,
                 selectedSearchResult: null
             });
+        case ActionType.FETCH_CLOSEST_FAILURE:
         case ActionType.FETCH_SEARCH_RESULT_FAILURE:
             return Object.assign({}, previousState, {isSearching: false});
         case ActionType.SELECT_SEARCH_RESULT:
