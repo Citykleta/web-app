@@ -108,6 +108,12 @@ ${suggestionElements}
 `;
     }
 
+    updated(changedProperties) {
+        if (changedProperties.has('suggestions')) {
+            this.searchInput.focus();
+        }
+    }
+
     private async suggest(query: string) {
         try {
             this.isBusy = true;

@@ -2,7 +2,6 @@ import {css} from 'lit-element';
 
 // language=CSS
 export const style = css`:host {
-    --background-color:inherit;
     --border-color:var(--color-theme);
     --color:inherit;
     --suggestion-bg-color:inherit;
@@ -10,31 +9,23 @@ export const style = css`:host {
     --suggestion-border-color:var(--background-theme-1);
     display: flex;
     flex-direction: column;
-    position: relative;
 }
 
 [aria-expanded=false] + [role=listbox]{
     display: none;
 }
 
-:host(.overlay) [role=listbox]{
-    background: inherit;
-    box-shadow: 2px 2px 5px 0 var(--background-theme-3);
-    position: absolute;
-    top: 100%;
-    z-index: 9;
-}
-
 [role=combobox] {
-    border-bottom: 2px solid var(--border-color, currentColor);
+    border-bottom: 2px solid var(--border-color);
     display: flex;
+    padding: 0.4em;
 }
 
 #loading-indicator {
     align-items: center;
     display: flex;
     padding: 2px;
-    width: 2rem;
+    width: 2em;
 }
 
 #loading-indicator > svg {
@@ -55,17 +46,18 @@ input {
     color: var(--color);
     flex-grow: 1;
     font-size: 0.9em;
-    font-weight: lighter;
     outline: none;
+    padding: 0 0.2em;
 }
 
 ul:empty, ol:empty {
     border-color: transparent;
 }
 
-ol {
+[role=listbox] {
     list-style: none;
     margin: 0;
+    overflow: scroll;
     padding: 0;
     width: 100%;
 }
@@ -75,7 +67,7 @@ li {
     padding: 0.5em 1em;
     background: var(--suggestion-bg-color);
     color: var(--suggestion-color);
-    transition: all 0.2s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 li[aria-selected=true] {
@@ -90,7 +82,7 @@ li:not(:last-child) {
 #my-location{
     --color: var(--color-theme-compl);
     align-self: center;
-    margin: 0.2rem;
+    margin: 0 0.4em;
 }
 
 @keyframes rotateSpinner {

@@ -4,7 +4,7 @@ import {style} from './location-suggestion-item.style';
 import {createSearchResultInstance} from '../search/search-result';
 
 export const template = ({suggestion}) =>
-    createSearchResultInstance(suggestion).toOption();
+    createSearchResultInstance(suggestion).toOptionElement();
 
 export const propDef = {
     suggestion: {

@@ -8,7 +8,7 @@ import {
     sourceId as routesId
 } from './directions-layer';
 import {
-    getLayerData as getAddressLineData,
+    getLayerData as getSuggestionsData,
     lineStyle as suggestionsLineStyle,
     pointStyle as suggestionsPointLayer,
     slicer as suggestionsSlicer,
@@ -22,6 +22,7 @@ const {store, mapTools} = registry;
 
 mapboxgl.accessToken = accessToken;
 
+
 const map = new mapboxgl.Map({
     container: 'map-container',
     interactive: true,
@@ -30,19 +31,29 @@ const map = new mapboxgl.Map({
 
 map.on('load', () => {
     map.addSource(routesId, EMPTY_SOURCE);
-    map.addLayer(routeLineStyle);
     map.addSource(suggestionsSourceId, EMPTY_SOURCE);
+    map.addLayer(routeLineStyle);
     map.addLayer(suggestionsLineStyle);
     map.addLayer(suggestionsPointLayer);
 });
 
+map.on('click', 'suggestions-point', ev => {
+    console.log(ev);
+    console.log(ev.features);
+});
+
 map.on('click', ev => {
+    // console.log(map.queryRenderedFeatures(ev.lngLat.toArray()));
     mapTools.actionClick(ev.lngLat);
+    // new mapboxgl.Marker()
+    //     .setLngLat(ev.lngLat)
+    //     .addTo(map);
+
 });
 
 const mapUpdater = eventuallyUpdate(map);
 const updateRoutes = mapUpdater(routesId, routesPathSlicer, getRoutesPathData);
-const updateSuggestions = mapUpdater(suggestionsSourceId, suggestionsSlicer, getAddressLineData);
+const updateSuggestions = mapUpdater(suggestionsSourceId, suggestionsSlicer, getSuggestionsData);
 
 store.subscribe(() => {
     const newState = store.getState();
@@ -55,7 +66,7 @@ store.subscribe(() => {
         const center = createSearchResultInstance(selectedSearchResult).toPoint();
         map.jumpTo({
             center: [center.lng, center.lat],
-            zoom: Math.max(13.5, map.getZoom())
+            zoom: Math.max(15.5, map.getZoom())
         });
     }
 });

@@ -13,17 +13,18 @@ import {html, TemplateResult} from 'lit-html';
 import midpoint from '@turf/midpoint';
 
 export interface SearchResultInstance {
-    toOption(): TemplateResult;
+    toOptionElement(): TemplateResult;
 
     toPoint(): GeoCoord;
 
-    // geometry(): any; //todo
-
     toString(): string;
+
+    //todo replace by a toDetailElement
 
     header(): TemplateResult;
 
     address(): TemplateResult;
+
 }
 
 
@@ -45,7 +46,7 @@ export const fromLine = (item: BlockSearchResult | StreetSearchResult): { toPoin
 
 const createCornerSearchResult = (item: CornerSearchResult): SearchResultInstance => {
     return {
-        toOption() {
+        toOptionElement() {
             return html`esquina entre <strong>${item.streets[0]}</strong> y <strong>${item.streets[1]}</strong>,<em class="municipality">${item.municipality}</em>`;
         },
         toPoint() {
@@ -61,14 +62,14 @@ const createCornerSearchResult = (item: CornerSearchResult): SearchResultInstanc
             return html`${item.streets[0]} y ${item.streets[1]}`;
         },
         address() {
-            return this.toOption();
+            return this.toOptionElement();
         }
     };
 };
 
 const createBlockSearchResult = (item: BlockSearchResult): SearchResultInstance => {
     return Object.assign(fromLine(item), {
-        toOption() {
+        toOptionElement() {
             return html`<strong>${item.name}</strong> entre <strong>${item.intersections[0].name}</strong> y <strong>${item.intersections[1].name}</strong>,<em class="municipality">${item.municipality}</em>`;
         },
         toString() {
@@ -78,14 +79,14 @@ const createBlockSearchResult = (item: BlockSearchResult): SearchResultInstance 
             return html`Cuadra en ${item.name}`;
         },
         address() {
-            return this.toOption();
+            return this.toOptionElement();
         }
     });
 };
 
 const createStreetSearchResult = (item: StreetSearchResult): SearchResultInstance => {
     return Object.assign(fromLine(item), {
-        toOption() {
+        toOptionElement() {
             return html`<strong>${item.name}</strong>,<em class="municipality">${item.municipality}</em>`;
         },
         toString() {
@@ -95,14 +96,14 @@ const createStreetSearchResult = (item: StreetSearchResult): SearchResultInstanc
             return html`${item.name}`;
         },
         address(): TemplateResult {
-            return this.toOption();
+            return this.toOptionElement();
         }
     });
 };
 
 const createPointOfInterestSearchResult = (item: PointOfInterestSearchResult): SearchResultInstance => {
     return {
-        toOption() {
+        toOptionElement() {
             return html`${item.name},<em class="municipality">${item.municipality}</em>`;
         },
         toPoint() {
@@ -135,7 +136,7 @@ const createPointOfInterestSearchResult = (item: PointOfInterestSearchResult): S
 
 const createLnLatSearchResult = (item: GeoCoordSearchResult): SearchResultInstance => {
     return {
-        toOption(): TemplateResult {
+        toOptionElement(): TemplateResult {
             return html`Pointed location <em class="municipality">${truncate(item.lng)}, ${truncate(item.lat)}</em>`;
         },
         toPoint() {

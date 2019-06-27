@@ -40,7 +40,7 @@ todo display a drag area on host hover instead
 }
 
 citykleta-search-box{
-    background: var(--background-theme-1);
+    /*background: var(--background-theme-1);*/
     flex-grow: 1;
-    margin: 0 0.5rem;
+    /*margin: 0 0.5rem;*/
 }`;

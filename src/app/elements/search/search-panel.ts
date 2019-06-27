@@ -7,7 +7,7 @@ import {SearchService} from '../../services/search';
 
 export const template = ({selectedSearchResult, isSearching, searchResult, onValue}) => {
     return html`
-    <citykleta-search-box .isBusy="${isSearching}" .suggestions="${searchResult}" .selectedSuggestion="${selectedSearchResult}" @value-change="${onValue}"></citykleta-search-box>
+    <citykleta-search-box id="search-box" .isBusy="${isSearching}" .suggestions="${searchResult}" .selectedSuggestion="${selectedSearchResult}" @value-change="${onValue}"></citykleta-search-box>
     <citykleta-location .location="${selectedSearchResult}" class="${classMap({hidden: selectedSearchResult === null})}"></citykleta-location>
 `;
 };

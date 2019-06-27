@@ -19,8 +19,9 @@ export const searchPointerTool = (registry: ServiceRegistry): ClickTool => {
                 return store.dispatch(selectSearchResult(suggestions[0]));
             }
 
-            suggestions.unshift(createGeoCoord(lng, lat));
             const newSuggestions = [...suggestions];
+            newSuggestions.unshift(createGeoCoord(lng, lat));
+            newSuggestions.pop();
             store.dispatch(fetchSearchResultWithSuccess(newSuggestions));
             return store.dispatch(selectSearchResult(newSuggestions[0]));
         }

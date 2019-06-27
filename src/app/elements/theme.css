@@ -56,9 +56,16 @@ citykleta-app {
     z-index: 99;
     max-height: 100vh;
     opacity: 0.8;
-    width: 460px;
+    overflow: auto;
+    width: 30rem;
+    transition: opacity 0.3s;
 }
 
-citykleta-app:focus-within, citykleta-app:hover {
+citykleta-app:focus-within,
+citykleta-app:hover {
     opacity: 1;
+}
+
+.hidden{
+    display: none;
 }

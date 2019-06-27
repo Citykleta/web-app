@@ -1,6 +1,7 @@
 import {EMPTY_SOURCE} from './utils';
 import {ApplicationState} from '../services/store';
-import {decodeLine} from '../utils';
+import {decodeLine, SearchResult} from '../utils';
+import {SearchState} from '../reducers/search';
 
 export const sourceId = 'suggestions';
 
@@ -9,9 +10,10 @@ export const lineStyle = {
     type: 'line',
     source: sourceId,
     paint: {
-        'line-color': 'green',
-        'line-opacity': 0.5,
-        'line-width': 5
+        'line-color': ['case', ['get', 'selected'], '#55b2ff', '#ff426f'],
+        'line-opacity': 0.7,
+        'line-gap-width': ['case', ['get', 'selected'], 4, 1],
+        'line-width': ['case', ['get', 'selected'], 7, 5]
     }
 };
 
@@ -20,11 +22,16 @@ export const pointStyle = {
     type: 'circle',
     source: sourceId,
     paint: {
-        'circle-color': 'green',
-    }
+        'circle-color': '#55b2ff',
+        'circle-radius': 12,
+        'circle-stroke-width': ['case', ['get', 'selected'], 4, 2],
+        'circle-stroke-color': ['case', ['get', 'selected'], '#55b2ff', '#ff426f'],
+        'circle-opacity': 0.2,
+    },
+    filter: ['==', '$type', 'Point']
 };
 
-export const slicer = (state: ApplicationState) => state.search.searchResult;
+export const slicer = (state: ApplicationState) => state.search;
 
 export const decodeLineString = geometry => {
     const output = Object.assign({}, geometry);
@@ -53,18 +60,32 @@ export const searchFeatureToGeoJSON = (data: any) => {
     }
 };
 
-export const getLayerData = (data: any[] = []) => {
+const pointFeatureFactory = (selectedItem: SearchResult) => (item: SearchResult, index ?: number) => ({
+    type: 'Feature',
+    geometry: searchFeatureToGeoJSON(item),
+    properties: {
+        selected: item === selectedItem,
+        index
+    }
+});
 
-    if (data.length === 0) {
+export const getLayerData = (data: SearchState) => {
+
+    if (data.searchResult.length === 0 && data.selectedSearchResult === null) {
         return EMPTY_SOURCE.data;
     }
 
-    return {
+    const pointFactory = pointFeatureFactory(data.selectedSearchResult);
+
+    const geoJSON = {
         type: 'FeatureCollection',
-        features: data
-            .map(item => ({
-                type: 'Feature',
-                geometry: searchFeatureToGeoJSON(item)
-            }))
+        features: data.searchResult
+            .map(pointFactory)
     };
+
+    if (data.selectedSearchResult && geoJSON.features.every(f => f.properties.selected === false)) {
+        geoJSON.features.push(pointFactory(data.selectedSearchResult));
+    }
+
+    return geoJSON;
 };

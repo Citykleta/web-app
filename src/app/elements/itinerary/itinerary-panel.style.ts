@@ -2,15 +2,18 @@ import {css} from 'lit-element';
 
 // language=CSS
 export const style = css`
+    :host > * {
+        background: var(--background-theme);
+    }
+
     ol {
-        list-style: none;
-        padding: 0;
-        margin: 0.5em 0 0 0.5em;
         flex-grow: 1;
+        list-style: none;
+        margin: 0;
+        padding: 0;
     }
 
     #add-button-container {
-        padding: 0.5em;
         display: flex;
         justify-content: center;
     }
@@ -18,7 +21,6 @@ export const style = css`
     #stops-list-container {
         align-items: center;
         display: flex;
-        padding: 0.5em 0.5em 0 0.5rem;
     }
 
     #swap-button {
@@ -26,10 +28,12 @@ export const style = css`
     }
 
     li {
-        --padding-length: 0.5rem;
-        border-color: var(--background-theme-1);
+        --border-length: 2px;
+        --padding-length: 0.2rem;
+        --border-color: transparent;
+        border-color: var(--border-color);
         border-style: solid;
-        border-width: 1px 0 1px 0;
+        border-width: var(--border-length) 0 var(--border-length) 0;
         padding: var(--padding-length) calc(var(--padding-length) / 2);
         position: relative;
     }
@@ -40,10 +44,10 @@ export const style = css`
         display: inline-block;
         border-width: var(--padding-length);
         border-style: solid;
-        border-color: transparent transparent transparent var(--color-theme);
+        border-color: transparent transparent transparent var(--border-color);
         z-index: 99;
         position: absolute;
-        top: calc(-1 * (var(--padding-length) + 1px));
+        top: calc(-1 * (var(--padding-length) + var(--border-length)));
         left: calc(-1 / 2 * var(--padding-length));
     }
 
@@ -52,24 +56,16 @@ export const style = css`
         display: inline-block;
         border-width: var(--padding-length);
         border-style: solid;
-        border-color: transparent transparent transparent var(--color-theme);
+        border-color: transparent transparent transparent var(--border-color);
         z-index: 99;
         position: absolute;
-        bottom: calc(-1 * (var(--padding-length) + 1px));
+        bottom: calc(-1 * (var(--padding-length) + var(--border-length)));
         left: calc(-1 / 2 * var(--padding-length));
     }
 
-    li.drop-target-after {
-        border-bottom-color: var(--color-theme);
-    }
-
+    li.drop-target-after,
     li.drop-target-before {
-        border-top-color: var(--color-theme);
-    }
-
-    citykleta-location {
-        border-top: 1px solid var(--background-theme-2);
-        padding: 0 1em 1em 1em;
+        --border-color: var(--color-theme-compl)
     }
 
     .hidden {
