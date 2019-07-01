@@ -24,7 +24,7 @@ import {
     updateItineraryPoint,
     UpdateItineraryPointAction
 } from '../../../src/app/actions/itinerary';
-import {defaultState, directionsAPIStub, testStore} from '../utils';
+import {createTestSearchResult, defaultState, directionsAPIStub, testStore} from '../utils';
 import {ItineraryState} from '../../../src/app/reducers/itinerary';
 import {ApplicationState} from '../../../src/app/services/store';
 import {GeoCoordSearchResult} from '../../../src/app/utils';
@@ -176,14 +176,10 @@ export default (a: Assert) => {
             geometry: 'whatever'
         }]);
         const store = testStore(setState({
-                stops: [{id: 1, item: <GeoCoordSearchResult>{type: 'lng_lat', lng: 1234, lat: 4321}}, {
-                    id: 2,
-                    item: {
-                        type: 'lng_lat',
-                        lng: 4321,
-                        lat: 1234
-                    }
-                }],
+                stops: [
+                    {id: 1, item: createTestSearchResult(1234, 4321)},
+                    {id: 2, item: createTestSearchResult(4321, 1234)}
+                ],
                 routes: []
             }
         ), {
@@ -195,8 +191,7 @@ export default (a: Assert) => {
 
         // expectations
         t.eq(sdkMock.calls.length, 1, 'should have been called once');
-        t.eq(sdkMock.calls[0], [{type: 'lng_lat', lng: 1234, lat: 4321}, {
-            type: 'lng_lat',
+        t.eq(sdkMock.calls[0], [{lng: 1234, lat: 4321}, {
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the arguments');
@@ -232,8 +227,7 @@ export default (a: Assert) => {
             error
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have been called once');
-        t.eq(sdkMock.calls[0], [{type: 'lng_lat', lng: 1234, lat: 4321}, {
-            type: 'lng_lat',
+        t.eq(sdkMock.calls[0], [{lng: 1234, lat: 4321}, {
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the arguments');
@@ -306,11 +300,9 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -348,11 +340,9 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -390,16 +380,12 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            type: 'lng_lat',
             lng: 666,
             lat: 666
-        },
-            {
-                type: 'lng_lat',
-                lng: 4321,
-                lat: 1234
-            }
-        ], 'should have forwarded the stop points lists');
+        }, {
+            lng: 4321,
+            lat: 1234
+        }], 'should have forwarded the stop points lists');
     });
 
     test('remove itinerary point with side effects should not have side effect if there is less than 2 stops', async t => {
@@ -453,11 +439,9 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -520,11 +504,9 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');
@@ -573,11 +555,9 @@ export default (a: Assert) => {
         }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
         t.eq(sdkMock.calls[0], [{
-            type: 'lng_lat',
             lng: 666,
             lat: 666
         }, {
-            type: 'lng_lat',
             lng: 4321,
             lat: 1234
         }], 'should have forwarded the stop points lists');

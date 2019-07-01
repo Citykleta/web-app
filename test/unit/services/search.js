@@ -94,4 +94,20 @@ export default ({ test }) => {
         t.ok(store.hasBeenCalled(), 'store.disptach should have been called once');
         t.eq(store.getCall(), [[expected]], 'store.dispatch should have been called with the result of fetchPointsOfInterestFromAPI action');
     });
+    test(`searchPointOfInterestNearBy with valid location should forward the search to the api`, async (t) => {
+        const store = storeFactory();
+        const fetchClosestFromAPIStub = stubFactory('fetchClosestFromAPI')();
+        const stub = {
+            //@ts-ignore
+            fetchClosestFromAPI: fetchClosestFromAPIStub.fetchClosestFromAPI
+        };
+        //@ts-ignore
+        const service = provider(store, stub);
+        const location = { lng: 1234, lat: 4321 };
+        await service.searchPointOfInterestNearBy(location);
+        t.ok(fetchClosestFromAPIStub.hasBeenCalled(), 'api should have been called');
+        t.eq(fetchClosestFromAPIStub.getCall(), [location], 'fetchClosestFromAPI should have been called with the provided location');
+        t.ok(store.hasBeenCalled(), 'store.disptach should have been called once');
+        t.eq(store.getCall(), [[location]], 'store.dispatch should have been called with the result of fetchClosestFromAPI action');
+    });
 };

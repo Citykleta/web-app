@@ -106,7 +106,6 @@ export const stubFactory = name => () => {
     };
 };
 
-
 export const createTestSearchResult = (lng: number, lat: number): GeoCoordSearchResult => ({
     type: 'lng_lat',
     lng,

@@ -1,14 +1,14 @@
 import {html, LitElement} from 'lit-element';
 import {SearchResult} from '../../utils';
-import {classMap} from 'lit-html/directives/class-map';
 import {style} from './search-panel.style';
 import {ServiceRegistry} from '../../services/service-registry';
 import {SearchService} from '../../services/search';
+import {createSearchResultInstance} from './search-result';
 
 export const template = ({selectedSearchResult, isSearching, searchResult, onValue}) => {
     return html`
     <citykleta-search-box id="search-box" .isBusy="${isSearching}" .suggestions="${searchResult}" .selectedSuggestion="${selectedSearchResult}" @value-change="${onValue}"></citykleta-search-box>
-    <citykleta-location .location="${selectedSearchResult}" class="${classMap({hidden: selectedSearchResult === null})}"></citykleta-location>
+    ${selectedSearchResult !== null ? createSearchResultInstance(selectedSearchResult).toDetailElement() : ''}
 `;
 };
 

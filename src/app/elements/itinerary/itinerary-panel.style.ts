@@ -16,6 +16,7 @@ export const style = css`
     #add-button-container {
         display: flex;
         justify-content: center;
+        padding: 0.5em;
     }
 
     #stops-list-container {
@@ -25,47 +26,32 @@ export const style = css`
 
     #swap-button {
         transform: rotateZ(90deg);
+        margin: 0 0.5em;
     }
 
     li {
-        --border-length: 2px;
-        --padding-length: 0.2rem;
-        --border-color: transparent;
-        border-color: var(--border-color);
-        border-style: solid;
-        border-width: var(--border-length) 0 var(--border-length) 0;
-        padding: var(--padding-length) calc(var(--padding-length) / 2);
+        --border-width: 14px;
+        --offset: calc(-1 * var(--border-width));
         position: relative;
     }
 
-
-    li.drop-target-before::before {
-        content: '';
-        display: inline-block;
-        border-width: var(--padding-length);
-        border-style: solid;
-        border-color: transparent transparent transparent var(--border-color);
-        z-index: 99;
-        position: absolute;
-        top: calc(-1 * (var(--padding-length) + var(--border-length)));
-        left: calc(-1 / 2 * var(--padding-length));
-    }
-
+    li.drop-target-before::before,
     li.drop-target-after::after {
         content: '';
         display: inline-block;
-        border-width: var(--padding-length);
+        border-width: var(--border-width);
         border-style: solid;
-        border-color: transparent transparent transparent var(--border-color);
+        border-color: transparent transparent transparent var(--color-theme-compl);
         z-index: 99;
         position: absolute;
-        bottom: calc(-1 * (var(--padding-length) + var(--border-length)));
-        left: calc(-1 / 2 * var(--padding-length));
     }
 
-    li.drop-target-after,
-    li.drop-target-before {
-        --border-color: var(--color-theme-compl)
+    li.drop-target-before::before {
+        top: var(--offset);
+    }
+
+    li.drop-target-after::after {
+        bottom: var(--offset);
     }
 
     .hidden {

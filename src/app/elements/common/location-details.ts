@@ -1,27 +1,25 @@
 import {html, LitElement} from 'lit-element';
-import {SearchResult, truncate} from '../../utils';
 import {style} from './location-details.style';
+import {SearchResult, truncate} from '../../utils';
 import {createSearchResultInstance} from '../search/search-result';
 
 export const template = ({location: val}) => {
-    if (val === null)
-        return html``;
-
-    const instance = createSearchResultInstance(val);
-    const center = instance.toPoint();
+    const searchResultInstance = createSearchResultInstance(val);
+    const center = searchResultInstance.toPoint();
     return html`
-    <header>
-        <h2>${instance.header()}</h2>
-    </header>
+<article>
+    <h2><slot name="title"><span>${val.name}</span></slot></h2>
+    <span>debug_category:${val.category}</span>
     ${val.description ? html`<p class="description">${val.description}</p>` : ''}
-    ${val.category ? html`<p>debug category: ${val.category}</p>` : ''}
-    <address>${instance.address()}
+    <address>
+        <slot name="address">${html`<div>${searchResultInstance.toOptionElement()}</div>`}</slot>
         <div class="location">
             <span>Location</span>:
             <span>${truncate(center.lng)} / ${truncate(center.lat)}</span>
         </div>
     </address>
-    <citykleta-actions-bar .location="${val}"></citykleta-actions-bar>`;
+<citykleta-actions-bar .location="${val}"></citykleta-actions-bar>
+</article>`;
 };
 
 export const propDef = {
@@ -31,7 +29,6 @@ export const propDef = {
 };
 
 export class LocationDetails extends LitElement {
-
     location: SearchResult = null;
 
     static get styles() {
@@ -43,7 +40,7 @@ export class LocationDetails extends LitElement {
     }
 
     render() {
-        return template(this);
+        return template({location: this.location});
     }
 }
 

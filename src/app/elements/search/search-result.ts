@@ -11,25 +11,23 @@ import {
 } from '../../utils';
 import {html, TemplateResult} from 'lit-html';
 import midpoint from '@turf/midpoint';
+import {decodeLineString} from '../../map/suggestions-layer';
 
 export interface SearchResultInstance {
     toOptionElement(): TemplateResult;
+
+    toDetailElement(): TemplateResult;
 
     toPoint(): GeoCoord;
 
     toString(): string;
 
-    //todo replace by a toDetailElement
-
-    header(): TemplateResult;
-
-    address(): TemplateResult;
-
+    // todo set the output type
+    toGeoFeature(): any;
 }
 
-
 // todo better composition
-export const fromLine = (item: BlockSearchResult | StreetSearchResult): { toPoint(): GeoCoord } => ({
+export const fromLine = (item: BlockSearchResult | StreetSearchResult): { toPoint(): GeoCoord, toGeoFeature(): any } => ({
     toPoint() {
         const line = decodeLine(item.geometry.coordinates);
         const points = [line[0], line[line.length - 1]]
@@ -41,6 +39,9 @@ export const fromLine = (item: BlockSearchResult | StreetSearchResult): { toPoin
             lng: center[1],
             lat: center[0]
         };
+    },
+    toGeoFeature() {
+        return decodeLineString(item.geometry);
     }
 });
 
@@ -49,20 +50,23 @@ const createCornerSearchResult = (item: CornerSearchResult): SearchResultInstanc
         toOptionElement() {
             return html`esquina entre <strong>${item.streets[0]}</strong> y <strong>${item.streets[1]}</strong>,<em class="municipality">${item.municipality}</em>`;
         },
+        toDetailElement() {
+            return html`
+<citykleta-location .location=${item}>
+    <span slot="title">${item.streets[0] + ' y ' + item.streets[1]}</span>
+</citykleta-location>`;
+        },
         toPoint() {
             return {
                 lng: item.geometry.coordinates[0],
                 lat: item.geometry.coordinates[1]
             };
         },
+        toGeoFeature() {
+            return item.geometry;
+        },
         toString() {
             return `esquina ${item.streets[0]} y ${item.streets[1]}, ${item.municipality}`;
-        },
-        header() {
-            return html`${item.streets[0]} y ${item.streets[1]}`;
-        },
-        address() {
-            return this.toOptionElement();
         }
     };
 };
@@ -72,14 +76,14 @@ const createBlockSearchResult = (item: BlockSearchResult): SearchResultInstance 
         toOptionElement() {
             return html`<strong>${item.name}</strong> entre <strong>${item.intersections[0].name}</strong> y <strong>${item.intersections[1].name}</strong>,<em class="municipality">${item.municipality}</em>`;
         },
+        toDetailElement() {
+            return html`
+<citykleta-location .location=${item}>
+    <span slot="title">Cuadra en ${item.name}</span>
+</citykleta-location>`;
+        },
         toString() {
             return `${item.name} e/ ${item.intersections[0].name} y ${item.intersections[1].name}, ${item.municipality}`;
-        },
-        header() {
-            return html`Cuadra en ${item.name}`;
-        },
-        address() {
-            return this.toOptionElement();
         }
     });
 };
@@ -89,14 +93,12 @@ const createStreetSearchResult = (item: StreetSearchResult): SearchResultInstanc
         toOptionElement() {
             return html`<strong>${item.name}</strong>,<em class="municipality">${item.municipality}</em>`;
         },
+        toDetailElement() {
+            return html`
+<citykleta-location .location=${item}></citykleta-location>`;
+        },
         toString() {
             return `${item.name}, ${item.municipality}`;
-        },
-        header(): TemplateResult {
-            return html`${item.name}`;
-        },
-        address(): TemplateResult {
-            return this.toOptionElement();
         }
     });
 };
@@ -105,6 +107,20 @@ const createPointOfInterestSearchResult = (item: PointOfInterestSearchResult): S
     return {
         toOptionElement() {
             return html`${item.name},<em class="municipality">${item.municipality}</em>`;
+        },
+        toDetailElement() {
+            const {address = {}} = item;
+            const addressPart = [
+                address.street,
+                address.number ? `#${address.number}` : ''
+            ]
+                .filter(Boolean)
+                .join(' ');
+
+            return html`
+<citykleta-location .location=${item}>
+    <div slot="address">${html`${addressPart ? addressPart + ', ' : ''}<em>${item.municipality}</em>`}</div>
+</citykleta-location>`;
         },
         toPoint() {
             const [lng, lat] = item.geometry.coordinates;
@@ -116,42 +132,38 @@ const createPointOfInterestSearchResult = (item: PointOfInterestSearchResult): S
         toString() {
             return `${item.name}, ${item.municipality}`;
         },
-        header() {
-            return html`${item.name}`;
-        },
-        address() {
-            const {address = {}} = item;
-            const addressPart = [
-                address.street,
-                address.number ? `#${address.number}` : ''
-            ]
-                .filter(Boolean)
-                .join(' ');
-
-            return html`${addressPart ? addressPart + ', ' : ''}<em>${item.municipality}</em>`;
+        toGeoFeature() {
+            return item.geometry;
         }
-
     };
 };
 
 const createLnLatSearchResult = (item: GeoCoordSearchResult): SearchResultInstance => {
     return {
         toOptionElement(): TemplateResult {
-            return html`Pointed location <em class="municipality">${truncate(item.lng)}, ${truncate(item.lat)}</em>`;
+            return html`Pointed location <at></at><em class="municipality">${truncate(item.lng)}, ${truncate(item.lat)}</em>`;
+        },
+        toDetailElement() {
+            return html`
+<citykleta-location .location=${item}>
+    <span slot="title">Unknown place</span>
+</citykleta-location>`;
         },
         toPoint() {
-            return item;
+            return {
+                lng: item.lng,
+                lat: item.lat
+            };
         },
         toString(): string {
-            return `Pointed location ${truncate(item.lng)},${truncate(item.lat)}`;
+            return `Pointed location at ${truncate(item.lng)},${truncate(item.lat)}`;
         },
-        header(): TemplateResult {
-            return html`Unknown place`;
-        },
-        address(): TemplateResult {
-            return html``;
+        toGeoFeature() {
+            return {
+                type: 'Point',
+                coordinates: [item.lng, item.lat]
+            };
         }
-
     };
 };
 

@@ -11,6 +11,7 @@ import searchReducer from './reducers/search';
 import mapUtil from './map/utils';
 import searchService from './services/search';
 import itineraryService from './services/itinerary';
+import searchResultElement from './elements/search-result';
 import { reporter as browserReporter } from './browser-reporter';
 const harness = createHarness();
 const { test } = harness;
@@ -26,5 +27,6 @@ test('TOOL-BOX SERVICE', toolboxService);
 test('SETTINGS ACTIONS', settingsAction);
 test('SETTINGS REDUCER', settingsReducer);
 test('MAP UTILS', mapUtil);
+test('Search-result elements', searchResultElement);
 harness
     .report(browserReporter);

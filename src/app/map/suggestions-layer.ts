@@ -2,6 +2,7 @@ import {EMPTY_SOURCE} from './utils';
 import {ApplicationState} from '../services/store';
 import {decodeLine, SearchResult} from '../utils';
 import {SearchState} from '../reducers/search';
+import {createSearchResultInstance} from '../elements/search/search-result';
 
 export const sourceId = 'suggestions';
 
@@ -39,30 +40,9 @@ export const decodeLineString = geometry => {
     return output;
 };
 
-// todo mutualize with search-result interface
-export const searchFeatureToGeoJSON = (data: any) => {
-    switch (data.type) {
-        case 'lng_lat':
-            return {
-                type: 'Point',
-                coordinates: [data.lng, data.lat]
-            };
-        case 'point_of_interest':
-        case 'corner': {
-            return data.geometry;
-        }
-        case 'street': {
-            return decodeLineString(data.geometry);
-        }
-        case 'street_block': {
-            return decodeLineString(data.geometry);
-        }
-    }
-};
-
 const pointFeatureFactory = (selectedItem: SearchResult) => (item: SearchResult, index ?: number) => ({
     type: 'Feature',
-    geometry: searchFeatureToGeoJSON(item),
+    geometry: createSearchResultInstance(item).toGeoFeature(),
     properties: {
         selected: item === selectedItem,
         index

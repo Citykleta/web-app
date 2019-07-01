@@ -1,5 +1,9 @@
 import {ActionType} from '../../../src/app/actions/types';
 import {
+    fetchClosest,
+    fetchClosestFromAPI,
+    fetchClosestWithFailure,
+    fetchClosestWithSuccess,
     fetchPointsOfInterest,
     fetchPointsOfInterestFromAPI,
     fetchPointsOfInterestWithFailure,
@@ -12,6 +16,7 @@ import {
 } from '../../../src/app/actions/search';
 import {CornerSearchResult, GeoCoordSearchResult, PointOfInterestSearchResult} from '../../../src/app/utils';
 import {Assert} from 'zora';
+import {createTestSearchResult} from '../utils';
 
 export default (a: Assert) => {
     const {test} = a;
@@ -199,5 +204,93 @@ export default (a: Assert) => {
             type: ActionType.SELECT_SEARCH_RESULT,
             searchResult
         });
+    });
+
+    test('create a FETCH_CLOSEST action', t => {
+        const location = {
+            lng: 222,
+            lat: 333
+        };
+        t.eq(fetchClosest(location), {
+            type: ActionType.FETCH_CLOSEST,
+            location
+        });
+    });
+
+    test('fetch closest location with success', t => {
+        const searchResults = [createTestSearchResult(1234, 4321), createTestSearchResult(23234, 53232)];
+        t.eq(fetchClosestWithSuccess(searchResults), {
+            type: ActionType.FETCH_CLOSEST_SUCCESS,
+            result: searchResults
+        });
+    });
+
+    test('fetch closest location with failure', t => {
+        const error = new Error('something went wrong');
+        t.eq(fetchClosestWithFailure(error), {
+            type: ActionType.FETCH_CLOSEST_FAILURE,
+            error
+        });
+    });
+
+    test('fetch closest from api when api succeed', async t => {
+        const actions = [];
+        const location = {lng: 1234, lat: 4321};
+        const thunk = fetchClosestFromAPI(location);
+        const fakeDispatch = a => actions.push(a);
+        const stubResult = [createTestSearchResult(234, 432), createTestSearchResult(765, 456)];
+        const fakeGeoCoder = {
+            async reverse(locationQuery) {
+                if (locationQuery !== location) {
+                    throw new Error('unexpected argument');
+                }
+                return stubResult;
+            }
+        };
+
+        await thunk(fakeDispatch, () => {
+        }, {
+            // @ts-ignore
+            geocoder: fakeGeoCoder
+        });
+
+        t.eq(actions, [{
+            type: ActionType.FETCH_CLOSEST,
+            location
+        }, {
+            type: ActionType.FETCH_CLOSEST_SUCCESS,
+            result: stubResult
+        }]);
+    });
+
+    test('fetch closest from api when api succeed', async t => {
+        const actions = [];
+        const location = {lng: 1234, lat: 4321};
+        const error = new Error('something went wrong');
+        const thunk = fetchClosestFromAPI(location);
+        const fakeDispatch = a => actions.push(a);
+        const fakeGeoCoder = {
+            async reverse(locationQuery) {
+                if (locationQuery !== location) {
+                    throw new Error('unexpected argument');
+                }
+
+                throw error;
+            }
+        };
+
+        await thunk(fakeDispatch, () => {
+        }, {
+            // @ts-ignore
+            geocoder: fakeGeoCoder
+        });
+
+        t.eq(actions, [{
+            type: ActionType.FETCH_CLOSEST,
+            location
+        }, {
+            type: ActionType.FETCH_CLOSEST_FAILURE,
+            error
+        }]);
     });
 }

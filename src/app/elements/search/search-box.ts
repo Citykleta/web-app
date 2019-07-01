@@ -60,12 +60,14 @@ export class SearchBox extends LitElement {
     set suggestions(value) {
         const oldValue = this.suggestions;
         this._suggestions = value;
-        this.selectedSuggestion = null;
+        // re init if search has switched the context
+        if (!value.includes(this.selectedSuggestion)) {
+            this.selectedSuggestion = null;
+        }
         this.requestUpdate('suggestions', oldValue);
     }
 
     private _searchInput = null;
-
     private get searchInput() {
         if (this._searchInput) {
             return this._searchInput;
@@ -99,7 +101,7 @@ export class SearchBox extends LitElement {
     <div id="loading-indicator" class="${classMap({hidden: !this.isBusy})}" aria-hidden="true">
         ${loadingIndicator()}
     </div>
-    <input autofocus="true" @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" type="search" placeholder="ex: teatro karl Marx">
+    <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" type="search" placeholder="ex: teatro karl Marx">
     <citykleta-button-icon label="select my location" id="my-location">${myLocation()}</citykleta-button-icon>
 </form>
 <ol role="listbox" id="place-suggestions-box">
@@ -109,11 +111,12 @@ ${suggestionElements}
     }
 
     updated(changedProperties) {
-        if (changedProperties.has('suggestions')) {
+        if (changedProperties.has('selectedSuggestion')) {
             this.searchInput.focus();
         }
     }
 
+    // todo refactor suggest & submit
     private async suggest(query: string) {
         try {
             this.isBusy = true;
@@ -126,11 +129,6 @@ ${suggestionElements}
         }
     }
 
-    private changeSelectedSuggestion(value) {
-        this.selectedSuggestion = value;
-        this._search.selectSearchResult(value);
-    }
-
     private async submit(value) {
         try {
             this.isBusy = true;
@@ -141,6 +139,11 @@ ${suggestionElements}
         } finally {
             this.isBusy = false;
         }
+    }
+
+    private changeSelectedSuggestion(value) {
+        this.selectedSuggestion = value;
+        this._search.selectSearchResult(value);
     }
 
     private commitValue(newVal: SearchResult) {
