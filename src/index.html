@@ -6,8 +6,9 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
     <meta name="viewport" content="initial-scale=1,width=device-width,user-scalable=0"/>
     <link href="theme.css" rel="stylesheet"/>
-    <script async type="module" src="index.js"></script>
-    <script async type="module" src="index2.js"></script>
+    <script type="module" async src="./app.js"></script>
+    <script type="module" async src="./map.js"></script>
+    <!-- todo something with preload/ prefetch <link rel="preload" as="script" href="./search.js"></link>-->
 </head>
 <style>
     body {
@@ -18,14 +19,24 @@
         margin: 0;
         width: 100%;
     }
-
-    #map-container {
+    citykleta-map {
         width: 100%;
         height: 100%;
     }
+    #map-placeholder{
+        background: #81bde6;
+        opacity: 0.5;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 <body>
-<div id="map-container">
-</div>
+<citykleta-app></citykleta-app>
+<citykleta-map>
+    <div id="map-placeholder">loading ...</div>
+</citykleta-map>
 </body>
 </html>

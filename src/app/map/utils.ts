@@ -1,4 +1,4 @@
-import {ApplicationState} from '../services/store';
+import {ApplicationState} from '../store/store';
 import {GeoCoord} from '../utils';
 
 export const EMPTY_SOURCE = Object.freeze({

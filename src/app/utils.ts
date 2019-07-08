@@ -4,7 +4,7 @@ const polyline = p.default;
 
 export const decodeLine = (lineString: string) => polyline.decode(lineString).map(pair => pair.reverse());
 
-export const truncate = (value: number): number => Math.trunc(value * 10 ** 6) / 10 ** 6;
+export const truncate = (value: number, radix = 6): number => Math.trunc(value * 10 ** radix) / 10 ** radix;
 
 export const debounce = (fn, time = 250) => {
     let timer = null;
@@ -95,3 +95,13 @@ export const createGeoCoord = (lng: number, lat: number): GeoCoordSearchResult =
     lng,
     lat
 });
+
+export const once = (fn: Function): Function => {
+    let run = false;
+    return (...args) => {
+        if (!run) {
+            fn(...args);
+            run = true;
+        }
+    };
+};

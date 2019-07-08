@@ -20,10 +20,13 @@ if (isProduction) {
 }
 
 export default {
-    input: [
-        './src/app/elements/index.js',
-        './src/app/map/index.js'
-    ],
+    input: {
+        app: './src/index.js',
+        settings: './src/app/settings/module.js',
+        search: './src/app/search/module.js',
+        itinerary: './src/app/itinerary/module.js',
+        map: './src/app/map/index.js'
+    },
     output: [{
         dir: './dist/',
         sourcemap: true,

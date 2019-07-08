@@ -1,4 +1,4 @@
-import {AssertionMessage, AssertionResult, MessageType, Test, TestHarness} from 'zora';
+import {AssertionMessage, AssertionResult, MessageType, Test, TestEndMessage, TestHarness} from 'zora';
 
 const isAssertionResult = (data: any) => data.actual !== void 0 && data.expected !== void 0;
 
@@ -25,7 +25,7 @@ export const reporter = async (stream: TestHarness) => {
                             console.group(t.data.description);
                         }
                         const assertionData = <AssertionResult>data;
-                        console.dir(new FailingAssertion(assertionData));
+                        console.error(new FailingAssertion(assertionData));
                         console.log(assertionData.at);
                         for (const t of stack) {
                             console.groupEnd();
@@ -34,13 +34,29 @@ export const reporter = async (stream: TestHarness) => {
                 }
                 break;
             case  MessageType.TEST_END: {
+                const {data} = (<TestEndMessage>message);
+                if (data.skip && message.offset > 0) {
+                    const [current, ...parents] = stack.reverse();
+                    for (const t of parents) {
+                        console.group(t.data.description);
+                    }
+                    console.warn(`skip: ${current.data.description}`);
+
+                    for (const t of parents) {
+                        console.groupEnd();
+                    }
+                }
+
                 if (message.offset === 0) {
                     const data = <Test>(message.data);
+                    console.log(`
+                    `);
                     console.log(`${data.failureCount} failure(s)`);
                     console.log(`${data.successCount} successes(s)`);
                     console.log(`${data.skipCount} skip(s)`);
                     console.assert(data.failureCount === 0, 'should not have any failing test');
                 }
+
                 stack.pop();
                 break;
             }

@@ -19,7 +19,7 @@ export const reporter = async (stream) => {
                             console.group(t.data.description);
                         }
                         const assertionData = data;
-                        console.dir(new FailingAssertion(assertionData));
+                        console.error(new FailingAssertion(assertionData));
                         console.log(assertionData.at);
                         for (const t of stack) {
                             console.groupEnd();
@@ -28,8 +28,21 @@ export const reporter = async (stream) => {
                 }
                 break;
             case "TEST_END" /* TEST_END */: {
+                const { data } = message;
+                if (data.skip && message.offset > 0) {
+                    const [current, ...parents] = stack.reverse();
+                    for (const t of parents) {
+                        console.group(t.data.description);
+                    }
+                    console.warn(`skip: ${current.data.description}`);
+                    for (const t of parents) {
+                        console.groupEnd();
+                    }
+                }
                 if (message.offset === 0) {
                     const data = (message.data);
+                    console.log(`
+                    `);
                     console.log(`${data.failureCount} failure(s)`);
                     console.log(`${data.successCount} successes(s)`);
                     console.log(`${data.skipCount} skip(s)`);

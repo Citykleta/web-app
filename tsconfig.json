@@ -11,7 +11,7 @@
     "preserveConstEnums": false
   },
   "include": [
-    "./src/app/",
+    "./src",
     "./test"
   ],
   "exclude": [
