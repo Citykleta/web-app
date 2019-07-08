@@ -80,6 +80,8 @@ export const provider = (store: Store<ApplicationState>, {
                 throw new Error('map service has already booted');
             }
 
+            mapboxgl.accessToken = mapboxConf.accessToken;
+
             map = new mapboxgl.Map(Object.assign({}, mapboxConf, options));
 
             this.onLoad(() => {
