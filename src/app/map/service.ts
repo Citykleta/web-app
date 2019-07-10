@@ -38,6 +38,10 @@ export interface MapService {
 
     hasBooted(): boolean;
 
+    getCenter(): number[];
+
+    getZoom(): number;
+
     addSource(id: string, source: mapboxgl.GeoJSONSourceRaw): this;
 
     getSource(layer: string): mapboxgl.GeoJSONSourceRaw
@@ -102,7 +106,7 @@ export const provider = (store: Store<ApplicationState>, {
                 const updateRoutes = mapUpdater(routesId, routesPathSlicer, getRoutesPathData);
                 const updateSuggestions = mapUpdater(suggestionsSourceId, suggestionsSlicer, getSuggestionsData);
 
-                store.subscribe(() => {
+                const updateMap = () => {
                     const newState = store.getState();
                     const {selectedSearchResult} = newState.search;
                     updateRoutes(newState);
@@ -115,7 +119,9 @@ export const provider = (store: Store<ApplicationState>, {
                             center: [center.lng, center.lat]
                         });
                     }
-                });
+                };
+
+                store.subscribe(updateMap);
 
                 // simply sync the store state.
                 // todo check if we can't simply register to other event ?
@@ -125,6 +131,8 @@ export const provider = (store: Store<ApplicationState>, {
                 // map.on('render', ev => console.log(ev));
                 map.on('zoomend', updateMapState);
                 map.on('dragend', updateMapState);
+
+                updateMap();
                 hasBooted = true;
             });
             return this;
@@ -162,6 +170,14 @@ export const provider = (store: Store<ApplicationState>, {
                 map.on('click', layerOrListener, listener);
             }
             return this;
+        },
+
+        getZoom() {
+            return store.getState().map.zoom;
+        },
+
+        getCenter() {
+            return store.getState().map.center;
         },
 
         jumpTo(options: mapboxgl.CameraOptions, eventData?: mapboxgl.EventData) {

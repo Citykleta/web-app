@@ -30,7 +30,7 @@ export class GeoMap extends HTMLElement {
         const map = this._map;
         const container = this.shadowRoot.getElementById('map-container');
         map
-            .boot({container})
+            .boot({container, center: map.getCenter(), zoom: map.getZoom()})
             .onLoad(() => {
                 this.isLoading = false;
             });
