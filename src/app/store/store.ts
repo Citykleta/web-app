@@ -31,13 +31,13 @@ const debugMiddleware = store => next => action => {
     return next(action);
 };
 
-const defaultState: ApplicationState = {
+export const defaultState: ApplicationState = Object.freeze({
     navigation: defaultNavigationState,
     itinerary: defaultItineraryState,
     settings: defaultSettingsState,
     search: defaultSearchState,
     map: defaultMapState
-};
+});
 const defaultAPI = {
     directions: directionsAPI({
         endpoint: apiConf.endpoint
@@ -61,7 +61,7 @@ export const store = (api: API = defaultAPI) => (initialState: ApplicationState 
     };
 
     const store = createStore(combineReducers(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
-        debugMiddleware
+        // debugMiddleware
     ));
 
     const dynamicReducers = {};

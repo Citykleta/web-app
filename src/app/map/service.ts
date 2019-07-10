@@ -62,6 +62,7 @@ export const provider = (store: Store<ApplicationState>, {
 } = mapActions): MapService => {
     let map;
     let hasBooted = false;
+    let currentlySelectedSuggestion = null;
 
     const updateMapState = ev => {
         const zoom = truncate(map.getZoom(), 2);
@@ -107,7 +108,8 @@ export const provider = (store: Store<ApplicationState>, {
                     updateRoutes(newState);
                     updateSuggestions(newState);
 
-                    if (selectedSearchResult !== null) {
+                    if (selectedSearchResult !== null && currentlySelectedSuggestion !== selectedSearchResult) {
+                        currentlySelectedSuggestion = selectedSearchResult;
                         const center = createSearchResultInstance(selectedSearchResult).toPoint();
                         instance.jumpTo({
                             center: [center.lng, center.lat]
@@ -116,6 +118,11 @@ export const provider = (store: Store<ApplicationState>, {
                 });
 
                 // simply sync the store state.
+                // todo check if we can't simply register to other event ?
+                // on render does not seem to fit as:
+                // 1- they are too many so we need to debounce
+                // 2- looks like it is emitted whenever a feature is rendered, so the last one may occur quite a long time after the actual action has finished
+                // map.on('render', ev => console.log(ev));
                 map.on('zoomend', updateMapState);
                 map.on('dragend', updateMapState);
                 hasBooted = true;
@@ -159,6 +166,8 @@ export const provider = (store: Store<ApplicationState>, {
 
         jumpTo(options: mapboxgl.CameraOptions, eventData?: mapboxgl.EventData) {
             map.jumpTo(Object.assign({zoom: Math.max(15.5, map.getZoom())}, options), eventData);
+            // todo same than above, try to centralize event listener
+            updateMapState(null);
             return this;
         }
     };

@@ -97,7 +97,7 @@ export class SearchBox extends LitElement {
     <div id="loading-indicator" class="${classMap({hidden: !this.isBusy})}" aria-hidden="true">
         ${loadingIndicator()}
     </div>
-    <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" type="search" placeholder="ex: teatro karl Marx">
+    <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" type="search" placeholder="ex: teatro Karl Marx">
     <citykleta-button-icon label="select my location" id="my-location">${myLocation()}</citykleta-button-icon>
 </form>
 <ol role="listbox" id="place-suggestions-box">
