@@ -1,4 +1,5 @@
 import * as p from '@mapbox/polyline';
+import {MapState} from './map/reducer';
 
 const polyline = p.default;
 
@@ -105,3 +106,5 @@ export const once = (fn: Function): Function => {
         }
     };
 };
+
+export const isEqual = (a: MapState, b: MapState) => a.zoom === b.zoom && truncate(a.center[0]) === truncate(b.center[0]) && truncate(a.center[1]) === truncate(b.center[1]);

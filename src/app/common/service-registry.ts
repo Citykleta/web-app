@@ -16,7 +16,6 @@ export const registry = (): ServiceRegistry => {
             return serviceMap.get(label);
         },
         set(label, service) {
-            // todo should simply ignore
             if (serviceMap.has(label)) {
                 throw new Error(`service ${label} has already been registered`);
             }

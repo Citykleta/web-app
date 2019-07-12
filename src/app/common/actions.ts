@@ -1,3 +1,6 @@
+import {ApplicationState} from '../store/store';
+import {Action} from 'redux';
+
 export enum ActionType {
     MOVE_ITINERARY_POINT = 'MOVE_ITINERARY_POINT',
     ADD_ITINERARY_POINT = 'ADD_ITINERARY_POINT',
@@ -21,5 +24,15 @@ export enum ActionType {
     SELECT_SEARCH_RESULT = 'SELECT_SEARCH_RESULT',
     CHANGE_THEME = 'CHANGE_THEME',
     UPDATE_MAP = 'UPDATE_MAP',
-    SELECT_VIEW = 'SELECT_VIEW'
+    SELECT_VIEW = 'SELECT_VIEW',
+    CHANGE_HISTORY_POINT = 'CHANGE_HISTORY_POINT'
 }
+
+export interface ChangeHistoryPointAction extends Action<ActionType.CHANGE_HISTORY_POINT> {
+    state: ApplicationState
+}
+
+export const changeHistoryPoint = (state: ApplicationState): ChangeHistoryPointAction => ({
+    type: ActionType.CHANGE_HISTORY_POINT,
+    state
+});

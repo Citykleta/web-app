@@ -5,6 +5,8 @@ import {html} from 'lit-html';
 import store from '../store/index';
 import {connect} from '../common/connect';
 import {ApplicationState} from '../store/store';
+import {SearchBox} from '../search/elements/search-box';
+import {loadSearchItineraryComponents} from '../common';
 
 export * from './actions';
 export * from './reducer';
@@ -15,7 +17,7 @@ export {loadSearchItineraryServices as loadServices} from '../common/index';
 
 export const loadComponents = once((injector) => {
     const connectedItineraryPanel = connect(store, (state: ApplicationState) => state.itinerary);
-
+    loadSearchItineraryComponents(injector);
     customElements.define('citykleta-itinerary-panel', connectedItineraryPanel(injector(ItineraryPanel)));
     customElements.define('citykleta-stop-point', injector(StopPoint));
 });

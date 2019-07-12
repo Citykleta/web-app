@@ -12,6 +12,8 @@ import {
     NavigationState,
     reducer as navigationReducer
 } from '../navigation/reducer';
+import {ActionType} from '../common/actions';
+import {createReducer} from './combine-reducer';
 
 export interface ApplicationState {
     itinerary: ItineraryState;
@@ -60,7 +62,8 @@ export const store = (api: API = defaultAPI) => (initialState: ApplicationState 
         search: passThroughReducer
     };
 
-    const store = createStore(combineReducers(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
+    // @ts-ignore
+    const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
         // debugMiddleware
     ));
 
@@ -70,7 +73,7 @@ export const store = (api: API = defaultAPI) => (initialState: ApplicationState 
     return Object.assign(store, {
         injectReducer(key, reducer) {
             dynamicReducers[key] = reducer;
-            store.replaceReducer(combineReducers(Object.assign({}, staticReducer, dynamicReducers)));
+            store.replaceReducer(createReducer(Object.assign({}, staticReducer, dynamicReducers)));
         }
     });
 };

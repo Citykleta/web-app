@@ -4,15 +4,30 @@ const storeFactory = stubFactory('dispatch');
 export default ({ test }) => {
     test(`selectSearchResult should dispatch the result of "selectSearchResult" action`, t => {
         const store = storeFactory();
-        const actionStub = stubFactory('selectSearchResult')();
+        const selectSearchResultStub = stubFactory('selectSearchResult')();
+        const updateMapPositionStub = stubFactory('updateMapPosition')();
         // @ts-ignore
-        const service = provider(store, actionStub);
+        const service = provider(store, {
+            // @ts-ignore
+            selectSearchResult: selectSearchResultStub.selectSearchResult,
+            // @ts-ignore
+            updateMapPosition: updateMapPositionStub.updateMapPosition
+        });
         const searchResult = createTestSearchResult(333, 444);
         service.selectSearchResult(searchResult);
-        t.ok(actionStub.hasBeenCalled(), 'selectSearchResult action should have been called');
-        t.eq(actionStub.getCall(), [searchResult], ' should have forwarded the search result argument');
-        t.ok(store.hasBeenCalled(), 'action should have been dispatched');
-        t.eq(store.getCall(), [[searchResult]], 'argument should have been forwarded by the action');
+        t.ok(selectSearchResultStub.hasBeenCalled(), 'selectSearchResult action should have been called');
+        t.eq(selectSearchResultStub.getCall(), [searchResult], ' should have forwarded the search result argument');
+        t.ok(updateMapPositionStub.hasBeenCalled(), 'updateMapPosition action should have been called');
+        t.eq(updateMapPositionStub.getCall(), [{
+                zoom: 15,
+                center: [333, 444]
+            }], ' should have set default zoom and the point');
+        t.ok(store.hasBeenCalled(2), 'action should have been dispatched');
+        t.eq(store.getCall(0), [[searchResult]], 'argument should have been forwarded by the store');
+        t.eq(store.getCall(1), [[{
+                    zoom: 15,
+                    center: [333, 444]
+                }]], 'argument should have been forwarded by the store');
     });
     test(`searchAddress with empty query should forward an empty search result and avoid api call`, async (t) => {
         const store = storeFactory();

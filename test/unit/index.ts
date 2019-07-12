@@ -12,8 +12,12 @@ import searchResultElement from './search/elements/search-result';
 import navigationActions from './navigation/actions';
 import navigationService from './navigation/service';
 import navigationReducer from './navigation/reducer';
+import commonActions from './common/actions';
+import mapActions from './map/actions';
+import mapReducer from './map/reducer';
+import urlStorage from './storage/url';
 
-import {reporter as browserReporter} from './browser-reporter';
+import {reporter} from './browser-reporter';
 
 const harness = createHarness();
 const {test} = harness;
@@ -30,10 +34,14 @@ test('NAVIGATION ACTIONS', navigationActions);
 test('NAVIGATION REDUCER', navigationReducer);
 test('NAVIGATION SERVICE', navigationService);
 test('MAP UTILS', mapUtil);
-test('Search-result elements', searchResultElement);
+test('MAP ACTIONS', mapActions);
+test('MAP REDUCER', mapReducer);
+test('SEARCH-RESULT ELEMENTS', searchResultElement);
+test('COMMON ACTIONS', commonActions);
+test('URL STORAGE', urlStorage);
 
 harness
-    .report(browserReporter);
+    .report(reporter);
 
 
 

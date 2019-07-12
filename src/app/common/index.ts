@@ -5,6 +5,7 @@ import {provider as searchProvider} from '../search/service';
 import {provider} from '../itinerary/service';
 import {reducer as itineraryReducer} from '../itinerary/reducer';
 import {reducer as searchReducer} from '../search/reducers';
+import {SearchBox} from '../search/elements/search-box';
 
 export const defaultRegistry = registry();
 export const defaultInjector = withInjector(defaultRegistry);
@@ -14,4 +15,10 @@ export const loadSearchItineraryServices = once((registry: ServiceRegistry, stor
     store.injectReducer('search', searchReducer);
     registry.set('search', searchProvider(store));
     registry.set('itinerary', provider(store));
+});
+
+export const loadSearchItineraryComponents = once(injector => {
+    if (!customElements.get('citykleta-search-box')) {
+        customElements.define('citykleta-search-box', injector(SearchBox));
+    }
 });

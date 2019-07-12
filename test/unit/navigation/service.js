@@ -10,7 +10,10 @@ export default (a) => {
         t.eq(service.getView(), View.ITINERARY);
     });
     a.test('selectView() - should change the current selected view', t => {
-        const storeInstance = stubFactory('dispatch')();
+        const storeInstance = Object.assign(stubFactory('dispatch')(), {
+            subscribe: () => {
+            }
+        });
         // @ts-ignore
         const service = provider(storeInstance);
         service.selectView(View.ITINERARY);

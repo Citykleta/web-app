@@ -18,7 +18,6 @@ import {
     sourceId as suggestionsSourceId
 } from './layers/suggestions-layer';
 import mapboxConf from '../../conf/mapbox';
-import {createSearchResultInstance} from '../search/elements/search-result';
 
 /**
  * This service is a bit particular as it holds dom reference (through the mapbox instance)
@@ -53,8 +52,6 @@ export interface MapService {
     onClick(listener: (ev: any) => any): this;
 
     onClick(layer: string, listener: (ev: any) => any): this;
-
-    jumpTo(options: mapboxgl.CameraOptions, eventData?: mapboxgl.EventData): this;
 }
 
 const mapActions = {
@@ -77,7 +74,7 @@ export const provider = (store: Store<ApplicationState>, {
         }));
     };
 
-    const instance: MapService = {
+    return {
 
         boot(options) {
 
@@ -109,16 +106,15 @@ export const provider = (store: Store<ApplicationState>, {
                 const updateMap = () => {
                     const newState = store.getState();
                     const {selectedSearchResult} = newState.search;
+                    const {map: mapState} = newState;
                     updateRoutes(newState);
                     updateSuggestions(newState);
 
-                    if (selectedSearchResult !== null && currentlySelectedSuggestion !== selectedSearchResult) {
-                        currentlySelectedSuggestion = selectedSearchResult;
-                        const center = createSearchResultInstance(selectedSearchResult).toPoint();
-                        instance.jumpTo({
-                            center: [center.lng, center.lat]
-                        });
-                    }
+                    return map.jumpTo({
+                        // @ts-ignore
+                        center: mapState.center,
+                        zoom: mapState.zoom
+                    });
                 };
 
                 store.subscribe(updateMap);
@@ -178,15 +174,6 @@ export const provider = (store: Store<ApplicationState>, {
 
         getCenter() {
             return store.getState().map.center;
-        },
-
-        jumpTo(options: mapboxgl.CameraOptions, eventData?: mapboxgl.EventData) {
-            map.jumpTo(Object.assign({zoom: Math.max(15.5, map.getZoom())}, options), eventData);
-            // todo same than above, try to centralize event listener
-            updateMapState(null);
-            return this;
         }
     };
-
-    return instance;
 };

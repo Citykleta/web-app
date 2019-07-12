@@ -13,7 +13,10 @@ export default (a: Assert) => {
     });
 
     a.test('selectView() - should change the current selected view', t => {
-        const storeInstance = stubFactory('dispatch')();
+        const storeInstance = Object.assign(stubFactory('dispatch')(), {
+            subscribe: () => {
+            }
+        });
         // @ts-ignore
         const service = provider(storeInstance);
         service.selectView(View.ITINERARY);

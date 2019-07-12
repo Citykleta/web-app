@@ -11,7 +11,7 @@ import {ActionType} from '../common/actions';
 export interface MapState {
     center: number[],
     zoom: number,
-};
+}
 
 export const defaultState = {
     zoom: mapBoxConf.zoom,

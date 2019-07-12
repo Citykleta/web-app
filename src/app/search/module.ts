@@ -8,6 +8,7 @@ import {LocationDetails} from './elements/location-details';
 import {connect} from '../common/connect';
 import store from '../store/index';
 import {ApplicationState} from '../store/store';
+import {loadSearchItineraryComponents} from '../common';
 
 export * from './actions';
 export * from './reducers';
@@ -20,10 +21,10 @@ export {loadSearchItineraryServices as loadServices} from '../common/index';
 
 export const loadComponents = once((injector) => {
     const connectedSearchPanel = connect(store, (state: ApplicationState) => state.search);
+    loadSearchItineraryComponents(injector);
     customElements.define('citykleta-location-suggestion', LocationSuggestionItem);
     customElements.define('citykleta-location', injector(LocationDetails));
     customElements.define('citykleta-actions-bar', injector(ActionsBar));
-    customElements.define('citykleta-search-box', injector(SearchBox));
     customElements.define('citykleta-search-panel', connectedSearchPanel(injector(SearchPanel)));
 });
 
