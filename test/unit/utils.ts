@@ -1,10 +1,8 @@
 import {Directions} from '../../src/sdk/directions';
-import {ApplicationState} from '../../src/app/store/store';
+import {ApplicationState, defaultState as defState} from '../../src/app/store/store';
 import {AnyAction, applyMiddleware, createStore, Store} from 'redux';
 import thunk from 'redux-thunk';
-import {Theme} from '../../src/app/settings/reducer';
 import {GeoCoord, GeoCoordSearchResult, Route} from '../../src/app/utils';
-import {View} from '../../src/app/navigation/reducer';
 
 interface DirectionsAPIStub extends Directions {
     readonly calls: any[];
@@ -64,34 +62,6 @@ export const directionsAPIStub = (): DirectionsAPIStub => {
         }
     });
 };
-
-export const defaultState = (): ApplicationState => ({
-    navigation: {
-        selectedView: View.SEARCH
-    },
-    itinerary: {
-        routes: [],
-        stops: [{
-            id: 0,
-            item: null
-        }, {
-            id: 1,
-            item: null
-        }]
-    },
-    settings: {
-        theme: Theme.LIGHT
-    },
-    search: {
-        isSearching: false,
-        searchResult: [],
-        selectedSearchResult: null
-    },
-    map: {
-        center: [-82.367408, 23.122419],
-        zoom: 12.4,
-    }
-});
 
 export const stubFactory = name => () => {
 

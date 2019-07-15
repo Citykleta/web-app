@@ -15,7 +15,7 @@ export interface ItineraryState {
     routes: Route[];
 }
 
-export const defaultState: ItineraryState = {
+export const defaultState = (): ItineraryState => ({
     stops: [{
         id: 0,
         item: null
@@ -24,14 +24,14 @@ export const defaultState: ItineraryState = {
         item: null
     }],
     routes: []
-};
+});
 
 const matchId = id => item => item.id === id;
 
-export const reducer: Reducer<ItineraryState> = (previousState = defaultState, action) => {
+export const reducer: Reducer<ItineraryState> = (previousState = defaultState(), action) => {
     switch (action.type) {
         case ActionType.RESET_ROUTES: {
-            return Object.assign({}, defaultState);
+            return Object.assign({}, defaultState());
         }
         case ActionType.FETCH_ROUTES_SUCCESS: {
             const {routes} = <FetchRoutesSuccessAction>action;

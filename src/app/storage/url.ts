@@ -8,11 +8,12 @@ const serializeData = (state: ApplicationState): string => btoa(JSON.stringify(p
 const deserializeData = (encoded: string) => JSON.parse(atob(encoded));
 
 const mergeStates = (...states) => {
-    return states.reduce((acc, curr) => {
+    const [init, ...rest] = states;
+    return rest.reduce((acc, curr) => {
         acc.search = Object.assign({}, acc.search, curr.search);
         acc.itinerary = Object.assign({}, acc.itinerary, curr.itinerary);
         return acc;
-    }, Object.assign({}, defaultState));
+    }, init);
 };
 
 const project = (state: ApplicationState) => {
@@ -44,7 +45,7 @@ export const deserialize = (url: URL): ApplicationState => {
         const location = parts.find(v => locationRegexp.test(v));
         const data = parts.find(v => dataRegexp.test(v));
 
-        let state = Object.assign({}, defaultState);
+        let state = defaultState();
 
         if (view) {
             state.navigation.selectedView = <View>view.toUpperCase();
@@ -64,7 +65,7 @@ export const deserialize = (url: URL): ApplicationState => {
         return state;
     } catch (e) {
         console.log(e);
-        return Object.assign({}, defaultState);
+        return defaultState()   ;
     }
 };
 

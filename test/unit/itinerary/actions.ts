@@ -24,9 +24,9 @@ import {
     updateItineraryPoint,
     UpdateItineraryPointAction
 } from '../../../src/app/itinerary/actions';
-import {createTestSearchResult, defaultState, directionsAPIStub, testStore} from '../utils';
+import {createTestSearchResult, directionsAPIStub, testStore} from '../utils';
 import {ItineraryState} from '../../../src/app/itinerary/reducer';
-import {ApplicationState} from '../../../src/app/store/store';
+import {ApplicationState, defaultState} from '../../../src/app/store/store';
 import {GeoCoordSearchResult} from '../../../src/app/utils';
 import {Assert} from 'zora';
 

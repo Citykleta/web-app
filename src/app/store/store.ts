@@ -1,4 +1,4 @@
-import {Action, applyMiddleware, combineReducers, createStore, Store} from 'redux';
+import {Action, applyMiddleware, createStore, Store} from 'redux';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 import {defaultState as defaultItineraryState, ItineraryState} from '../itinerary/reducer';
 import {Directions, factory as directionsAPI} from '../../sdk/directions';
@@ -12,7 +12,6 @@ import {
     NavigationState,
     reducer as navigationReducer
 } from '../navigation/reducer';
-import {ActionType} from '../common/actions';
 import {createReducer} from './combine-reducer';
 
 export interface ApplicationState {
@@ -33,13 +32,14 @@ const debugMiddleware = store => next => action => {
     return next(action);
 };
 
-export const defaultState: ApplicationState = Object.freeze({
-    navigation: defaultNavigationState,
-    itinerary: defaultItineraryState,
-    settings: defaultSettingsState,
-    search: defaultSearchState,
-    map: defaultMapState
+export const defaultState = () => ({
+    navigation: defaultNavigationState(),
+    itinerary: defaultItineraryState(),
+    search: defaultSearchState(),
+    settings: defaultSettingsState(),
+    map: defaultMapState()
 });
+
 const defaultAPI = {
     directions: directionsAPI({
         endpoint: apiConf.endpoint
@@ -52,7 +52,7 @@ const defaultAPI = {
 // placeholder for dynamically injected reducers
 const passThroughReducer = (state = {}) => state;
 
-export const store = (api: API = defaultAPI) => (initialState: ApplicationState = defaultState): Store<ApplicationState> => {
+export const store = (api: API = defaultAPI) => (initialState: ApplicationState = defaultState()): Store<ApplicationState> => {
 
     const staticReducer = {
         navigation: navigationReducer,

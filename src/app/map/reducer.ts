@@ -13,12 +13,12 @@ export interface MapState {
     zoom: number,
 }
 
-export const defaultState = {
+export const defaultState = (): MapState => ({
     zoom: mapBoxConf.zoom,
     center: mapBoxConf.center
-};
+});
 
-export const reducer: Reducer<MapState> = (previousState = defaultState, action) => {
+export const reducer: Reducer<MapState> = (previousState = defaultState(), action) => {
     switch (action.type) {
         case ActionType.UPDATE_MAP:
             const {type, ...rest} = action;

@@ -1,5 +1,5 @@
-import { store } from '../../../src/app/store/store';
-import { defaultState, stubFactory } from '../utils';
+import { defaultState, store } from '../../../src/app/store/store';
+import { stubFactory } from '../utils';
 import { View } from '../../../src/app/navigation/reducer';
 import { provider } from '../../../src/app/navigation/service';
 import { ActionType } from '../../../src/app/common/actions';

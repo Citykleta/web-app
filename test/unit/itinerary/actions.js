@@ -1,6 +1,7 @@
 import { ActionType } from '../../../src/app/common/actions';
 import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPointWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, goFrom, goTo, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes, updateItineraryPoint } from '../../../src/app/itinerary/actions';
-import { createTestSearchResult, defaultState, directionsAPIStub, testStore } from '../utils';
+import { createTestSearchResult, directionsAPIStub, testStore } from '../utils';
+import { defaultState } from '../../../src/app/store/store';
 const setState = (state) => ({
     ...defaultState(),
     itinerary: state

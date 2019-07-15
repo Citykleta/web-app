@@ -11,11 +11,11 @@ export interface NavigationState {
     selectedView: View
 }
 
-export const defaultState: NavigationState = {
+export const defaultState = (): NavigationState => ({
     selectedView: View.SEARCH
-};
+});
 
-export const reducer: Reducer<NavigationState> = (previousState = defaultState, action) => {
+export const reducer: Reducer<NavigationState> = (previousState = defaultState(), action) => {
     switch (action.type) {
         case ActionType.SELECT_VIEW:
             return Object.assign({}, previousState, {selectedView: action.view});

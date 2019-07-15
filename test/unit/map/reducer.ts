@@ -1,10 +1,10 @@
 import {Assert} from 'zora';
 import {reducer} from '../../../src/app/map/reducer';
-import {defaultState} from '../utils';
 import {selectView} from '../../../src/app/navigation/actions';
 import {View} from '../../../src/app/navigation/reducer';
 import {ActionType} from '../../../src/app/common/actions';
 import {updateMapPosition} from '../../../src/app/map/actions';
+import {defaultState} from '../../../src/app/store/store';
 
 export default function ({test}: Assert) {
     test(`should forward previous state if action is not relevant`, t => {

@@ -1,9 +1,8 @@
-import { reducer } from '../../../src/app/search/reducers';
+import { reducer, defaultState } from '../../../src/app/search/reducers';
 import { addItineraryPoint } from '../../../src/app/itinerary/actions';
-import { createTestSearchResult, defaultState as globalDefaultState } from '../utils';
+import { createTestSearchResult } from '../utils';
 import { fetchClosest, fetchClosestWithFailure, fetchClosestWithSuccess, fetchPointsOfInterest, fetchPointsOfInterestWithSuccess, fetchSearchResult, fetchSearchResultWithFailure, fetchSearchResultWithSuccess, selectSearchResult } from '../../../src/app/search/actions';
 import { ActionType } from '../../../src/app/common/actions';
-const defaultState = () => globalDefaultState().search;
 export default (assert) => {
     const { test } = assert;
     const skip = assert.skip.bind(assert);
@@ -73,7 +72,7 @@ export default (assert) => {
             isSearching: false
         });
     });
-    test('responding to SELECT_SEARCH_RESULT action, should change the selectedSearchResult part of the state', t => {
+    test(`responding to ${ActionType.SELECT_SEARCH_RESULT} action, should change the selectedSearchResult part of the state`, t => {
         const searchResult = [{ type: 'lng_lat', lng: 5432, lat: 1234 }];
         const initialState = Object.assign(defaultState(), {
             searchResult

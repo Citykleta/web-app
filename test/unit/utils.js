@@ -1,7 +1,5 @@
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { Theme } from '../../src/app/settings/reducer';
-import { View } from '../../src/app/navigation/reducer';
 export const testStore = (state, extraArgs) => {
     let actions = [];
     const collectActionsMiddleware = store => next => action => {
@@ -42,33 +40,6 @@ export const directionsAPIStub = () => {
         }
     });
 };
-export const defaultState = () => ({
-    navigation: {
-        selectedView: View.SEARCH
-    },
-    itinerary: {
-        routes: [],
-        stops: [{
-                id: 0,
-                item: null
-            }, {
-                id: 1,
-                item: null
-            }]
-    },
-    settings: {
-        theme: Theme.LIGHT
-    },
-    search: {
-        isSearching: false,
-        searchResult: [],
-        selectedSearchResult: null
-    },
-    map: {
-        center: [-82.367408, 23.122419],
-        zoom: 12.4,
-    }
-});
 export const stubFactory = name => () => {
     const calls = [];
     return {

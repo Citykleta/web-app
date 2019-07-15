@@ -1,7 +1,7 @@
 import {Assert} from 'zora';
-import {reducer, SearchState} from '../../../src/app/search/reducers';
+import {reducer, defaultState} from '../../../src/app/search/reducers';
 import {addItineraryPoint} from '../../../src/app/itinerary/actions';
-import {createTestSearchResult, defaultState as globalDefaultState} from '../utils';
+import {createTestSearchResult} from '../utils';
 import {GeoCoordSearchResult, PointOfInterestSearchResult} from '../../../src/app/utils';
 import {
     fetchClosest,
@@ -15,8 +15,6 @@ import {
     selectSearchResult
 } from '../../../src/app/search/actions';
 import {ActionType} from '../../../src/app/common/actions';
-
-const defaultState = (): SearchState => globalDefaultState().search;
 
 export default (assert: Assert) => {
     const {test} = assert;
@@ -92,7 +90,7 @@ export default (assert: Assert) => {
         });
     });
 
-    test('responding to SELECT_SEARCH_RESULT action, should change the selectedSearchResult part of the state', t => {
+    test(`responding to ${ActionType.SELECT_SEARCH_RESULT} action, should change the selectedSearchResult part of the state`, t => {
         const searchResult = [<GeoCoordSearchResult>{type: 'lng_lat', lng: 5432, lat: 1234}];
         const initialState = Object.assign(defaultState(), {
             searchResult

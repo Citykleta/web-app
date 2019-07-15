@@ -8,13 +8,13 @@ export interface SearchState {
     selectedSearchResult: SearchResult;
 }
 
-export const defaultState: SearchState = {
+export const defaultState = () => ({
     searchResult: [],
     isSearching: false,
     selectedSearchResult: null
-};
+});
 
-export const reducer: Reducer<SearchState> = (previousState = defaultState, action) => {
+export const reducer: Reducer<SearchState> = (previousState = defaultState(), action) => {
     switch (action.type) {
         case ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS:
             return Object.assign({}, previousState, {
