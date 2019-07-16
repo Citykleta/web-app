@@ -1,6 +1,7 @@
-import { deserialize, serialize } from '../../../src/app/storage/url';
+import { deserialize, serialize, storage } from '../../../src/app/storage/url';
 import { View } from '../../../src/app/navigation/reducer';
 import { defaultState } from '../../../src/app/store/store';
+import { createTestSearchResult } from '../utils';
 export default function (a) {
     a.test('Serialize a state currently in search view', t => {
         const state = Object.assign(defaultState(), {
@@ -259,5 +260,79 @@ export default function (a) {
     a.test('should set the default state if does not understand the url', t => {
         const state = deserialize(new URL('foo/bar/bim', 'https://localhost.com'));
         t.eq(state, defaultState());
+    });
+    a.test(`url storage - get() should get the result from the window.location.href`, async (t) => {
+        const state = Object.assign(defaultState(), {
+            search: {
+                searchResult: [],
+                selectedSearchResult: createTestSearchResult(1234, 4321),
+                isSearching: false
+            }
+        });
+        const fakeWindow = {
+            location: {
+                href: serialize(state)
+            }
+        };
+        const service = storage(fakeWindow);
+        t.eq(await service.get(), state);
+    });
+    a.test(`url storage - set() should push the new state in the history `, async (t) => {
+        const argList = [];
+        const fakeWindow = {
+            history: {
+                pushState(...args) {
+                    argList.push(args);
+                }
+            },
+            location: {
+                href: serialize(defaultState())
+            }
+        };
+        const service = storage(fakeWindow);
+        const newState = Object.assign(defaultState(), {
+            map: {
+                center: [-82, 23],
+                zoom: 16
+            }
+        });
+        await service.set(newState);
+        t.eq(argList, [
+            [
+                newState,
+                '',
+                '/search/@-82,23,16z/data=eyJzZWFyY2giOnsic2VsZWN0ZWRTZWFyY2hSZXN1bHQiOm51bGx9fQ=='
+            ]
+        ]);
+    });
+    a.test(`url storage - set() should not push the new state in the history if the new state is equivalent`, async (t) => {
+        const argList = [];
+        const fakeWindow = {
+            history: {
+                pushState(...args) {
+                    argList.push(args);
+                    fakeWindow.location.href = serialize(args[0]).href;
+                }
+            },
+            location: {
+                href: serialize(defaultState()).href
+            }
+        };
+        const service = storage(fakeWindow);
+        const newState = Object.assign(defaultState(), {
+            map: {
+                center: [-82, 23],
+                zoom: 16
+            }
+        });
+        await service.set(newState);
+        await service.set(newState);
+        t.eq(argList, [
+            [
+                newState,
+                '',
+                '/search/@-82,23,16z/data=eyJzZWFyY2giOnsic2VsZWN0ZWRTZWFyY2hSZXN1bHQiOm51bGx9fQ=='
+            ]
+        ]);
     });
 }

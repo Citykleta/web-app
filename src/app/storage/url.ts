@@ -81,6 +81,5 @@ export const storage = (window): ApplicationStorage => {
             }
         }
     };
-
 };
 
