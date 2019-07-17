@@ -1,7 +1,7 @@
 import polyline from '@mapbox/polyline';
 import {EMPTY_SOURCE} from '../utils';
-import {Route} from '../../utils';
 import {ApplicationState} from '../../store/store';
+import {ItineraryState} from '../../itinerary/reducer';
 
 export const sourceId = 'directions-path';
 
@@ -10,8 +10,10 @@ export const lineStyle = {
     type: 'line',
     source: sourceId,
     paint: {
-        'line-color': 'blue',
-        'line-width': 7
+        'line-color': ['case', ['get', 'selected'], '#ff426f', 'gray'],
+        'line-opacity': ['case', ['get', 'selected'], 1, 0.6],
+        'line-gap-width': ['case', ['get', 'selected'], 2, 0],
+        'line-width': ['case', ['get', 'selected'], 3, 5]
     }
 };
 
@@ -24,9 +26,11 @@ export const pointStyle = {
     }
 };
 
-export const slicer = (state: ApplicationState) => state.itinerary.routes;
+export const slicer = (state: ApplicationState) => state.itinerary;
 
-export const getLayerData = (routes: Route[]) => {
+export const getLayerData = (state: ItineraryState) => {
+
+    const {routes, selectedRoute} = state;
 
     if (routes.length === 0) {
         return EMPTY_SOURCE.data;
@@ -34,9 +38,12 @@ export const getLayerData = (routes: Route[]) => {
 
     return {
         type: 'FeatureCollection',
-        features: [{
+        features: routes.map((r, i) => ({
             type: 'Feature',
-            geometry: polyline.toGeoJSON(routes[0].geometry, 5)
-        }]
+            geometry: polyline.toGeoJSON(r.geometry, 5),
+            properties: {
+                selected: i === selectedRoute
+            }
+        }))
     };
 };

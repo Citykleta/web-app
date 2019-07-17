@@ -22,7 +22,6 @@ export {loadSearchItineraryServices as loadServices} from '../common/index';
 export const loadComponents = once((injector) => {
     const connectedSearchPanel = connect(store, (state: ApplicationState) => state.search);
     loadSearchItineraryComponents(injector);
-    customElements.define('citykleta-location-suggestion', LocationSuggestionItem);
     customElements.define('citykleta-location', injector(LocationDetails));
     customElements.define('citykleta-actions-bar', injector(ActionsBar));
     customElements.define('citykleta-search-panel', connectedSearchPanel(injector(SearchPanel)));

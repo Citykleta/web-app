@@ -13,6 +13,7 @@ import {ItineraryPoint, Route} from '../utils';
 export interface ItineraryState {
     stops: ItineraryPoint[];
     routes: Route[];
+    selectedRoute: number;
 }
 
 export const defaultState = (): ItineraryState => ({
@@ -23,7 +24,8 @@ export const defaultState = (): ItineraryState => ({
         id: 1,
         item: null
     }],
-    routes: []
+    routes: [],
+    selectedRoute: 0
 });
 
 const matchId = id => item => item.id === id;
@@ -36,7 +38,8 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState(),
         case ActionType.FETCH_ROUTES_SUCCESS: {
             const {routes} = <FetchRoutesSuccessAction>action;
             return Object.assign({}, previousState, {
-                routes
+                routes,
+                selectedRoute: 0
             });
         }
         case ActionType.UPDATE_ITINERARY_POINT: {

@@ -124,23 +124,17 @@ export default function (a: Assert) {
                         'address': {'number': null, 'street': 'Calle 26', 'municipality': 'Plaza de la Revolución'},
                         'description': null
                     }
-                }]
+                }],
+                routes: [{
+                    'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
+                    'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
+                    'weight_name': 'cyclability',
+                    'weight': 650,
+                    'duration': 534.4,
+                    'distance': 2055
+                }],
+                selectedRoute: 0
             },
-            'routes': [{
-                'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
-                'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
-                'weight_name': 'cyclability',
-                'weight': 650,
-                'duration': 534.4,
-                'distance': 2055
-            }],
-            'waypoints': [{
-                'distance': 16.11451552639027,
-                'name': 'Calle 26',
-                'location': [-82.410138, 23.127413]
-            }, {'distance': 28.4612272787436, 'name': '1ra Avenida', 'location': [-82.42462, 23.125018]}],
-            'code': 'Ok',
-            'uuid': 'cjy4jd73f00kp3ylhx4zxure3'
         });
         const expected = Object.assign(defaultState(), {
             navigation: {
@@ -170,7 +164,8 @@ export default function (a: Assert) {
                         'description': null
                     }
                 }],
-                routes: []
+                routes: [],
+                selectedRoute: 0
             }
         });
         t.eq(deserialize(serialize(state)).itinerary, expected.itinerary, 'should have serialized the stops points only');
@@ -208,23 +203,17 @@ export default function (a: Assert) {
                         'address': {'number': null, 'street': 'Calle 26', 'municipality': 'Plaza de la Revolución'},
                         'description': null
                     }
-                }]
-            },
-            'routes': [{
-                'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
-                'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
-                'weight_name': 'cyclability',
-                'weight': 650,
-                'duration': 534.4,
-                'distance': 2055
-            }],
-            'waypoints': [{
-                'distance': 16.11451552639027,
-                'name': 'Calle 26',
-                'location': [-82.410138, 23.127413]
-            }, {'distance': 28.4612272787436, 'name': '1ra Avenida', 'location': [-82.42462, 23.125018]}],
-            'code': 'Ok',
-            'uuid': 'cjy4jd73f00kp3ylhx4zxure3'
+                }],
+                routes: [{
+                    'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
+                    'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
+                    'weight_name': 'cyclability',
+                    'weight': 650,
+                    'duration': 534.4,
+                    'distance': 2055
+                }],
+                selectedRoute: 0
+            }
         });
         const expected = Object.assign(defaultState(), {
             map: {
@@ -258,7 +247,8 @@ export default function (a: Assert) {
                         'description': null
                     }
                 }],
-                routes: []
+                routes: [],
+                selectedRoute: 0
             }
         });
         t.eq(deserialize(serialize(state)).itinerary, expected.itinerary, 'should have serialized the stops points only');

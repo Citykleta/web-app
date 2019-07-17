@@ -89,6 +89,8 @@ export interface ItineraryPoint {
 //todo formalize routes type
 export interface Route {
     geometry: string;
+    duration: number;
+    distance: number;
 }
 
 export const createGeoCoord = (lng: number, lat: number): GeoCoordSearchResult => ({

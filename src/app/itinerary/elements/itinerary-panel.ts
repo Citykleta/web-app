@@ -3,15 +3,15 @@ import {classMap} from 'lit-html/directives/class-map';
 import {ItineraryService} from '../service';
 import {plus, swap} from '../../common/elements/icons';
 import {style} from './itinerary-panel.style';
-import {ItineraryPoint} from '../../utils';
+import {ItineraryPoint, Route} from '../../utils';
 import {ServiceRegistry} from '../../common/service-registry';
 
 const isTopPart = (ev: DragEvent, rect: ClientRect) => ev.pageY < (rect.top + rect.height / 2);
 
 // todo better event handler for drag/drop operation
-export const template = ({stops, addPoint, itinerary}) => {
-
+export const template = ({stops, routes, selectedRoute, itinerary}) => {
     let boundingBox = null;
+    const addPoint = () => itinerary.addPoint(null);
 
     const dragstart = (id: number) => (ev: DragEvent) => {
         ev.dataTransfer.setData('text/json', String(id));
@@ -57,23 +57,32 @@ export const template = ({stops, addPoint, itinerary}) => {
         removable: isMulti
     });
 
-    return html`<div id="stops-list-container">
+    return html`
+<div id="stops-list-container">
     <citykleta-button-icon label="swap departure with destination" @click="${swapPoints}" id="swap-button" class="${classMap({
         hidden: isMulti
     })}">${swap()}</citykleta-button-icon>
-    <ol>${stops.map((stop) => html`<li @dragstart="${dragstart(stop.id)}" @dragover="${dragOver(stop.id)}" @drop="${drop(stop.id)}" @dragleave="${dragLeave(stop.id)}"><citykleta-stop-point class=${classList} .location="${stop}"></citykleta-stop-point></li>`)}</ol>
+    <ol>${stops.map(stop => html`<li @dragstart="${dragstart(stop.id)}" @dragover="${dragOver(stop.id)}" @drop="${drop(stop.id)}" @dragleave="${dragLeave(stop.id)}"><citykleta-stop-point class=${classList} .location="${stop}"></citykleta-stop-point></li>`)}</ol>
 </div>
-<div id="add-button-container"><citykleta-button-icon label="add a stop point in the itinerary" @click="${addPoint}">${plus()}</citykleta-button-icon></div>`;
+<div id="add-button-container">
+    <citykleta-button-icon label="add a stop point in the itinerary" @click="${addPoint}">${plus()}</citykleta-button-icon>
+</div>
+${routes.length ? html`<div id="routes-container">
+<h2>Route suggestions</h2>
+<citykleta-route-details .selectedRoute="${selectedRoute}" .routes="${routes}">Hello world</citykleta-route-details></div>` : ''}`;
 };
 
 export const propDef = {
     stops: {type: Array},
-    selectedSuggestion: {type: Object}
+    routes: {type: Array},
+    selectedRoute: {type: Number}
 };
 
 export class ItineraryPanel extends LitElement {
 
+    private selectedRoute: number;
     private stops: ItineraryPoint[];
+    private routes: Route[];
     private readonly _itinerary: ItineraryService = null;
 
     constructor(serviceMap: ServiceRegistry) {
@@ -91,10 +100,10 @@ export class ItineraryPanel extends LitElement {
 
     render() {
         return template({
-            stops: this.stops, addPoint: () => {
-                this._itinerary.addPoint(null);
-            },
-            itinerary: this._itinerary
+            routes: this.routes,
+            stops: this.stops,
+            itinerary: this._itinerary,
+            selectedRoute: this.selectedRoute
         });
     }
 }

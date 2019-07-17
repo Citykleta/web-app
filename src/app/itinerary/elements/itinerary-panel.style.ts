@@ -2,7 +2,7 @@ import {css} from 'lit-element';
 
 // language=CSS
 export const style = css`
-    :host > * {
+    :host > div {
         background: var(--background-theme);
     }
 
@@ -56,5 +56,15 @@ export const style = css`
 
     .hidden {
         display: none;
+    }
+
+    #routes-container {
+        margin-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    h2 {
+        margin: 1em;
+        border-bottom: 2px solid var(--color-theme);
     }
 `;

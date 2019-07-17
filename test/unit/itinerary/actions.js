@@ -11,34 +11,18 @@ export default (a) => {
     test('create an ADD_ITINERARY_ACTION without specifying the "before" item', t => {
         const expected = {
             type: ActionType.ADD_ITINERARY_POINT,
-            point: {
-                type: 'lng_lat',
-                lng: -82.396679,
-                lat: 23.115898
-            },
+            point: createTestSearchResult(-82.396679, 23.115898),
             beforeId: null
         };
-        t.eq(addItineraryPoint({
-            type: 'lng_lat',
-            lng: -82.396679,
-            lat: 23.115898
-        }), expected);
+        t.eq(addItineraryPoint(createTestSearchResult(-82.396679, 23.115898)), expected);
     });
     test('create an create an ADD_ITINERARY_ACTION specifying the "before" item', t => {
         const expected = {
             type: ActionType.ADD_ITINERARY_POINT,
-            point: {
-                type: 'lng_lat',
-                lng: -82.396679,
-                lat: 23.115898
-            },
+            point: createTestSearchResult(-82.396679, 23.115898),
             beforeId: 666
         };
-        t.eq(addItineraryPoint({
-            type: 'lng_lat',
-            lng: -82.396679,
-            lat: 23.115898,
-        }, 666), expected);
+        t.eq(addItineraryPoint(createTestSearchResult(-82.396679, 23.115898), 666), expected);
     });
     test('create a REMOVE_ITINERARY_POINT action', t => {
         const expected = {
@@ -51,17 +35,9 @@ export default (a) => {
         const expected = {
             type: ActionType.UPDATE_ITINERARY_POINT,
             id: 42,
-            location: {
-                type: 'lng_lat',
-                lng: -82.396679,
-                lat: 23.115898
-            }
+            location: createTestSearchResult(-82.396679, 23.115898)
         };
-        t.eq(updateItineraryPoint(42, {
-            type: 'lng_lat',
-            lng: -82.396679,
-            lat: 23.115898
-        }), expected);
+        t.eq(updateItineraryPoint(42, createTestSearchResult(-82.396679, 23.115898)), expected);
     });
     test('create a MOVE_ITINERARY_POINT action (insert after)', t => {
         const expected = {
@@ -91,19 +67,30 @@ export default (a) => {
         const expected = {
             type: ActionType.FETCH_ROUTES_SUCCESS,
             routes: [{
-                    geometry: 'foo'
+                    geometry: 'foo',
+                    distance: 1234,
+                    duration: 4321
                 }]
         };
         t.eq(fetchRoutesWithSuccess([{
-                geometry: 'foo'
+                geometry: 'foo',
+                distance: 1234,
+                duration: 4321
             }]), expected);
     });
     test('create a FETCH_ROUTES_SUCCESS action', t => {
         const expected = {
             type: ActionType.FETCH_ROUTES_SUCCESS,
-            routes: [{ geometry: 'foo' }]
+            routes: [{
+                    geometry: 'foo',
+                    distance: 1234,
+                    duration: 4321
+                }]
         };
-        t.eq(fetchRoutesWithSuccess([{ geometry: 'foo' }]), expected);
+        t.eq(fetchRoutesWithSuccess([{
+                geometry: 'foo', distance: 1234,
+                duration: 4321
+            }]), expected);
     });
     test('create a FETCH_ROUTES_FAILURE action', t => {
         const error = new Error('some error');
@@ -121,14 +108,17 @@ export default (a) => {
         // given
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'whatever'
+                geometry: 'whatever',
+                distance: 1234,
+                duration: 4321
             }]);
         const store = testStore(setState({
             stops: [
                 { id: 1, item: createTestSearchResult(1234, 4321) },
                 { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -144,7 +134,11 @@ export default (a) => {
                 type: ActionType.FETCH_ROUTES
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
-                routes: [{ geometry: 'whatever' }]
+                routes: [{
+                        geometry: 'whatever',
+                        distance: 1234,
+                        duration: 4321
+                    }]
             }]);
     });
     test('create a FETCH_ROUTES action thunk: errored request', async (t) => {
@@ -153,11 +147,12 @@ export default (a) => {
         const sdkMock = directionsAPIStub();
         sdkMock.reject(error);
         const store = testStore(setState({
-            stops: [{ id: 1, item: { type: 'lng_lat', lng: 1234, lat: 4321 } }, {
+            stops: [{ id: 1, item: createTestSearchResult(1234, 4321) }, {
                     id: 2,
-                    item: { type: 'lng_lat', lng: 4321, lat: 1234 }
+                    item: createTestSearchResult(4321, 1234)
                 }],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), { directions: sdkMock });
         //@ts-ignore
         await store.dispatch(fetchRoutesFromAPI());
@@ -178,8 +173,9 @@ export default (a) => {
         // given
         const sdkMock = directionsAPIStub();
         const store = testStore(setState({
-            stops: [{ id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } }],
-            routes: []
+            stops: [{ id: 1, item: createTestSearchResult(666, 666) }],
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -202,37 +198,34 @@ export default (a) => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
-                { id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } },
-                { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
+                { id: 1, item: createTestSearchResult(666, 666) },
+                { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
         //@ts-ignore
-        await store.dispatch(addItineraryPointWithSideEffects({
-            type: 'lng_lat',
-            lng: 4321,
-            lat: 1234
-        }));
+        await store.dispatch(addItineraryPointWithSideEffects(createTestSearchResult(4321, 1234)));
         t.eq(store.getActions(), [{
                 type: ActionType.ADD_ITINERARY_POINT,
-                point: {
-                    type: 'lng_lat',
-                    lat: 1234,
-                    lng: 4321
-                },
+                point: createTestSearchResult(4321, 1234),
                 beforeId: null
             }, {
                 type: ActionType.FETCH_ROUTES
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
                 routes: [{
-                        geometry: 'geometry'
+                        geometry: 'geometry',
+                        duration: 12345,
+                        distance: 54321
                     }]
             }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
@@ -247,14 +240,17 @@ export default (a) => {
     test('move itinerary point before with side effects should trigger side effects', async (t) => {
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
-                { id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } },
-                { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
+                { id: 1, item: createTestSearchResult(666, 666) },
+                { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -270,7 +266,9 @@ export default (a) => {
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
                 routes: [{
-                        geometry: 'geometry'
+                        geometry: 'geometry',
+                        duration: 12345,
+                        distance: 54321
                     }]
             }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
@@ -285,14 +283,17 @@ export default (a) => {
     test('move itinerary point after with side effects should trigger side effects', async (t) => {
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
-                { id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } },
-                { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
+                { id: 1, item: createTestSearchResult(666, 666) },
+                { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -308,7 +309,9 @@ export default (a) => {
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
                 routes: [{
-                        geometry: 'geometry'
+                        geometry: 'geometry',
+                        duration: 12345,
+                        distance: 54321
                     }]
             }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
@@ -324,8 +327,9 @@ export default (a) => {
         // given
         const sdkMock = directionsAPIStub();
         const store = testStore(setState({
-            stops: [{ id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } }],
-            routes: []
+            stops: [{ id: 1, item: createTestSearchResult(666, 666) }],
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -341,14 +345,17 @@ export default (a) => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
-                { id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } },
-                { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
+                { id: 1, item: createTestSearchResult(666, 666) },
+                { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -362,7 +369,9 @@ export default (a) => {
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
                 routes: [{
-                        geometry: 'geometry'
+                        geometry: 'geometry',
+                        duration: 12345,
+                        distance: 54321
                     }]
             }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
@@ -378,8 +387,9 @@ export default (a) => {
         // given
         const sdkMock = directionsAPIStub();
         const store = testStore(setState({
-            stops: [{ id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } }],
-            routes: []
+            stops: [{ id: 1, item: createTestSearchResult(666, 666) }],
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -396,14 +406,17 @@ export default (a) => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
-                { id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } },
-                { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
+                { id: 1, item: createTestSearchResult(666, 666) },
+                { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -422,7 +435,9 @@ export default (a) => {
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
                 routes: [{
-                        geometry: 'geometry'
+                        geometry: 'geometry',
+                        duration: 12345,
+                        distance: 54321
                     }]
             }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
@@ -447,14 +462,17 @@ export default (a) => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
-                { id: 1, item: { type: 'lng_lat', lng: 666, lat: 666 } },
-                { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
+                { id: 1, item: createTestSearchResult(666, 666) },
+                { id: 2, item: createTestSearchResult(4321, 1234) }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -470,7 +488,9 @@ export default (a) => {
             }, {
                 type: ActionType.FETCH_ROUTES_SUCCESS,
                 routes: [{
-                        geometry: 'geometry'
+                        geometry: 'geometry',
+                        duration: 12345,
+                        distance: 54321
                     }]
             }]);
         t.eq(sdkMock.calls.length, 1, 'should have tried to fetch the remote resource');
@@ -486,14 +506,17 @@ export default (a) => {
         // given a fake store
         const sdkMock = directionsAPIStub();
         sdkMock.resolve([{
-                geometry: 'geometry'
+                geometry: 'geometry',
+                duration: 12345,
+                distance: 54321
             }]);
         const store = testStore(setState({
             stops: [
                 { id: 1, item: null },
                 { id: 2, item: { type: 'lng_lat', lng: 4321, lat: 1234 } }
             ],
-            routes: []
+            routes: [],
+            selectedRoute: 0
         }), {
             directions: sdkMock
         });
@@ -508,31 +531,15 @@ export default (a) => {
         t.eq(sdkMock.calls.length, 0, 'should not have fetched routes');
     });
     test('go to action: should create a goTo action', t => {
-        t.eq(goTo({
-            type: 'lng_lat',
-            lng: 12345,
-            lat: 54321
-        }), {
+        t.eq(goTo(createTestSearchResult(12345, 54321)), {
             type: ActionType.GO_TO,
-            location: {
-                type: 'lng_lat',
-                lng: 12345,
-                lat: 54321
-            }
+            location: createTestSearchResult(12345, 54321)
         });
     });
     test('go from action: should create a goFrom action', t => {
-        t.eq(goFrom({
-            type: 'lng_lat',
-            lng: 12345,
-            lat: 54321
-        }), {
+        t.eq(goFrom(createTestSearchResult(12345, 54321)), {
             type: ActionType.GO_FROM,
-            location: {
-                type: 'lng_lat',
-                lng: 12345,
-                lat: 54321
-            }
+            location: createTestSearchResult(12345, 54321)
         });
     });
 };
