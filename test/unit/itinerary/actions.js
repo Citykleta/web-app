@@ -1,5 +1,5 @@
 import { ActionType } from '../../../src/app/common/actions';
-import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPointWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, goFrom, goTo, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes, updateItineraryPoint } from '../../../src/app/itinerary/actions';
+import { addItineraryPoint, addItineraryPointWithSideEffects, changeItineraryPointWithSideEffects, fetchRoutes, fetchRoutesFromAPI, fetchRoutesWithFailure, fetchRoutesWithSuccess, goFrom, goTo, InsertionPosition, moveItineraryPoint, moveItineraryPointWithSideEffects, removeItineraryPoint, removeItineraryPointWithSideEffects, resetRoutes, selectRoute, updateItineraryPoint } from '../../../src/app/itinerary/actions';
 import { createTestSearchResult, directionsAPIStub, testStore } from '../utils';
 import { defaultState } from '../../../src/app/store/store';
 const setState = (state) => ({
@@ -540,6 +540,12 @@ export default (a) => {
         t.eq(goFrom(createTestSearchResult(12345, 54321)), {
             type: ActionType.GO_FROM,
             location: createTestSearchResult(12345, 54321)
+        });
+    });
+    test(`selectRoute should create a ${ActionType.SELECT_ROUTE} action`, t => {
+        t.eq(selectRoute(4), {
+            type: ActionType.SELECT_ROUTE,
+            route: 4
         });
     });
 };

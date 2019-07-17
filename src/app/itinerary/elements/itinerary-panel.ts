@@ -69,7 +69,7 @@ export const template = ({stops, routes, selectedRoute, itinerary}) => {
 </div>
 ${routes.length ? html`<div id="routes-container">
 <h2>Route suggestions</h2>
-<citykleta-route-details .selectedRoute="${selectedRoute}" .routes="${routes}">Hello world</citykleta-route-details></div>` : ''}`;
+<citykleta-route-details tabindex="0" .selectedRoute="${selectedRoute}" .routes="${routes}">Hello world</citykleta-route-details></div>` : ''}`;
 };
 
 export const propDef = {

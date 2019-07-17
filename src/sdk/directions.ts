@@ -1,5 +1,6 @@
 import {GeoCoord, Route, truncate} from '../app/utils';
 
+/*
 const mock = {
     'routes': [
         {
@@ -72,6 +73,7 @@ const mock = {
     'code': 'Ok',
     'uuid': 'cjy5yo9tz00og3xmwil3pzmht'
 };
+*/
 
 
 export interface Directions {
@@ -86,9 +88,6 @@ export const factory = ({endpoint = DEFAULT_ENDPOINT_ROOT} = {endpoint: DEFAULT_
 
     return {
         async search(points: GeoCoord[]) {
-
-            return mock.routes;
-
 
             if (searchDirectionController) {
                 searchDirectionController.abort();

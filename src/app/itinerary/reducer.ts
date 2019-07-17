@@ -6,6 +6,7 @@ import {
     GoToAction,
     InsertionPosition,
     RemoveItineraryPointAction,
+    SelectRouteAction,
     UpdateItineraryPointAction
 } from './actions';
 import {ItineraryPoint, Route} from '../utils';
@@ -41,6 +42,14 @@ export const reducer: Reducer<ItineraryState> = (previousState = defaultState(),
                 routes,
                 selectedRoute: 0
             });
+        }
+        case ActionType.SELECT_ROUTE: {
+            const {route} = <SelectRouteAction>action;
+            const {routes} = previousState;
+            return route >= 0 && route < routes.length ?
+                Object.assign({}, previousState, {selectedRoute: route}) :
+                previousState;
+
         }
         case ActionType.UPDATE_ITINERARY_POINT: {
             const {id, location} = <UpdateItineraryPointAction>action;

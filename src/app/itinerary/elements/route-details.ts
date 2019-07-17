@@ -8,7 +8,7 @@ export const formatDuration = (duration: number) => duration > 60 ? html`${Math.
 
 export const formatDistance = (distance: number) => html`${Math.round(distance)}<span class="unit">m</span>`;
 
-export const template = ({routes, selectedRoute}) => html`<ol>${routes.map( (r, i) => html`<li aria-selected="${i === selectedRoute}">
+export const template = ({routes, selectedRoute, itinerary}) => html`<ol>${routes.map((r, i) => html`<li @click="${() => itinerary.selectRoute(i)}" aria-selected="${i === selectedRoute}">
 <dl>
     <dt>Distance</dt><dd>${formatDistance(r.distance)}</dd>
     <dt>Duration</dt><dd>${formatDuration(r.duration)}</dd>
@@ -17,7 +17,7 @@ export const template = ({routes, selectedRoute}) => html`<ol>${routes.map( (r, 
 
 export const propDef = {
     routes: {type: Array},
-    selectedRoute:{type:Number}
+    selectedRoute: {type: Number}
 };
 
 export class RouteDetails extends LitElement {
@@ -29,6 +29,7 @@ export class RouteDetails extends LitElement {
     constructor(serviceMap: ServiceRegistry) {
         super();
         this._itinerary = serviceMap.get('itinerary');
+        this.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 
     static get properties() {
@@ -40,6 +41,30 @@ export class RouteDetails extends LitElement {
     }
 
     render() {
-        return template({routes: this.routes, selectedRoute:this.selectedRoute});
+        return template({
+            routes: this.routes,
+            selectedRoute: this.selectedRoute,
+            itinerary: this._itinerary
+        });
+    }
+
+    private handleKeyDown(ev) {
+        const {key} = ev;
+        const routeLength = this.routes.length;
+        if (routeLength) {
+            const selectedRoute = this.selectedRoute;
+            let newRoute = selectedRoute;
+            switch (key) {
+                case 'ArrowDown': {
+                    newRoute = (selectedRoute + 1) % routeLength;
+                    break;
+                }
+                case 'ArrowUp': {
+                    newRoute = selectedRoute - 1 >= 0 ? selectedRoute - 1 : routeLength - 1;
+                    break;
+                }
+            }
+            this._itinerary.selectRoute(newRoute);
+        }
     }
 }

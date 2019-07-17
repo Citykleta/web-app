@@ -6,7 +6,9 @@ import {updateMapPosition} from './actions';
 import {EMPTY_SOURCE, eventuallyUpdate} from './utils';
 import {
     getLayerData as getRoutesPathData,
+    labelStyle as routeLabelStyle,
     lineStyle as routeLineStyle,
+    pointStyle as stopPointStyle,
     slicer as routesPathSlicer,
     sourceId as routesId
 } from './layers/directions-layer';
@@ -87,18 +89,13 @@ export const provider = (store: Store<ApplicationState>, {
             map = new mapboxgl.Map(Object.assign({}, mapboxConf, options));
 
             this.onLoad(() => {
-
-                // // @ts-ignore
                 map.addSource(routesId, EMPTY_SOURCE);
-                // @ts-ignore
                 map.addSource(suggestionsSourceId, EMPTY_SOURCE);
-                // @ts-ignore
                 map.addLayer(routeLineStyle);
-                // @ts-ignore
+                map.addLayer(routeLabelStyle);
+                map.addLayer(stopPointStyle);
                 map.addLayer(suggestionsLineStyle);
-                // @ts-ignore
                 map.addLayer(suggestionsPointLayer);
-
                 const mapUpdater = eventuallyUpdate(map);
                 const updateRoutes = mapUpdater(routesId, routesPathSlicer, getRoutesPathData);
                 const updateSuggestions = mapUpdater(suggestionsSourceId, suggestionsSlicer, getSuggestionsData);

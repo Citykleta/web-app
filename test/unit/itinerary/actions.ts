@@ -21,6 +21,7 @@ import {
     RemoveItineraryPointAction,
     removeItineraryPointWithSideEffects,
     resetRoutes,
+    selectRoute,
     updateItineraryPoint,
     UpdateItineraryPointAction
 } from '../../../src/app/itinerary/actions';
@@ -629,6 +630,13 @@ export default (a: Assert) => {
         t.eq(goFrom(createTestSearchResult(12345, 54321)), {
             type: ActionType.GO_FROM,
             location: createTestSearchResult(12345, 54321)
+        });
+    });
+
+    test(`selectRoute should create a ${ActionType.SELECT_ROUTE} action`, t => {
+        t.eq(selectRoute(4), {
+            type: ActionType.SELECT_ROUTE,
+            route: 4
         });
     });
 }

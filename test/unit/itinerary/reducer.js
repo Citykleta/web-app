@@ -1,8 +1,9 @@
 import { reducer } from '../../../src/app/itinerary/reducer';
-import { addItineraryPoint, fetchRoutesWithSuccess, goFrom, goTo, InsertionPosition, moveItineraryPoint, removeItineraryPoint, resetRoutes, updateItineraryPoint } from '../../../src/app/itinerary/actions';
+import { addItineraryPoint, fetchRoutesWithSuccess, goFrom, goTo, InsertionPosition, moveItineraryPoint, removeItineraryPoint, resetRoutes, selectRoute, updateItineraryPoint } from '../../../src/app/itinerary/actions';
 import { createTestSearchResult } from '../utils';
 import { selectView } from '../../../src/app/navigation/actions';
 import { View } from '../../../src/app/navigation/reducer';
+import { ActionType } from '../../../src/app/common/actions';
 const createInitalState = (...stops) => ({
     stops,
     routes: [],
@@ -187,23 +188,23 @@ export default ({ test }) => {
         });
     });
     test('set routes', t => {
-        const initialState = createInitalState({ id: 1, item: createTestSearchResult(1234, 4321) });
+        const initialState = Object.assign({}, createInitalState({ id: 1, item: createTestSearchResult(1234, 4321) }), {
+            selectedRoute: 3
+        });
         const actual = reducer(initialState, fetchRoutesWithSuccess([{
                 geometry: 'geom',
                 duration: 3453,
                 distance: 2323
             }]));
-        t.eq(actual, {
-            stops: [{
-                    id: 1, item: createTestSearchResult(1234, 4321)
-                }],
-            routes: [{
-                    geometry: 'geom',
-                    duration: 3453,
-                    distance: 2323
-                }],
-            selectedRoute: 0
-        });
+        t.eq(actual.stops, [{
+                id: 1, item: createTestSearchResult(1234, 4321)
+            }], 'should have let the stops untouched');
+        t.eq(actual.routes, [{
+                geometry: 'geom',
+                duration: 3453,
+                distance: 2323
+            }], 'should have set the new routes');
+        t.eq(actual.selectedRoute, 0, 'should have re initialized the selected route');
     });
     test('respond to a GO_TO action, should set the stops state', t => {
         const initialState = createInitalState(createTestSearchResult(1234, 4321), createTestSearchResult(5678, 8765));
@@ -232,5 +233,39 @@ export default ({ test }) => {
             routes: [],
             selectedRoute: 0
         });
+    });
+    test(`respond to a ${ActionType.SELECT_ROUTE} action with a valid index should select the route`, t => {
+        const initialState = Object.assign(createInitalState(), {
+            routes: [{
+                    geometry: 'route1',
+                    duration: 1234,
+                    distance: 4321
+                }, {
+                    geometry: 'route2',
+                    duration: 6789,
+                    distance: 9876
+                }],
+            selectedRoute: 1
+        });
+        const actual = reducer(initialState, selectRoute(0));
+        t.eq(actual.routes, initialState.routes, 'routes part of the state should be left untouched');
+        t.eq(actual.selectedRoute, 0, 'should have changed the selectedRoute');
+    });
+    test(`respond to a ${ActionType.SELECT_ROUTE} action with an invalid index should keep the currently selected route`, t => {
+        const initialState = Object.assign(createInitalState(), {
+            routes: [{
+                    geometry: 'route1',
+                    duration: 1234,
+                    distance: 4321
+                }, {
+                    geometry: 'route2',
+                    duration: 6789,
+                    distance: 9876
+                }],
+            selectedRoute: 1
+        });
+        const actual = reducer(initialState, selectRoute(2));
+        t.eq(actual.routes, initialState.routes, 'routes part of the state should be left untouched');
+        t.eq(actual.selectedRoute, 1, 'should have kept the selected route');
     });
 };
