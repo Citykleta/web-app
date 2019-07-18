@@ -74,6 +74,15 @@ export const fetchRoutesWithSuccess = (routes: Route[]): FetchRoutesSuccessActio
     routes
 });
 
+export interface SelectRouteAction extends Action<ActionType.SELECT_ROUTE> {
+    route: number
+}
+
+export const selectRoute = (route: number) => ({
+    type: ActionType.SELECT_ROUTE,
+    route
+});
+
 export interface FetchRoutesFailureAction extends Action<ActionType.FETCH_ROUTES_FAILURE> {
     type: ActionType.FETCH_ROUTES_FAILURE,
     error: any // todo normalize error type

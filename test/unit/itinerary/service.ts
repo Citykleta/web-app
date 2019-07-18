@@ -123,4 +123,20 @@ export default ({test}: Assert) => {
         t.eq(store.getCall(), [[searchResult]]);
     });
 
+    test('selectRoute - should dispatch a selectRoute action creator', t => {
+        const selectRouteStub = stubFactory('selectRoute')();
+        const stub = {
+            //@ts-ignore
+            selectRoute: selectRouteStub.selectRoute
+        };
+        const store = storeFactory();
+        //@ts-ignore
+        const service = provider(store, stub);
+        service.selectRoute(6);
+        t.ok(selectRouteStub.hasBeenCalled(), 'action creator should have been called once');
+        t.eq(selectRouteStub.getCall(), [6]);
+        t.ok(store.hasBeenCalled(), 'dispatch should have been called');
+        t.eq(store.getCall(), [[6]]);
+    });
+
 };

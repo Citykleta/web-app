@@ -32,10 +32,7 @@
     "webapp",
     "citykleta"
   ],
-  "author": [
-    "Laurent RENARD",
-    "irmab.penicha@gmail.com"
-  ],
+  "author": "Laurent RENARD",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Citykleta/web-app/issues"

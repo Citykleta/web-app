@@ -11,10 +11,12 @@ import {
     RemoveItineraryPointAction,
     removeItineraryPointWithSideEffects,
     resetRoutes,
+    selectRoute,
     UpdateItineraryPointAction
 } from './actions';
 import {ItineraryPoint, SearchResult} from '../utils';
 
+// todo be more consistent on names: startMove should be startMovePoint for example
 export interface ItineraryService {
     startMove(id: number): void;
 
@@ -33,6 +35,8 @@ export interface ItineraryService {
     goFrom(location: SearchResult): void;
 
     reset(): void;
+
+    selectRoute(r: number): void;
 }
 
 const itineraryActions = {
@@ -42,7 +46,8 @@ const itineraryActions = {
     changeItineraryPointWithSideEffects,
     goTo,
     goFrom,
-    resetRoutes
+    resetRoutes,
+    selectRoute
 };
 
 export const provider = (store: Store<ApplicationState>, {
@@ -52,7 +57,8 @@ export const provider = (store: Store<ApplicationState>, {
     changeItineraryPointWithSideEffects,
     goTo,
     goFrom,
-    resetRoutes
+    resetRoutes,
+    selectRoute
 } = itineraryActions): ItineraryService => {
 
     let movingPoint: ItineraryPoint = null;
@@ -94,6 +100,9 @@ export const provider = (store: Store<ApplicationState>, {
         },
         goFrom(location: SearchResult): void {
             store.dispatch(goFrom(location));
+        },
+        selectRoute(r): void {
+            store.dispatch(selectRoute(r));
         }
     };
 };

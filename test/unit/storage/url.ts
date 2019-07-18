@@ -1,7 +1,8 @@
 import {Assert} from 'zora';
-import {deserialize, serialize} from '../../../src/app/storage/url';
+import {deserialize, serialize, storage} from '../../../src/app/storage/url';
 import {View} from '../../../src/app/navigation/reducer';
 import {defaultState} from '../../../src/app/store/store';
+import {createTestSearchResult} from '../utils';
 
 export default function (a: Assert) {
 
@@ -123,23 +124,17 @@ export default function (a: Assert) {
                         'address': {'number': null, 'street': 'Calle 26', 'municipality': 'Plaza de la Revolución'},
                         'description': null
                     }
-                }]
+                }],
+                routes: [{
+                    'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
+                    'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
+                    'weight_name': 'cyclability',
+                    'weight': 650,
+                    'duration': 534.4,
+                    'distance': 2055
+                }],
+                selectedRoute: 0
             },
-            'routes': [{
-                'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
-                'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
-                'weight_name': 'cyclability',
-                'weight': 650,
-                'duration': 534.4,
-                'distance': 2055
-            }],
-            'waypoints': [{
-                'distance': 16.11451552639027,
-                'name': 'Calle 26',
-                'location': [-82.410138, 23.127413]
-            }, {'distance': 28.4612272787436, 'name': '1ra Avenida', 'location': [-82.42462, 23.125018]}],
-            'code': 'Ok',
-            'uuid': 'cjy4jd73f00kp3ylhx4zxure3'
         });
         const expected = Object.assign(defaultState(), {
             navigation: {
@@ -169,7 +164,8 @@ export default function (a: Assert) {
                         'description': null
                     }
                 }],
-                routes: []
+                routes: [],
+                selectedRoute: 0
             }
         });
         t.eq(deserialize(serialize(state)).itinerary, expected.itinerary, 'should have serialized the stops points only');
@@ -207,23 +203,17 @@ export default function (a: Assert) {
                         'address': {'number': null, 'street': 'Calle 26', 'municipality': 'Plaza de la Revolución'},
                         'description': null
                     }
-                }]
-            },
-            'routes': [{
-                'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
-                'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
-                'weight_name': 'cyclability',
-                'weight': 650,
-                'duration': 534.4,
-                'distance': 2055
-            }],
-            'waypoints': [{
-                'distance': 16.11451552639027,
-                'name': 'Calle 26',
-                'location': [-82.410138, 23.127413]
-            }, {'distance': 28.4612272787436, 'name': '1ra Avenida', 'location': [-82.42462, 23.125018]}],
-            'code': 'Ok',
-            'uuid': 'cjy4jd73f00kp3ylhx4zxure3'
+                }],
+                routes: [{
+                    'geometry': 'iadlCjv~uNg@`@pGxIlM~RhBhB{]xZvSnZ',
+                    'legs': [{'summary': '', 'weight': 650, 'duration': 534.4, 'steps': [], 'distance': 2055}],
+                    'weight_name': 'cyclability',
+                    'weight': 650,
+                    'duration': 534.4,
+                    'distance': 2055
+                }],
+                selectedRoute: 0
+            }
         });
         const expected = Object.assign(defaultState(), {
             map: {
@@ -257,7 +247,8 @@ export default function (a: Assert) {
                         'description': null
                     }
                 }],
-                routes: []
+                routes: [],
+                selectedRoute: 0
             }
         });
         t.eq(deserialize(serialize(state)).itinerary, expected.itinerary, 'should have serialized the stops points only');
@@ -266,5 +257,87 @@ export default function (a: Assert) {
     a.test('should set the default state if does not understand the url', t => {
         const state = deserialize(new URL('foo/bar/bim', 'https://localhost.com'));
         t.eq(state, defaultState());
+    });
+
+    a.test(`url storage - get() should get the result from the window.location.href`, async t => {
+        const state = Object.assign(defaultState(), {
+            search: {
+                searchResult: [],
+                selectedSearchResult: createTestSearchResult(1234, 4321),
+                isSearching: false
+            }
+        });
+        const fakeWindow = {
+            location: {
+                href: serialize(state)
+            }
+        };
+
+        const service = storage(fakeWindow);
+        t.eq(await service.get(), state);
+    });
+
+    a.test(`url storage - set() should push the new state in the history `, async t => {
+        const argList = [];
+        const fakeWindow = {
+            history: {
+                pushState(...args) {
+                    argList.push(args);
+                }
+            },
+            location: {
+                href: serialize(defaultState())
+            }
+        };
+
+        const service = storage(fakeWindow);
+        const newState = Object.assign(defaultState(), {
+            map: {
+                center: [-82, 23],
+                zoom: 16
+            }
+        });
+        await service.set(newState);
+
+        t.eq(argList, [
+            [
+                newState,
+                '',
+                '/search/@-82,23,16z/data=eyJzZWFyY2giOnsic2VsZWN0ZWRTZWFyY2hSZXN1bHQiOm51bGx9fQ=='
+            ]
+        ]);
+    });
+
+    a.test(`url storage - set() should not push the new state in the history if the new state is equivalent`, async t => {
+        const argList = [];
+        const fakeWindow = {
+            history: {
+                pushState(...args) {
+                    argList.push(args);
+                    fakeWindow.location.href = serialize(args[0]).href;
+                }
+            },
+            location: {
+                href: serialize(defaultState()).href
+            }
+        };
+
+        const service = storage(fakeWindow);
+        const newState = Object.assign(defaultState(), {
+            map: {
+                center: [-82, 23],
+                zoom: 16
+            }
+        });
+        await service.set(newState);
+        await service.set(newState);
+
+        t.eq(argList, [
+            [
+                newState,
+                '',
+                '/search/@-82,23,16z/data=eyJzZWFyY2giOnsic2VsZWN0ZWRTZWFyY2hSZXN1bHQiOm51bGx9fQ=='
+            ]
+        ]);
     });
 }
