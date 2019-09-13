@@ -19,6 +19,8 @@ const resolveModule = (view: View) => {
             return './itinerary.js';
         case View.SETTINGS:
             return './settings.js';
+        case View.LEISURE:
+            return './leisure.js';
         default:
             throw new Error(`could not find module for view: ${view}`);
     }

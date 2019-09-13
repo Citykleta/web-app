@@ -22,6 +22,8 @@ const project = (state: ApplicationState) => {
             return {itinerary: {stops: state.itinerary.stops}};
         case View.SEARCH:
             return {search: {selectedSearchResult: state.search.selectedSearchResult}};
+        case View.LEISURE:
+            return {};
         default:
             return {};
     }
@@ -34,7 +36,7 @@ export const serialize = (state: ApplicationState): URL => {
     return new URL(`/${view.toLowerCase()}/@${location}/data=${data}`, window.location.origin);
 };
 
-const viewRegexp = /^(settings|search|itinerary)/;
+const viewRegexp = /^(settings|search|itinerary|leisure)/;
 const locationRegexp = /^@.*z$/;
 const dataRegexp = /^data=/;
 
@@ -65,7 +67,7 @@ export const deserialize = (url: URL): ApplicationState => {
         return state;
     } catch (e) {
         console.log(e);
-        return defaultState()   ;
+        return defaultState();
     }
 };
 

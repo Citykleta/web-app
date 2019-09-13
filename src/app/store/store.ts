@@ -64,7 +64,7 @@ export const store = (api: API = defaultAPI) => (initialState: ApplicationState 
 
     // @ts-ignore
     const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
-        // debugMiddleware
+        debugMiddleware
     ));
 
     const dynamicReducers = {};

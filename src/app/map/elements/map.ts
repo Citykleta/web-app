@@ -23,7 +23,9 @@ export class GeoMap extends HTMLElement {
     }
 
     set isLoading(value) {
-        this.shadowRoot.querySelector('slot').setAttribute('hidden', '');
+        this.shadowRoot
+            .querySelector('slot')
+            .setAttribute('hidden', '');
     }
 
     connectedCallback(): void {

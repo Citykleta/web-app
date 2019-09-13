@@ -4,7 +4,8 @@ import {ActionType} from '../common/actions';
 export enum View {
     SEARCH = 'SEARCH',
     SETTINGS = 'SETTINGS',
-    ITINERARY = 'ITINERARY'
+    ITINERARY = 'ITINERARY',
+    LEISURE = 'LEISURE'
 }
 
 export interface NavigationState {

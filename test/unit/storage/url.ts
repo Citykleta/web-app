@@ -254,6 +254,35 @@ export default function (a: Assert) {
         t.eq(deserialize(serialize(state)).itinerary, expected.itinerary, 'should have serialized the stops points only');
     });
 
+    a.test('Serialize a state currently in leisure view', t => {
+        const state = Object.assign(defaultState(), {
+            navigation: {selectedView: View.LEISURE}
+        });
+        t.eq(deserialize(serialize(state)), state);
+    });
+
+    a.test('Serialize a state currently in leisure view should save map state too', t => {
+        const state = Object.assign(defaultState(), {
+            map: {
+                zoom: 15.48,
+                center: [-82.413233, 23.129075]
+            },
+            navigation: {
+                selectedView: View.LEISURE
+            }
+        });
+        const expected = Object.assign(defaultState(), {
+            map: {
+                zoom: 15.48,
+                center: [-82.413233, 23.129075]
+            },
+            navigation: {
+                selectedView: View.LEISURE
+            }
+        });
+        t.eq(deserialize(serialize(state)), expected, 'should have serialized the stops points only');
+    });
+
     a.test('should set the default state if does not understand the url', t => {
         const state = deserialize(new URL('foo/bar/bim', 'https://localhost.com'));
         t.eq(state, defaultState());

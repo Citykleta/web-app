@@ -2,8 +2,8 @@ import {Action} from 'redux';
 import {ActionType} from '../common/actions';
 
 export interface UpdateMapPositionAction extends Action<ActionType.UPDATE_MAP> {
-    zoom: number;
-    center: number[]
+    zoom?: number;
+    center?: number[]
 }
 
 export interface MapPosition {

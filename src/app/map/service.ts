@@ -20,6 +20,9 @@ import {
     sourceId as suggestionsSourceId
 } from './layers/suggestions-layer';
 import mapboxConf from '../../conf/mapbox';
+import {MapToolBox} from "./map-tool-box";
+import {CanvasInteractions, factory as canvasInteractionFactory} from './canvas-interactions';
+import {MapMouseEvent} from "mapbox-gl";
 
 /**
  * This service is a bit particular as it holds dom reference (through the mapbox instance)
@@ -50,22 +53,20 @@ export interface MapService {
     addLayer(layer: mapboxgl.Layer, before ?: string): this;
 
     onLoad(listener: (ev: any) => any): this;
-
-    onClick(listener: (ev: any) => any): this;
-
-    onClick(layer: string, listener: (ev: any) => any): this;
 }
 
 const mapActions = {
     updateMapPosition: updateMapPosition
 };
 
-export const provider = (store: Store<ApplicationState>, {
-    updateMapPosition
-} = mapActions): MapService => {
+export const provider = (
+    store: Store<ApplicationState>,
+    toolBox: MapToolBox, {
+        updateMapPosition
+    } = mapActions): MapService => {
     let map;
     let hasBooted = false;
-    let currentlySelectedSuggestion = null;
+    let canvasInteraction: CanvasInteractions = null;
 
     const updateMapState = ev => {
         const zoom = truncate(map.getZoom(), 2);
@@ -89,6 +90,9 @@ export const provider = (store: Store<ApplicationState>, {
             map = new mapboxgl.Map(Object.assign({}, mapboxConf, options));
 
             this.onLoad(() => {
+
+                canvasInteraction = canvasInteractionFactory(map);
+
                 map.addSource(routesId, EMPTY_SOURCE);
                 map.addSource(suggestionsSourceId, EMPTY_SOURCE);
                 map.addLayer(routeLineStyle);
@@ -118,16 +122,27 @@ export const provider = (store: Store<ApplicationState>, {
 
                 // simply sync the store state.
                 // todo check if we can't simply register to other event ?
-                // on render does not seem to fit as:
+                // todo 'render' event does not seem to fit as:
                 // 1- they are too many so we need to debounce
                 // 2- looks like it is emitted whenever a feature is rendered, so the last one may occur quite a long time after the actual action has finished
                 // map.on('render', ev => console.log(ev));
                 map.on('zoomend', updateMapState);
                 map.on('dragend', updateMapState);
 
+                //@ts-ignore
+                canvasInteraction.onClick((ev: MapMouseEvent) => {
+                    toolBox.clickAction(ev);
+                });
+
+                //@ts-ignore
+                canvasInteraction.onLongClick(ev => {
+                    toolBox.longClickAction(ev);
+                });
+
                 updateMap();
                 hasBooted = true;
             });
+
             return this;
         },
 
@@ -151,17 +166,6 @@ export const provider = (store: Store<ApplicationState>, {
 
         onLoad(listener) {
             map.on('load', listener);
-            return this;
-        },
-
-        //todo
-        // @ts-ignore
-        onClick(layerOrListener: string | ((ev: any) => any), listener) {
-            if (typeof layerOrListener === 'function') {
-                map.on('click', <(ev) => any>layerOrListener);
-            } else {
-                map.on('click', layerOrListener, listener);
-            }
             return this;
         },
 

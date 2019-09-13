@@ -7,6 +7,7 @@ export const createReducer = (reducers) => {
     const combined = combineReducers(reducers);
 
     return (state = defaultState, action) => {
+
         if (action.type === ActionType.CHANGE_HISTORY_POINT) {
             return action.state;
         }

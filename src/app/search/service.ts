@@ -59,8 +59,7 @@ export const provider = (store: Store<ApplicationState>, {
         const {lng, lat} = createSearchResultInstance(r).toPoint();
         store.dispatch(selectSearchResult(r));
         store.dispatch(updateMapPosition({
-            center: [lng, lat],
-            zoom: 15
+            center: [lng, lat]
         }));
     },
     getSearchResult() {

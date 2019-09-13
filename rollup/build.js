@@ -25,6 +25,7 @@ export default {
         settings: './src/app/settings/module.js',
         search: './src/app/search/module.js',
         itinerary: './src/app/itinerary/module.js',
+        leisure: './src/app/leisure/module.js',
         map: './src/app/map/index.js'
     },
     output: [{

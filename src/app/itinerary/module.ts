@@ -17,7 +17,7 @@ export {loadSearchItineraryServices as loadServices} from '../common/index';
 
 export const loadComponents = once((injector) => {
     const connectedItineraryPanel = connect(store, (state: ApplicationState) => state.itinerary);
-    loadSearchItineraryComponents   (injector);
+    loadSearchItineraryComponents(injector);
     customElements.define('citykleta-itinerary-panel', connectedItineraryPanel(injector(ItineraryPanel)));
     customElements.define('citykleta-stop-point', injector(StopPoint));
     customElements.define('citykleta-route-details', injector(RouteDetails));

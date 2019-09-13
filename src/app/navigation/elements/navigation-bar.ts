@@ -23,6 +23,10 @@ const navigationDefinition: ViewDefinition[] = [{
     view: View.ITINERARY
 }, {
     // @ts-ignore
+    label: 'Leisure',
+    view: View.LEISURE
+}, {
+    // @ts-ignore
     label: 'Settings',
     view: View.SETTINGS
 }];
