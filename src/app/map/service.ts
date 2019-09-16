@@ -1,6 +1,7 @@
 import {ApplicationState} from '../store/store';
 import {Store} from 'redux';
 import * as mapboxglNamespace from 'mapbox-gl';
+import {MapMouseEvent} from 'mapbox-gl';
 import {truncate} from '../utils';
 import {updateMapPosition} from './actions';
 import {EMPTY_SOURCE, eventuallyUpdate} from './utils';
@@ -20,9 +21,8 @@ import {
     sourceId as suggestionsSourceId
 } from './layers/suggestions-layer';
 import mapboxConf from '../../conf/mapbox';
-import {MapToolBox} from "./map-tool-box";
+import {MapToolBox} from './tools/map-tool-box';
 import {CanvasInteractions, factory as canvasInteractionFactory} from './canvas-interactions';
-import {MapMouseEvent} from "mapbox-gl";
 
 /**
  * This service is a bit particular as it holds dom reference (through the mapbox instance)

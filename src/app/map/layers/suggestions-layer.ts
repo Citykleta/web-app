@@ -27,7 +27,7 @@ export const pointStyle = {
         'circle-radius': 12,
         'circle-stroke-width': ['case', ['get', 'selected'], 4, 2],
         'circle-stroke-color': ['case', ['get', 'selected'], '#55b2ff', '#ff426f'],
-        'circle-opacity': 0.2,
+        'circle-opacity': 0.2
     },
     filter: ['==', '$type', 'Point']
 };

@@ -23,13 +23,11 @@ export default ({test}: Assert) => {
         t.eq(selectSearchResultStub.getCall(), [searchResult], ' should have forwarded the search result argument');
         t.ok(updateMapPositionStub.hasBeenCalled(), 'updateMapPosition action should have been called');
         t.eq(updateMapPositionStub.getCall(), [{
-            zoom: 15,
             center: [333, 444]
-        }], ' should have set default zoom and the point');
+        }], ' should have set default center point');
         t.ok(store.hasBeenCalled(2), 'action should have been dispatched');
         t.eq(store.getCall(0), [[searchResult]], 'argument should have been forwarded by the store');
         t.eq(store.getCall(1), [[{
-            zoom: 15,
             center: [333, 444]
         }]], 'argument should have been forwarded by the store');
     });

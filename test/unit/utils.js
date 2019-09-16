@@ -60,3 +60,6 @@ export const createTestSearchResult = (lng, lat) => ({
     lng,
     lat
 });
+export const wait = (time = 100) => new Promise(resolve => {
+    setTimeout(() => resolve(), time);
+});

@@ -15,7 +15,10 @@ import navigationReducer from './navigation/reducer';
 import commonActions from './common/actions';
 import mapActions from './map/actions';
 import mapReducer from './map/reducer';
+import canvasInteraction from './map/canvas-interactions';
 import urlStorage from './storage/url';
+import searchTool from './map/search-tool';
+import toolBox from './map/map-tool-box';
 
 import {reporter} from './browser-reporter';
 
@@ -36,9 +39,12 @@ test('NAVIGATION SERVICE', navigationService);
 test('MAP UTILS', mapUtil);
 test('MAP ACTIONS', mapActions);
 test('MAP REDUCER', mapReducer);
+test('SEARCH TOOL', searchTool);
 test('SEARCH-RESULT ELEMENTS', searchResultElement);
 test('COMMON ACTIONS', commonActions);
+test('CANVAS INTERACTIONS', canvasInteraction);
 test('URL STORAGE', urlStorage);
+test('TOOL BOX', toolBox);
 
 harness
     .report(reporter);

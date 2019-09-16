@@ -1,5 +1,5 @@
 import {Directions} from '../../src/sdk/directions';
-import {ApplicationState, defaultState as defState} from '../../src/app/store/store';
+import {ApplicationState} from '../../src/app/store/store';
 import {AnyAction, applyMiddleware, createStore, Store} from 'redux';
 import thunk from 'redux-thunk';
 import {GeoCoord, GeoCoordSearchResult, Route} from '../../src/app/utils';
@@ -85,4 +85,8 @@ export const createTestSearchResult = (lng: number, lat: number): GeoCoordSearch
     type: 'lng_lat',
     lng,
     lat
+});
+
+export const wait = (time = 100) => new Promise(resolve => {
+    setTimeout(() => resolve(), time);
 });

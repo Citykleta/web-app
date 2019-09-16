@@ -3,7 +3,7 @@ import {once} from '../utils';
 import {provider} from './service';
 import {GeoMap} from './elements/map';
 import {reducer} from './reducer';
-import {factory, MapToolBox} from "./map-tool-box";
+import {factory, MapToolBox} from "./tools/map-tool-box";
 
 export const loadServices = once((registry: ServiceRegistry, store) => {
     store.injectReducer('map', reducer);
