@@ -1,5 +1,6 @@
 import * as p from '@mapbox/polyline';
 import {MapState} from './map/reducer';
+import {html} from 'lit-html';
 
 const polyline = p.default;
 
@@ -40,7 +41,7 @@ interface GeoJSONPoint {
     coordinates: [number, number]
 }
 
-interface GeoJSONLineString {
+export interface GeoJSONLineString {
     type: 'LineString',
     coordinates: string
 }
@@ -58,7 +59,7 @@ export interface BlockSearchResult extends SearchResult {
     intersections: [
         { type: 'corner', geometry: GeoJSONPoint, name: string },
         { type: 'corner', geometry: GeoJSONPoint, name: string }
-        ]
+    ]
 }
 
 export interface StreetSearchResult extends SearchResult {
@@ -88,7 +89,7 @@ export interface ItineraryPoint {
 
 //todo formalize routes type
 export interface Route {
-    geometry: string;
+    geometry: GeoJSONLineString | string;
     duration: number;
     distance: number;
 }
@@ -110,3 +111,11 @@ export const once = (fn: Function): Function => {
 };
 
 export const isEqual = (a: MapState, b: MapState) => a.zoom === b.zoom && truncate(a.center[0]) === truncate(b.center[0]) && truncate(a.center[1]) === truncate(b.center[1]);
+
+export const formatDuration = (duration: number) => duration > 60 ? html`${Math.floor(duration / 60)}<span class="unit">min</span>` : html`${duration}<span class="unit">sec</span>`;
+
+export const formatDistance = (distance: number) => {
+    const meterDistance = Math.round(distance);
+    const printedDistance = meterDistance > 1000 ? Math.round(meterDistance / 100) / 10 : meterDistance;
+    return html`${printedDistance}<span class="unit">${meterDistance > 1000 ? 'km' : 'm'}</span>`;
+};

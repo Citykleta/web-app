@@ -14,6 +14,14 @@ import {
     sourceId as routesId
 } from './layers/directions-layer';
 import {
+    getLayerData as getLeisurePathData,
+    lineStyle as leisureRouteStyle,
+    pointStyle as leisurePointStyle,
+    labelStyle as leisureLabelStyle,
+    slicer as leisureRouteSlicer,
+    sourceId as leisureId
+} from './layers/leisure-layer';
+import {
     getLayerData as getSuggestionsData,
     lineStyle as suggestionsLineStyle,
     pointStyle as suggestionsPointLayer,
@@ -95,14 +103,19 @@ export const provider = (
 
                 map.addSource(routesId, EMPTY_SOURCE);
                 map.addSource(suggestionsSourceId, EMPTY_SOURCE);
+                map.addSource(leisureId, EMPTY_SOURCE);
                 map.addLayer(routeLineStyle);
                 map.addLayer(routeLabelStyle);
                 map.addLayer(stopPointStyle);
+                map.addLayer(leisureRouteStyle);
+                map.addLayer(leisurePointStyle);
+                map.addLayer(leisureLabelStyle);
                 map.addLayer(suggestionsLineStyle);
                 map.addLayer(suggestionsPointLayer);
                 const mapUpdater = eventuallyUpdate(map);
                 const updateRoutes = mapUpdater(routesId, routesPathSlicer, getRoutesPathData);
                 const updateSuggestions = mapUpdater(suggestionsSourceId, suggestionsSlicer, getSuggestionsData);
+                const updateLeisureRoute = mapUpdater(leisureId, leisureRouteSlicer, getLeisurePathData);
 
                 const updateMap = () => {
                     const newState = store.getState();
@@ -110,6 +123,7 @@ export const provider = (
                     const {map: mapState} = newState;
                     updateRoutes(newState);
                     updateSuggestions(newState);
+                    updateLeisureRoute(newState);
 
                     return map.jumpTo({
                         // @ts-ignore

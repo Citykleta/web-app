@@ -1,12 +1,14 @@
 import {Action, applyMiddleware, createStore, Store} from 'redux';
 import thunk, {ThunkDispatch} from 'redux-thunk';
-import {defaultState as defaultItineraryState, ItineraryState} from '../itinerary/reducer';
 import {Directions, factory as directionsAPI} from '../../sdk/directions';
-import {factory as geocoderAPI, Geocoder,} from '../../sdk/geocoder';
+import {factory as geocoderAPI, Geocoder} from '../../sdk/geocoder';
+import {factory as leisureAPI, Leisure} from '../../sdk/leisure';
+import {defaultState as defaultItineraryState, ItineraryState} from '../itinerary/reducer';
 import {defaultState as defaultSettingsState, SettingsState} from '../settings/reducer';
 import {defaultState as defaultSearchState, SearchState} from '../search/reducers';
-import apiConf from '../../conf/api';
 import {defaultState as defaultMapState, MapState} from '../map/reducer';
+import {defaultState as defaultLeisureState, LeisureState} from '../leisure/reducer';
+import apiConf from '../../conf/api';
 import {
     defaultState as defaultNavigationState,
     NavigationState,
@@ -19,12 +21,14 @@ export interface ApplicationState {
     settings: SettingsState,
     search: SearchState,
     map: MapState,
-    navigation: NavigationState
+    navigation: NavigationState,
+    leisure: LeisureState
 }
 
 export interface API {
     directions: Directions
-    geocoder: Geocoder
+    geocoder: Geocoder,
+    leisure: Leisure
 }
 
 const debugMiddleware = store => next => action => {
@@ -37,7 +41,8 @@ export const defaultState = () => ({
     itinerary: defaultItineraryState(),
     search: defaultSearchState(),
     settings: defaultSettingsState(),
-    map: defaultMapState()
+    map: defaultMapState(),
+    leisure: defaultLeisureState()
 });
 
 const defaultAPI = {
@@ -45,6 +50,9 @@ const defaultAPI = {
         endpoint: apiConf.endpoint
     }),
     geocoder: geocoderAPI({
+        endpoint: apiConf.endpoint
+    }),
+    leisure: leisureAPI({
         endpoint: apiConf.endpoint
     })
 };
@@ -59,12 +67,13 @@ export const store = (api: API = defaultAPI) => (initialState: ApplicationState 
         map: passThroughReducer,
         itinerary: passThroughReducer,
         settings: passThroughReducer,
-        search: passThroughReducer
+        search: passThroughReducer,
+        leisure: passThroughReducer
     };
 
     // @ts-ignore
     const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
-        debugMiddleware
+        // debugMiddleware
     ));
 
     const dynamicReducers = {};

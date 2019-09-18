@@ -1,16 +1,8 @@
 import {html, LitElement} from 'lit-element';
-import {Route} from '../../utils';
+import {formatDistance, formatDuration, Route} from '../../utils';
 import {ItineraryService} from '../service';
 import {ServiceRegistry} from '../../common/service-registry';
 import {style} from './route-details.style';
-
-export const formatDuration = (duration: number) => duration > 60 ? html`${Math.floor(duration / 60)}<span class="unit">min</span>` : html`${duration}<span class="unit">sec</span>`;
-
-export const formatDistance = (distance: number) => {
-    const meterDistance = Math.round(distance);
-    const printedDistance = meterDistance > 1000 ? Math.round(meterDistance / 100) / 10 : meterDistance;
-    return html`${printedDistance}<span class="unit">${meterDistance > 1000 ? 'km' : 'm'}</span>`;
-};
 
 export const template = ({routes, selectedRoute, itinerary}) => html`<ol>${routes.map((r, i) => html`<li @click="${() => itinerary.selectRoute(i)}" aria-selected="${i === selectedRoute}">
 <dl>
