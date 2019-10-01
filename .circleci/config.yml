@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:latest-browsers
     steps:
       - checkout
 
@@ -19,13 +19,13 @@ jobs:
 
       - run: npm install
 
-      - run: npm run build && npm run test:build
-
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+      - run: npm run build && npm run test:build
+
       # run tests!
-      - run: npm run test
+      - run: npm run test:ci
 

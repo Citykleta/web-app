@@ -11,6 +11,7 @@
     "test:build": "rollup -c rollup/test.js",
     "test:watch": "npm run test:build -- -w",
     "test": "node ./test/run-unit.js",
+    "test:ci": "http-serve -s -p 3002 & npm run test",
     "compile": "tsc",
     "compile:watch": "npm run compile -- -w",
     "bundle": "rollup -c rollup/build.js",
