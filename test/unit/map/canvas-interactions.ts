@@ -1,12 +1,16 @@
 import {factory as canvasInteraction, LONG_PRESS_TIME} from '../../../src/app/map/canvas-interactions';
 import {Assert} from 'zora';
-import {Evented} from "mapbox-gl";
-import {emitter} from "smart-table-events";
-import {stubFactory, wait} from "../utils";
+import {emitter} from 'smart-table-events';
+import {stubFactory, wait} from '../utils';
 
-const fakeSource = (): Evented => {
+const fakeSource = (): EventTarget => {
+    const instance = emitter();
+
     //@ts-ignore
-    return emitter();
+    instance.addEventListener = instance.on.bind(instance);
+
+    //@ts-ignore
+    return instance;
 };
 
 const onClickStub = stubFactory('onClick');
@@ -51,7 +55,6 @@ export default ({test}: Assert) => {
         };
         // @ts-ignore
         source.dispatch('mousedown', {lngLat: point});
-        await wait(0.5 * LONG_PRESS_TIME);
         // @ts-ignore
         source.dispatch('mouseup', {lngLat: point});
         t.ok(onClick.hasBeenCalled(1), 'click handler should have been called');
@@ -75,7 +78,6 @@ export default ({test}: Assert) => {
                 lat: 321
             }
         });
-        await wait(0.5 * LONG_PRESS_TIME);
         // @ts-ignore
         source.dispatch('mouseup', {
             lngLat: {

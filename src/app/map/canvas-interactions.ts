@@ -18,7 +18,7 @@ export const isSameLocation = (pos1: LngLat, pos2: LngLat) => {
     return pos1.lat === pos2.lat && pos1.lng === pos2.lng;
 };
 
-export const factory = (source: Evented): CanvasInteractions => {
+export const factory = (source: EventTarget): CanvasInteractions => {
     let mouseDownTime = null;
     let mouseDownPosition = null;
 
@@ -31,12 +31,14 @@ export const factory = (source: Evented): CanvasInteractions => {
     //@ts-ignore
     const instance: CanvasInteractions = <CanvasInteractions>proxyFactory({emitter: proxy});
 
-    source.on('mousedown', ev => {
+    //@ts-ignore
+    source.addEventListener('mousedown', (ev: MapMouseEvent) => {
         mouseDownTime = Date.now();
         mouseDownPosition = ev.lngLat;
     });
 
-    source.on('mouseup', ev => {
+    //@ts-ignore
+    source.addEventListener('mouseup', (ev: MapMouseEvent) => {
         try {
             const mouseUpTime = Date.now();
             if (isSameLocation(mouseDownPosition, ev.lngLat)) {

@@ -5,6 +5,9 @@ export const style = css`
     citykleta-search-box,
     citykleta-location {
         background: var(--background-theme);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12),
+        0 4px 4px rgba(0, 0, 0, 0.12),
+        0 6px 4px rgba(0, 0, 0, 0.12);
     }
     
     citykleta-search-box{

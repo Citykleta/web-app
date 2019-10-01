@@ -32,8 +32,9 @@ export interface Address {
 export type SearchResultType = 'corner' | 'street_block' | 'street' | 'point_of_interest' | 'lng_lat';
 
 export interface SearchResult {
-    type: SearchResultType,
-    municipality?: string
+    type: SearchResultType;
+    id?: number; //todo search result with id will be a type in the reducers land, without -> it has to be response from sdk
+    municipality?: string;
 }
 
 interface GeoJSONPoint {

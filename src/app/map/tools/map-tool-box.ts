@@ -1,11 +1,8 @@
-import {ApplicationState} from '../../store/store';
-import {ServiceRegistry} from '../../common/service-registry';
-import {Store} from 'redux';
 import {MapMouseEvent} from 'mapbox-gl';
 import {View} from '../../navigation/reducer';
-import {searchViewTool} from './search-tool';
 
 export interface MapToolBox {
+    selectTool(view): this;
 
     addTool<T extends Tool>(view: View, tool: T): this;
 
@@ -25,17 +22,16 @@ export interface LongClickActionTool extends Tool {
     longClickAction(ev: MapMouseEvent): Promise<void>
 }
 
-export const factory = (store: Store<ApplicationState>, registry: ServiceRegistry): MapToolBox => {
+export const factory = (): MapToolBox => {
     const toolBox = new Map();
-    toolBox.set(View.SEARCH, searchViewTool(registry));
-    let currentTool = toolBox.get(View.SEARCH);
-
-    store.subscribe(() => {
-        const {selectedView} = store.getState().navigation;
-        currentTool = toolBox.get(selectedView);
-    });
+    let currentTool = null;
 
     return {
+        selectTool(view) {
+            currentTool = toolBox.get(view);
+            return this;
+        },
+
         addTool(view, tool) {
             toolBox.set(view, tool);
             return this;

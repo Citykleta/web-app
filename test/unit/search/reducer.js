@@ -52,7 +52,7 @@ export default (assert) => {
             isSearching: false
         });
     });
-    test(`responding to ${ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS} action, should not automatically select the item it there is only one result`, t => {
+    test(`responding to ${ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS} action, should automatically select the item if there is only one result`, t => {
         const initialState = defaultState();
         const pointsOfInterest = [{
                 type: 'point_of_interest',
@@ -68,7 +68,7 @@ export default (assert) => {
         const actual = reducer(initialState, fetchPointsOfInterestWithSuccess(pointsOfInterest));
         t.eq(actual, {
             searchResult: pointsOfInterest,
-            selectedSearchResult: null,
+            selectedSearchResult: pointsOfInterest[0],
             isSearching: false
         });
     });

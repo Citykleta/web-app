@@ -1,4 +1,4 @@
-import {createHarness} from 'zora';
+import {test} from 'zora';
 import itineraryAction from './itinerary/actions';
 import itineraryReducer from './itinerary/reducer';
 import settingsAction from './settings/actions';
@@ -19,11 +19,11 @@ import canvasInteraction from './map/canvas-interactions';
 import urlStorage from './storage/url';
 import searchTool from './map/search-tool';
 import toolBox from './map/map-tool-box';
+import leisureAction from './leisure/actions';
+import leisureService from './leisure/service';
+import leisureReducer from './leisure/reducer';
 
-import {reporter} from './browser-reporter';
-
-const harness = createHarness();
-const {test} = harness;
+// test.indent();
 
 test('ITINERARY ACTIONS', itineraryAction);
 test('ITINERARY REDUCER', itineraryReducer);
@@ -45,10 +45,6 @@ test('COMMON ACTIONS', commonActions);
 test('CANVAS INTERACTIONS', canvasInteraction);
 test('URL STORAGE', urlStorage);
 test('TOOL BOX', toolBox);
-
-harness
-    .report(reporter);
-
-
-
-
+test('LEISURE ACTIONS', leisureAction);
+test('LEISURE SERVICE', leisureService);
+test('LEISURE REDUCER', leisureReducer);

@@ -42,7 +42,7 @@ export default (a: Assert) => {
         };
         t.eq(fetchPointsOfInterestWithSuccess([pointOfInterest]), {
             type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
-            pointsOfInterest: [pointOfInterest]
+            result: [pointOfInterest]
         });
     });
 
@@ -84,7 +84,7 @@ export default (a: Assert) => {
             query: 'revolucion'
         }, {
             type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
-            pointsOfInterest: suggestionsStub
+            result: suggestionsStub
         }]);
     });
 

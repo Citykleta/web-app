@@ -13,12 +13,12 @@ export const fetchPointsOfInterest = (query: string): FetchPointsOfInterestActio
 });
 
 export interface FetchPointsOfInterestSuccessAction extends Action<ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS> {
-    pointsOfInterest: PointOfInterestSearchResult[]
+    result: PointOfInterestSearchResult[]
 }
 
-export const fetchPointsOfInterestWithSuccess = (pointsOfInterest: PointOfInterestSearchResult[]): FetchPointsOfInterestSuccessAction => ({
+export const fetchPointsOfInterestWithSuccess = (result: PointOfInterestSearchResult[]): FetchPointsOfInterestSuccessAction => ({
     type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
-    pointsOfInterest
+    result
 });
 
 export interface FetchPointsOfInterestFailure extends Action<ActionType.FETCH_POINTS_OF_INTEREST_FAILURE> {

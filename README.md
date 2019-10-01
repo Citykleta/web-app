@@ -7,6 +7,6 @@ the web app for citykleta app
 
 ## todo
 - csp policies
-- dev server
 - minify html, js, css
-- replace token with env variables.
+- streamline "truncate" usage into reducers only
+- streamline state definition selectedFoo vs ids etc

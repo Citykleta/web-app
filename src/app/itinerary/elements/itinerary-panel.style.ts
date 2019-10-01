@@ -4,6 +4,9 @@ import {css} from 'lit-element';
 export const style = css`
     :host > div {
         background: var(--background-theme);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12),
+        0 4px 4px rgba(0, 0, 0, 0.12),
+        0 6px 4px rgba(0, 0, 0, 0.12);
     }
 
     ol {
@@ -13,10 +16,14 @@ export const style = css`
         padding: 0;
     }
 
-    #add-button-container {
+    #action-buttons-container {
         display: flex;
         justify-content: center;
         padding: 0.5em;
+    }
+
+    #action-buttons-container > * {
+        margin: 0 0.4em;
     }
 
     #stops-list-container {

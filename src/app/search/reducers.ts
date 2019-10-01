@@ -16,14 +16,6 @@ export const defaultState = () => ({
 
 export const reducer: Reducer<SearchState> = (previousState = defaultState(), action) => {
     switch (action.type) {
-        case ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS:
-            return Object.assign({}, previousState, {
-                searchResult: action.pointsOfInterest.map((s, i) => Object.assign(s, {
-                    id: i
-                })),
-                isSearching: false,
-                selectedSearchResult: null
-            });
         case ActionType.FETCH_POINTS_OF_INTEREST:
         case ActionType.FETCH_SEARCH_RESULT:
         case ActionType.FETCH_CLOSEST: {
@@ -33,12 +25,15 @@ export const reducer: Reducer<SearchState> = (previousState = defaultState(), ac
                 selectedSearchResult: null
             });
         }
+        case ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS:
         case ActionType.FETCH_CLOSEST_SUCCESS:
         case ActionType.FETCH_SEARCH_RESULT_SUCCESS:
             const {result: searchResult} = action;
             const selectedSearchResult = searchResult.length === 1 ? searchResult[0] : null;
             return Object.assign({}, previousState, {
-                searchResult,
+                searchResult: searchResult.map((s, i) => Object.assign(s, {
+                    id: i
+                })),
                 isSearching: false,
                 selectedSearchResult
             });

@@ -2,16 +2,16 @@ import {css} from 'lit-element';
 
 // language=CSS
 export const style = css`:host {
-    --border-color:var(--color-theme);
-    --color:inherit;
-    --suggestion-bg-color:inherit;
-    --suggestion-color:inherit;
-    --suggestion-border-color:var(--background-theme-1);
+    --border-color: var(--color-theme);
+    --color: inherit;
+    --suggestion-bg-color: inherit;
+    --suggestion-color: inherit;
+    --suggestion-border-color: var(--background-theme-1);
     display: flex;
     flex-direction: column;
 }
 
-[aria-expanded=false] + [role=listbox]{
+[aria-expanded=false] + [role=listbox] {
     display: none;
 }
 
@@ -79,7 +79,7 @@ li:not(:last-child) {
     border-bottom: 1px solid var(--suggestion-border-color);
 }
 
-#my-location{
+#my-location {
     --color: var(--color-theme-compl);
     align-self: center;
     margin: 0 0.4em;

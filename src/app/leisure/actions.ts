@@ -11,12 +11,12 @@ export const fetchLeisureRoutes = (): FetchLeisureRoutesAction => ({
     type: ActionType.FETCH_LEISURE_ROUTES
 });
 
-export interface FetchLeisureRoutesFailureAction extends Action<ActionType.FETCH_CLOSEST_FAILURE> {
+export interface FetchLeisureRoutesFailureAction extends Action<ActionType.FETCH_LEISURE_ROUTES_FAILURE> {
     error: any
 }
 
 export const fetchLeisureRoutesWithFailure = (error: any): FetchLeisureRoutesFailureAction => ({
-    type: ActionType.FETCH_CLOSEST_FAILURE,
+    type: ActionType.FETCH_LEISURE_ROUTES_FAILURE,
     error
 });
 

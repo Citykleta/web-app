@@ -1,6 +1,6 @@
 import {Assert} from 'zora';
-import {eventuallyUpdate, pointListToFeature} from '../../../src/app/map/utils';
 import {GeoCoord} from '../../../src/app/utils';
+import {pointListToFeature} from '../../../src/app/map/utils';
 
 const fakeSource = () => {
     return {
@@ -41,25 +41,5 @@ export default (a: Assert) => {
                 }
             }]
         });
-    });
-
-    test('eventuallyUpdate: should update a layer when states are different', t => {
-
-        let updateCalls = [];
-
-        const slicer = state => state.search.suggestions;
-        const map = fakeMap();
-        const updateFunc = (state) => {
-            updateCalls.push(state);
-            return Object.assign({updated: true}, state);
-        };
-
-        const updater = eventuallyUpdate(map);
-
-        const update = updater('suggestions', slicer, updateFunc);
-
-        const state = {search: {suggestions: [{id: 1}]}};
-        // @ts-ignore
-        t.eq(update(state), true, 'should have marked as updated');
     });
 };

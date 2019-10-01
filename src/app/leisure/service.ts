@@ -9,11 +9,13 @@ export interface LeisureService {
 }
 
 const leisureActions = {
-    fetchLeisureRoutesFromAPI
+    fetchLeisureRoutesFromAPI,
+    selectLeisureRoute
 };
 
 export const provider = (store: Store<ApplicationState>, {
-    fetchLeisureRoutesFromAPI
+    fetchLeisureRoutesFromAPI,
+    selectLeisureRoute
 } = leisureActions): LeisureService => {
     return {
         async searchRoutes() {

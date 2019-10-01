@@ -23,7 +23,7 @@ export default (a) => {
         };
         t.eq(fetchPointsOfInterestWithSuccess([pointOfInterest]), {
             type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
-            pointsOfInterest: [pointOfInterest]
+            result: [pointOfInterest]
         });
     });
     test('create a FETCH_POINTS_OF_INTEREST_FAILURE action', t => {
@@ -61,7 +61,7 @@ export default (a) => {
                 query: 'revolucion'
             }, {
                 type: ActionType.FETCH_POINTS_OF_INTEREST_SUCCESS,
-                pointsOfInterest: suggestionsStub
+                result: suggestionsStub
             }]);
     });
     test('fetch pointsOfInterest from API when API fails', async (t) => {

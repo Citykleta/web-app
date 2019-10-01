@@ -5,13 +5,15 @@ import {SettingsService} from '../service';
 import {ServiceRegistry} from '../../common/service-registry';
 
 export const template = ({onChange, theme}) => html`
-<label>
-    <span>Theme</span>
-    <select @change="${onChange}" name="theme">
-            <option value="${Theme.LIGHT}" ?selected="${theme === Theme.LIGHT}">Light</option>
-            <option value="${Theme.DARK}" ?selected="${theme === Theme.DARK}">Dark</option>
-    </select>
-</label>`;
+<div>
+    <label>
+        <span>Theme</span>
+        <select @change="${onChange}" name="theme">
+                <option value="${Theme.LIGHT}" ?selected="${theme === Theme.LIGHT}">Light</option>
+                <option value="${Theme.DARK}" ?selected="${theme === Theme.DARK}">Dark</option>
+        </select>
+    </label>
+</div>`;
 
 export const propDef = {};
 

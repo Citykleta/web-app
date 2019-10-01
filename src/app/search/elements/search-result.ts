@@ -11,7 +11,7 @@ import {
 } from '../../utils';
 import {html, TemplateResult} from 'lit-html';
 import midpoint from '@turf/midpoint';
-import {decodeLineString} from '../../map/layers/suggestions-layer';
+import {decodeLineString} from '../../map/utils';
 
 export interface SearchResultInstance {
     toOptionElement(): TemplateResult;

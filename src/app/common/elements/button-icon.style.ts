@@ -13,6 +13,9 @@ export const style = css`
         border: 2px solid var(--color);
         border-radius: 50%;
         box-sizing: border-box;
+        // box-shadow: 0 0 3px rgba(0, 0, 0, 0.3),
+        // 0 0 4px rgba(0, 0, 0, 0.3),
+        // 0 0 5px rgba(0, 0, 0, 0.2);
         color: var(--color);
         cursor: pointer;
         display: flex;
@@ -31,15 +34,15 @@ export const style = css`
         color: var(--font-color-theme-2);
     }
 
-    :host(.danger){
-        --color:var(--color-theme);
+    :host(.danger) {
+        --color: var(--color-theme);
         --size: 1.5rem;
     }
 
-    :host(.danger) button:focus, :host(.danger) button:hover{
+    :host(.danger) button:focus, :host(.danger) button:hover {
         --background: var(--color-theme);
-        --color:var(--color-theme-1);
-        color:var(--font-color-theme-2);
+        --color: var(--color-theme-1);
+        color: var(--font-color-theme-2);
     }
 
     ::slotted(svg) {

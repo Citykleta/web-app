@@ -1,6 +1,7 @@
 import {Action, applyMiddleware, createStore, Store} from 'redux';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 import {Directions, factory as directionsAPI} from '../../sdk/directions';
+import {factory as directionsMock} from '../../sdk/directions-mock';
 import {factory as geocoderAPI, Geocoder} from '../../sdk/geocoder';
 import {factory as leisureAPI, Leisure} from '../../sdk/leisure';
 import {defaultState as defaultItineraryState, ItineraryState} from '../itinerary/reducer';
@@ -46,7 +47,7 @@ export const defaultState = () => ({
 });
 
 const defaultAPI = {
-    directions: directionsAPI({
+    directions: process.env.NODE_ENV !== 'production' ? directionsMock() : directionsAPI({
         endpoint: apiConf.endpoint
     }),
     geocoder: geocoderAPI({
@@ -72,7 +73,7 @@ export const store = (api: API = defaultAPI) => (initialState: ApplicationState 
     };
 
     // @ts-ignore
-    const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api),
+    const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument<API>(api)
         // debugMiddleware
     ));
 

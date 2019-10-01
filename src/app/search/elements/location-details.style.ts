@@ -2,7 +2,6 @@ import {css} from 'lit-element';
 
 // language=CSS
 export const style = css`
-
     h2 {
         border-bottom: 2px solid var(--color-theme);
     }

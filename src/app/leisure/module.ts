@@ -8,6 +8,11 @@ import {connect} from '../common/connect';
 import store from '../store/index';
 import {ApplicationState} from '../store/store';
 
+export * from './actions';
+export * from './reducer';
+export * from './service';
+export {LeisurePanel} from './elements/leisure-panel';
+
 export const loadServices = once((registry: ServiceRegistry, store) => {
     store.injectReducer('leisure', reducer);
     registry.set('leisure', provider(store));

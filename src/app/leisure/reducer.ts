@@ -1,4 +1,4 @@
-import { PointOfInterestSearchResult, Route} from '../utils';
+import {PointOfInterestSearchResult, Route} from '../utils';
 import {Reducer} from 'redux';
 import {ActionType} from '../common/actions';
 
@@ -39,8 +39,10 @@ export const reducer: Reducer<LeisureState> = (previousState = defaultState(), a
         }
         case ActionType.FETCH_LEISURE_ROUTES_FAILURE:
             return Object.assign({}, previousState, {isSearching: false});
-        case ActionType.SELECT_LEISURE_ROUTE:
-            return Object.assign({}, previousState, {selectedRouteId: action.routeId});
+        case ActionType.SELECT_LEISURE_ROUTE: {
+            const selectedRouteId = previousState.routes.some(r => r.id === action.routeId) ? action.routeId : previousState.selectedRouteId;
+            return Object.assign({}, previousState, {selectedRouteId});
+        }
         default:
             return previousState;
     }

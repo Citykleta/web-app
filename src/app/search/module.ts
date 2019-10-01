@@ -3,7 +3,6 @@ import {SearchBox} from './elements/search-box';
 import {SearchPanel} from './elements/search-panel';
 import {once} from '../utils';
 import {html} from 'lit-html';
-import {LocationSuggestionItem} from './elements/location-suggestion-item';
 import {LocationDetails} from './elements/location-details';
 import {connect} from '../common/connect';
 import store from '../store/index';

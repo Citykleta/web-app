@@ -9,6 +9,12 @@ export const style = css`
         --route-border-color: var(--background-theme-1);
     }
 
+    :host > * {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12),
+        0 4px 4px rgba(0, 0, 0, 0.12),
+        0 6px 4px rgba(0, 0, 0, 0.12);
+    }
+
     ul {
         list-style: none;
         margin: 0;
