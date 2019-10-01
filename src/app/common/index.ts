@@ -21,6 +21,7 @@ export const loadSearchItineraryServices = once((registry: ServiceRegistry, stor
 export const loadSearchItineraryComponents = once(injector => {
     if (!customElements.get('citykleta-search-box')) {
         customElements.define('citykleta-search-box', injector(SearchBox));
+        customElements.define('citykleta-location-suggestion', LocationSuggestionItem);
     }
     if (!customElements.get('citykleta-location-suggestion')) {
         customElements.define('citykleta-location-suggestion', LocationSuggestionItem);
