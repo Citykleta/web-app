@@ -1,4 +1,4 @@
-import {Evented, LngLat, MapMouseEvent} from 'mapbox-gl';
+import {LngLat, MapMouseEvent} from 'mapbox-gl';
 import {emitter, proxyListener} from 'smart-table-events';
 
 export interface CanvasInteractions {
@@ -33,6 +33,7 @@ export const factory = (source: EventTarget): CanvasInteractions => {
 
     //@ts-ignore
     source.addEventListener('mousedown', (ev: MapMouseEvent) => {
+        console.log('mousedown');
         mouseDownTime = Date.now();
         mouseDownPosition = ev.lngLat;
     });
@@ -40,6 +41,7 @@ export const factory = (source: EventTarget): CanvasInteractions => {
     //@ts-ignore
     source.addEventListener('mouseup', (ev: MapMouseEvent) => {
         try {
+            console.log('mouseup');
             const mouseUpTime = Date.now();
             if (isSameLocation(mouseDownPosition, ev.lngLat)) {
                 const eventName = (mouseUpTime - mouseDownTime) < LONG_PRESS_TIME ?

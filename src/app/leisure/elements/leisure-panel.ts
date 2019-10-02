@@ -5,23 +5,32 @@ import {ServiceRegistry} from '../../common/service-registry';
 import {LeisureRoute} from '../reducer';
 import {loadingIndicator} from '../../common/elements/icons';
 
-export const template = ({leisure, isSearching, routes, selectedRouteId}) => {
+export const template = ({leisure, isSearching, routes, selectedStopIndex, selectedRouteId}) => {
     if (isSearching) {
         return html`<div>${loadingIndicator()}</div>`;
     } else {
-        return html`<ul tabindex="0">
-${routes.map(r => html`<li @click=${() => leisure.selectRoute(r.id)} aria-selected="${r.id === selectedRouteId}"><article>
-<h2>${r.title}</h2>
-<p>${r.description}</p>
-</article></li>`)}
-</ul>`;
+        const selectedRoute = routes.find(r => r.id === selectedRouteId);
+        return html`<div>
+    <ul tabindex="0">
+    ${routes.map(r => html`
+        <li @click=${() => leisure.selectRoute(r.id)} aria-selected="${r.id === selectedRouteId}">
+        <article>
+            <h2>${r.title}</h2>
+            <p>${r.description}</p>
+        </article>
+        </li>`)}
+    </ul>
+</div>
+${selectedRoute !== void 0 ? html`<citykleta-leisure-route-details .selectedStopIndex=${selectedStopIndex} .stops="${selectedRoute.stops}"></citykleta-leisure-route-details>` : ''}
+`;
     }
 };
 
 export const propDef = {
     isSearching: {type: Boolean},
     routes: {type: Array},
-    selectedRouteId: {type: Number}
+    selectedRouteId: {type: Number},
+    selectedStopIndex: {type: Number}
 };
 
 // todo refactor with equivalent Listbox
@@ -29,6 +38,7 @@ export class LeisurePanel extends LitElement {
 
     private isSearching = false;
     private selectedRouteId: number = null;
+    private selectedStopIndex: number = null;
     private routes: LeisureRoute[] = [];
     private readonly _leisure: LeisureService = null;
 
@@ -56,7 +66,8 @@ export class LeisurePanel extends LitElement {
             leisure: this._leisure,
             isSearching: this.isSearching,
             selectedRouteId: this.selectedRouteId,
-            routes: this.routes
+            routes: this.routes,
+            selectedStopIndex: this.selectedStopIndex
         });
     }
 

@@ -4,6 +4,7 @@ import {css} from 'lit-element';
 export const style = css`
     h2 {
         border-bottom: 2px solid var(--color-theme);
+        font-size:1.2rem;
     }
 
     .location {

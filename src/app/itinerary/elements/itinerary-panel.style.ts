@@ -71,7 +71,8 @@ export const style = css`
     }
 
     h2 {
-        margin: 1em;
         border-bottom: 2px solid var(--color-theme);
+        font-size:1.2rem;
+        margin:1em;
     }
 `;

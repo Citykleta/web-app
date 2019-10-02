@@ -22,7 +22,7 @@ export const template = ({
                              selectItineraryRoute
                          }) => {
     return html`
-<mb-map @camera-change="${onCameraChange}" center="${center.join(',')}" zoom="${zoom}" access-token="${ACCESS_TOKEN}" mb-style="${STYLE_URL}">
+<mb-map @click="${ev => console.log('map click')}" @camera-change="${onCameraChange}" center="${center.join(',')}" zoom="${zoom}" access-token="${ACCESS_TOKEN}" mb-style="${STYLE_URL}">
     <mb-geojson .data="${suggestions}" source-id="suggestions">
         <mb-circle-layer @click="${selectSuggestion}" layer-id="suggestions-point"
             filter="['==','$type','Point']"
@@ -31,7 +31,7 @@ export const template = ({
             circle-stroke-width="['case',['get','selected'],4,2]" 
             circle-stroke-color="['case',['get','selected'],'#55b2ff','#ff426f']" 
             circle-opacity="0.2"></mb-circle-layer>
-        <mb-line-layer @click="${selectSuggestion}" layer-id="suggestions-line"
+        <mb-line-layer  @click="${selectSuggestion}" layer-id="suggestions-line"
             line-color="['case',['get','selected'],'#55b2ff','#ff426f']"
             line-opacity="0.7"
             line-gap-width="['case',['get','selected'],4,1]"
@@ -56,7 +56,7 @@ export const template = ({
             text-anchor="bottom"
             text-font="['Open Sans Bold']"
             text-field="['get', 'name']"
-            text-color="green"></mb-symbol-layer>
+            text-color="blue"></mb-symbol-layer>
     </mb-geojson>
     <mb-geojson .data="${itinerary}" source-id="itinerary">
         <mb-line-layer @click="${selectItineraryRoute}" layer-id="itinerary-line"
@@ -111,19 +111,22 @@ export class GeoMap extends LitElement {
     }
 
     protected firstUpdated(_changedProperties: Map<PropertyKey, unknown>): void {
-        this._canvas = canvasInteractions(this.shadowRoot.querySelector('mb-map'));
-        this._canvas.onClick(ev => this._toolBox.clickAction(ev));
-        this._canvas.onLongClick(ev => this._toolBox.longClickAction(ev));
+        // this._canvas = canvasInteractions(this.shadowRoot.querySelector('mb-map'));
+        // this._canvas.onClick(ev => this._toolBox.clickAction(ev));
+        // this._canvas.onLongClick(ev => this._toolBox.longClickAction(ev));
     }
 
     render() {
 
         const selectSuggestion = ev => {
+            console.log('click layer');
+
             const {features} = ev;
             const search = this._registry.get('search');
             if (features && features.length) {
                 const {properties: {index}} = features[0];
                 search.selectSearchResult(this.applicationState.search.searchResult[index]);
+                ev.preventDefault();
             }
         };
 
@@ -133,6 +136,7 @@ export class GeoMap extends LitElement {
             if (features && features.length) {
                 const {properties: {index}} = features[0];
                 itinerary.selectRoute(index);
+                ev.preventDefault();
             }
         };
 
@@ -140,6 +144,8 @@ export class GeoMap extends LitElement {
             zoom: ev.detail.zoom,
             center: ev.detail.center
         });
+
+        console.log('render');
 
         return template({
             zoom: this.zoom,

@@ -49,3 +49,12 @@ export const selectLeisureRoute = (routeId: number): SelectLeisureRouteAction =>
     type: ActionType.SELECT_LEISURE_ROUTE,
     routeId
 });
+
+export interface SelectLeisureStopAction extends Action<ActionType.SELECT_LEISURE_STOP> {
+    stopIndex: number
+}
+
+export const selectLeisureStop = (index: number): SelectLeisureStopAction => ({
+    type: ActionType.SELECT_LEISURE_STOP,
+    stopIndex: index
+});

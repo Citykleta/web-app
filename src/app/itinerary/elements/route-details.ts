@@ -22,9 +22,9 @@ export class RouteDetails extends LitElement {
     private selectedRoute: number;
     private readonly _itinerary: ItineraryService;
 
-    constructor(serviceMap: ServiceRegistry) {
+    constructor(registry: ServiceRegistry) {
         super();
-        this._itinerary = serviceMap.get('itinerary');
+        this._itinerary = registry.get('itinerary');
         this.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 

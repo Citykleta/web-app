@@ -1,3 +1,4 @@
+// const pti = require('puppeteer-to-istanbul');
 const puppeteer = require('puppeteer');
 
 const wait = (time = 1000) => new Promise(resolve => {
@@ -5,15 +6,18 @@ const wait = (time = 1000) => new Promise(resolve => {
 });
 
 (async () => {
-        const browser = await puppeteer.launch({
-            // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+    const browser = await puppeteer.launch({
+        // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     try {
         const page = await browser.newPage();
         page.on('console', ev => console.log(ev.text()));
+        // await page.coverage.startJSCoverage();
         await page.goto(`http://localhost:3002/test/dist/index.html`);
         await wait(1000);
+        // const coverage = await page.coverage.stopJSCoverage();
+        // pti.write([...coverage]);
     } catch (e) {
         console.error(e);
         process.exit(1);

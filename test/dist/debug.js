@@ -646,6 +646,7 @@
       ActionType["FETCH_LEISURE_ROUTES_FAILURE"] = "FETCH_LEISURE_ROUTES_FAILURE";
       ActionType["SELECT_LEISURE_ROUTE"] = "SELECT_LEISURE_ROUTE";
       ActionType["SELECT_SEARCH_RESULT"] = "SELECT_SEARCH_RESULT";
+      ActionType["SELECT_LEISURE_STOP"] = "SELECT_LEISURE_STOP";
       ActionType["CHANGE_THEME"] = "CHANGE_THEME";
       ActionType["UPDATE_MAP"] = "UPDATE_MAP";
       ActionType["SELECT_VIEW"] = "SELECT_VIEW";
@@ -3966,7 +3967,8 @@ slot[name=placeholder]{
   const defaultState$5 = () => ({
       routes: [],
       isSearching: false,
-      selectedRouteId: null
+      selectedRouteId: null,
+      selectedStopIndex: null
   });
   const reducer$5 = (previousState = defaultState$5(), action) => {
       switch (action.type) {
@@ -3974,20 +3976,32 @@ slot[name=placeholder]{
               return {
                   isSearching: true,
                   routes: [],
-                  selectedRouteId: null
+                  selectedRouteId: null,
+                  selectedStopIndex: null
               };
           case ActionType.FETCH_LEISURE_ROUTES_SUCCESS: {
               return {
                   routes: action.result,
                   isSearching: false,
-                  selectedRouteId: action.result.length > 0 ? action.result[0].id : null
+                  selectedRouteId: action.result.length > 0 ? action.result[0].id : null,
+                  selectedStopIndex: action.result.length > 0 ? 0 : null
               };
           }
           case ActionType.FETCH_LEISURE_ROUTES_FAILURE:
               return Object.assign({}, previousState, { isSearching: false });
           case ActionType.SELECT_LEISURE_ROUTE: {
               const selectedRouteId = previousState.routes.some(r => r.id === action.routeId) ? action.routeId : previousState.selectedRouteId;
-              return Object.assign({}, previousState, { selectedRouteId });
+              return Object.assign({}, previousState, { selectedRouteId, selectedLeisureStop: 0 });
+          }
+          case ActionType.SELECT_LEISURE_STOP: {
+              const { selectedRouteId, routes } = previousState;
+              const selectedRoute = routes.find(r => r.id === selectedRouteId);
+              if (selectedRoute && selectedRoute.stops.length > action.stopIndex) {
+                  return Object.assign({}, previousState, {
+                      selectedStopIndex: action.stopIndex
+                  });
+              }
+              return previousState;
           }
           default:
               return previousState;
@@ -6223,12 +6237,14 @@ slot[name=placeholder]{
       const instance = proxyFactory({ emitter: proxy });
       //@ts-ignore
       source.addEventListener('mousedown', (ev) => {
+          console.log('mousedown');
           mouseDownTime = Date.now();
           mouseDownPosition = ev.lngLat;
       });
       //@ts-ignore
       source.addEventListener('mouseup', (ev) => {
           try {
+              console.log('mouseup');
               const mouseUpTime = Date.now();
               if (isSameLocation(mouseDownPosition, ev.lngLat)) {
                   const eventName = (mouseUpTime - mouseDownTime) < LONG_PRESS_TIME ?
@@ -6870,6 +6886,10 @@ slot[name=placeholder]{
       type: ActionType.SELECT_LEISURE_ROUTE,
       routeId
   });
+  const selectLeisureStop = (index) => ({
+      type: ActionType.SELECT_LEISURE_STOP,
+      stopIndex: index
+  });
 
   var leisureAction = (a) => {
       a.test(`create a ${ActionType.FETCH_LEISURE_ROUTES} action`, t => {
@@ -6969,6 +6989,9 @@ slot[name=placeholder]{
           },
           selectRoute(id) {
               store.dispatch(selectLeisureRoute(id));
+          },
+          selectStop(id) {
+              store.dispatch(selectLeisureStop(id));
           }
       };
   };
