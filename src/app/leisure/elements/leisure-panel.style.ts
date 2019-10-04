@@ -15,26 +15,28 @@ export const style = css`
         0 6px 4px rgba(0, 0, 0, 0.12);
     }
 
-    ul {
+    citykleta-listbox {
         list-style: none;
         margin: 0;
         padding: 0;
         width: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
-    li {
+    citykleta-listbox-option {
         padding: 0.5em 1em;
         background: var(--route-bg-color);
         color: var(--route-color);
         transition: background-color 0.3s, color 0.3s;
     }
 
-    li[aria-selected=true] {
+    citykleta-listbox-option[aria-selected=true] {
         --route-bg-color: var(--color-theme-1);
         --route-color: var(--font-color-theme-2);
     }
 
-    li:not(:last-child) {
+    citykleta-listbox-option:not(:last-child) {
         border-bottom: 1px solid var(--route-border-color);
     }
 

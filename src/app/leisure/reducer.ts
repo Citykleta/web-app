@@ -45,7 +45,7 @@ export const reducer: Reducer<LeisureState> = (previousState = defaultState(), a
             return Object.assign({}, previousState, {isSearching: false});
         case ActionType.SELECT_LEISURE_ROUTE: {
             const selectedRouteId = previousState.routes.some(r => r.id === action.routeId) ? action.routeId : previousState.selectedRouteId;
-            return Object.assign({}, previousState, {selectedRouteId, selectedLeisureStop: 0});
+            return Object.assign({}, previousState, {selectedRouteId, selectedStopIndex: 0});
         }
         case ActionType.SELECT_LEISURE_STOP: {
             const {selectedRouteId, routes} = previousState;

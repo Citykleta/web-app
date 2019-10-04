@@ -4,7 +4,6 @@ import {LitElement} from 'lit-element';
 import {ServiceRegistry} from '../../common/service-registry';
 import {itineraryToGeoJSON, leisureToGeoJSON, suggestionsToGeoJSON} from '../utils';
 import {factory} from '../tools/map-tool-box';
-import {factory as canvasInteractions} from '../canvas-interactions';
 import {View} from '../../navigation/reducer';
 import {searchViewTool} from '../tools/search-tool';
 
@@ -40,10 +39,10 @@ export const template = ({
     <mb-geojson .data="${leisure}" source-id="leisure">
         <mb-circle-layer  layer-id="leisure-point"
             filter="['==','$type','Point']"
-            circle-color="green"
-            circle-radius="8"
+            circle-color="['case',['get','selected'],'blue','green']"
+            circle-radius="['case',['get','selected'],12,8]"
             circle-stroke-width="2"
-            circle-stroke-color="green"
+            circle-stroke-color="['case',['get','selected'],'blue','green']"
             circle-opacity="0.2"></mb-circle-layer>
         <mb-line-layer  layer-id="leisure-line"
             line-color="green"
@@ -111,6 +110,7 @@ export class GeoMap extends LitElement {
     }
 
     protected firstUpdated(_changedProperties: Map<PropertyKey, unknown>): void {
+        // todo friction with layer handlers
         // this._canvas = canvasInteractions(this.shadowRoot.querySelector('mb-map'));
         // this._canvas.onClick(ev => this._toolBox.clickAction(ev));
         // this._canvas.onLongClick(ev => this._toolBox.longClickAction(ev));

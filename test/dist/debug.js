@@ -3991,7 +3991,7 @@ slot[name=placeholder]{
               return Object.assign({}, previousState, { isSearching: false });
           case ActionType.SELECT_LEISURE_ROUTE: {
               const selectedRouteId = previousState.routes.some(r => r.id === action.routeId) ? action.routeId : previousState.selectedRouteId;
-              return Object.assign({}, previousState, { selectedRouteId, selectedLeisureStop: 0 });
+              return Object.assign({}, previousState, { selectedRouteId, selectedStopIndex: 0 });
           }
           case ActionType.SELECT_LEISURE_STOP: {
               const { selectedRouteId, routes } = previousState;
@@ -4022,6 +4022,10 @@ slot[name=placeholder]{
       };
   };
 
+  const debugMiddleware = store => next => action => {
+      console.log(action);
+      return next(action);
+  };
   const defaultState$6 = () => ({
       navigation: defaultState(),
       itinerary: defaultState$1(),
@@ -4051,9 +4055,7 @@ slot[name=placeholder]{
           leisure: passThroughReducer
       };
       // @ts-ignore
-      const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument(api)
-      // debugMiddleware
-      ));
+      const store = createStore(createReducer(staticReducer), initialState, applyMiddleware(thunk.withExtraArgument(api), debugMiddleware));
       const dynamicReducers = {};
       // @ts-ignore
       return Object.assign(store, {
@@ -7033,21 +7035,24 @@ slot[name=placeholder]{
   const createInitialState = (routes = []) => ({
       isSearching: false,
       selectedRouteId: null,
-      routes
+      routes,
+      selectedStopIndex: null
   });
   var leisureReducer = (a) => {
       a.test(`unrelated action`, t => {
           t.eq(reducer$5(createInitialState(), selectView(View.LEISURE)), {
               isSearching: false,
               selectedRouteId: null,
-              routes: []
+              routes: [],
+              selectedStopIndex: null
           });
       });
       a.test(`react to ${ActionType.FETCH_LEISURE_ROUTES} action`, t => {
           t.eq(reducer$5(createInitialState(), fetchLeisureRoutes()), {
               isSearching: true,
               selectedRouteId: null,
-              routes: []
+              routes: [],
+              selectedStopIndex: null
           }, 'should be put into searching mode');
       });
       a.test(`react to ${ActionType.FETCH_LEISURE_ROUTES_SUCCESS} action when result is not empty`, t => {
@@ -7077,7 +7082,8 @@ slot[name=placeholder]{
           t.eq(reducer$5(createInitialState(routes), fetchLeisureRoutesWithSuccess(routes)), {
               isSearching: false,
               routes,
-              selectedRouteId: 8
+              selectedRouteId: 8,
+              selectedStopIndex: 0
           });
       });
       a.test(`react to ${ActionType.FETCH_LEISURE_ROUTES_SUCCESS} action when result is not empty`, t => {
@@ -7085,7 +7091,8 @@ slot[name=placeholder]{
           t.eq(reducer$5(createInitialState(routes), fetchLeisureRoutesWithSuccess(routes)), {
               isSearching: false,
               routes,
-              selectedRouteId: null
+              selectedRouteId: null,
+              selectedStopIndex: null
           });
       });
       a.test(`react to ${ActionType.SELECT_LEISURE_ROUTE} action`, t => {
@@ -7117,7 +7124,8 @@ slot[name=placeholder]{
           t.eq(reducer$5(leisureState, selectLeisureRoute(66)), {
               isSearching: false,
               routes,
-              selectedRouteId: 66
+              selectedRouteId: 66,
+              selectedStopIndex: 0
           });
       });
       a.test(`react to ${ActionType.SELECT_LEISURE_ROUTE} action when route id does not match any route`, t => {
@@ -7149,7 +7157,8 @@ slot[name=placeholder]{
           t.eq(reducer$5(leisureState, selectLeisureRoute(999)), {
               isSearching: false,
               routes,
-              selectedRouteId: 8
+              selectedRouteId: 8,
+              selectedStopIndex: 0
           });
       });
       a.test(`react to ${ActionType.FETCH_LEISURE_ROUTES_FAILURE} action`, t => {
@@ -7159,7 +7168,8 @@ slot[name=placeholder]{
           t.eq(reducer$5(leisureState, fetchLeisureRoutesWithFailure(error)), {
               isSearching: false,
               routes: [],
-              selectedRouteId: null
+              selectedRouteId: null,
+              selectedStopIndex: null
           }, 'should have reset the isSearching to false');
       });
   };

@@ -80,6 +80,7 @@ export const leisureToGeoJSON = (state: ApplicationState) => {
                     coordinates: p.geometry.coordinates
                 },
                 properties: {
+                    selected: state.leisure.selectedStopIndex === index,
                     index: index + 1,
                     name: p.name,
                     description: p.description

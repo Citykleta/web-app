@@ -10,27 +10,29 @@ export const style = css`
         counter-reset: stop;
     }
 
-    ol {
+    citykleta-citykleta-listbox-optionstbox {
+        display: flex;
+        flex-direction: column;
         margin: 0;
         padding: 0;
         width: 100%;
-        list-style: none;
+        citykleta-listbox-optionst-style: none;
     }
 
-    li::before {
+    citykleta-listbox-option::before {
         color: var(--adorner-color);
         content: counter(stop);
         font-size: 1.2em;
-        font-style: italic;
+        font-style: itacitykleta-listbox-optionc;
         font-weight: bold;
         text-shadow: 0 1px 1px rgb(100, 100, 100);
         padding: 0.5em;
 
     }
 
-    li {
+    citykleta-listbox-option {
         display: flex;
-        align-items: center;
+        acitykleta-listbox-optiongn-items: center;
         counter-increment: stop;
         padding: 0.5em;
         background: var(--route-bg-color);
@@ -38,13 +40,13 @@ export const style = css`
         transition: background-color 0.3s, color 0.3s;
     }
 
-    li[aria-selected=true] {
+    citykleta-listbox-option[aria-selected=true] {
         --route-bg-color: var(--color-theme-1);
         --route-color: var(--font-color-theme-2);
         --adorner-color: var(--font-color-theme-2);
     }
 
-    li:not(:last-child) {
+    citykleta-listbox-option:not(:last-child) {
         border-bottom: 1px solid var(--route-border-color);
     }
 

@@ -10,16 +10,24 @@ export const template = ({leisure, isSearching, routes, selectedStopIndex, selec
         return html`<div>${loadingIndicator()}</div>`;
     } else {
         const selectedRoute = routes.find(r => r.id === selectedRouteId);
-        return html`<div>
-    <ul tabindex="0">
-    ${routes.map(r => html`
-        <li @click=${() => leisure.selectRoute(r.id)} aria-selected="${r.id === selectedRouteId}">
-        <article>
-            <h2>${r.title}</h2>
-            <p>${r.description}</p>
-        </article>
-        </li>`)}
-    </ul>
+        const selectedRouteIndex = routes.indexOf(selectedRoute);
+        const selectRoute = ev => {
+            leisure.selectRoute(routes[ev.selectedIndex].id);
+        };
+
+        return html`
+<div>
+    <citykleta-listbox @change="${selectRoute}">
+        ${routes.map((r, i) => {
+            return html`
+        <citykleta-listbox-option ?selected=${i === 0} .selectedIndex="${selectedRouteIndex}" id="_route_listbox_${i}">
+            <div>
+                <h2>${r.title}</h2>
+                <p>${r.description}</p>
+            </div>
+        </citykleta-listbox-option>`;
+        })}
+    </citykleta-listbox>
 </div>
 ${selectedRoute !== void 0 ? html`<citykleta-leisure-route-details .selectedStopIndex=${selectedStopIndex} .stops="${selectedRoute.stops}"></citykleta-leisure-route-details>` : ''}
 `;
@@ -58,7 +66,6 @@ export class LeisurePanel extends LitElement {
     connectedCallback(): void {
         super.connectedCallback();
         this._leisure.searchRoutes();
-        this.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 
     render() {
@@ -70,27 +77,5 @@ export class LeisurePanel extends LitElement {
             selectedStopIndex: this.selectedStopIndex
         });
     }
-
-    private handleKeyDown(ev) {
-        const {key} = ev;
-        const routeLength = this.routes.length;
-        const currentIndex = this.routes.findIndex(r => r.id === this.selectedRouteId);
-        if (routeLength) {
-            let newRouteIndex = currentIndex > -1 ? currentIndex : 0;
-            switch (key) {
-                case 'ArrowDown': {
-                    newRouteIndex = (newRouteIndex + 1) % routeLength;
-                    break;
-                }
-                case 'ArrowUp': {
-                    newRouteIndex = (newRouteIndex - 1) >= 0 ? newRouteIndex - 1 : routeLength - 1;
-                    break;
-                }
-            }
-            this._leisure.selectRoute(this.routes[newRouteIndex].id);
-        }
-
-    }
-
 }
 

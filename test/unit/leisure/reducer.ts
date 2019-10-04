@@ -13,7 +13,8 @@ import {
 const createInitialState = (routes = []): LeisureState => ({
     isSearching: false,
     selectedRouteId: null,
-    routes
+    routes,
+    selectedStopIndex: null
 });
 
 export default (a: Assert) => {
@@ -21,7 +22,8 @@ export default (a: Assert) => {
         t.eq(reducer(createInitialState(), selectView(View.LEISURE)), {
             isSearching: false,
             selectedRouteId: null,
-            routes: []
+            routes: [],
+            selectedStopIndex: null
         });
     });
 
@@ -29,7 +31,8 @@ export default (a: Assert) => {
         t.eq(reducer(createInitialState(), fetchLeisureRoutes()), {
             isSearching: true,
             selectedRouteId: null,
-            routes: []
+            routes: [],
+            selectedStopIndex: null
         }, 'should be put into searching mode');
     });
 
@@ -60,7 +63,8 @@ export default (a: Assert) => {
         t.eq(reducer(createInitialState(routes), fetchLeisureRoutesWithSuccess(routes)), {
             isSearching: false,
             routes,
-            selectedRouteId: 8
+            selectedRouteId: 8,
+            selectedStopIndex: 0
         });
     });
 
@@ -69,7 +73,8 @@ export default (a: Assert) => {
         t.eq(reducer(createInitialState(routes), fetchLeisureRoutesWithSuccess(routes)), {
             isSearching: false,
             routes,
-            selectedRouteId: null
+            selectedRouteId: null,
+            selectedStopIndex: null
         });
     });
 
@@ -102,7 +107,8 @@ export default (a: Assert) => {
         t.eq(reducer(leisureState, selectLeisureRoute(66)), {
             isSearching: false,
             routes,
-            selectedRouteId: 66
+            selectedRouteId: 66,
+            selectedStopIndex: 0
         });
     });
 
@@ -135,7 +141,8 @@ export default (a: Assert) => {
         t.eq(reducer(leisureState, selectLeisureRoute(999)), {
             isSearching: false,
             routes,
-            selectedRouteId: 8
+            selectedRouteId: 8,
+            selectedStopIndex: 0
         });
     });
 
@@ -146,7 +153,8 @@ export default (a: Assert) => {
         t.eq(reducer(leisureState, fetchLeisureRoutesWithFailure(error)), {
             isSearching: false,
             routes: [],
-            selectedRouteId: null
+            selectedRouteId: null,
+            selectedStopIndex: null
         }, 'should have reset the isSearching to false');
     });
 }

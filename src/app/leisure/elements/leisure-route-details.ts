@@ -6,15 +6,15 @@ import {LeisureService} from '../service';
 
 export const template = ({stops, selectedStopIndex, selectStop}) => html`
 <div>
-    <h2>Itinerary details</h2>
-    <ol tabindex="0">
+    <h2 id="stop_points_label">Itinerary details</h2>
+    <citykleta-listbox aria-labelledby="stop_points_label" .selectedIndex="${selectedStopIndex}" @change="${selectStop}">
     ${stops.map((s, i) => html`
-        <li @click="${ev => selectStop(i)}" aria-selected="${i === selectedStopIndex}">
-            <article>
-                <h3>${s.name}</h3>
+        <citykleta-listbox-option ?selected=${i === 0} id="_leisure_stop_${i}">
+            <div>
+               <h3>${s.name}</h3>
                 <p>${s.description}</p>
-            </article>
-        </li>`)}
+            </div>
+        </citykleta-listbox-option>`)}
     </ol>
 </div>
 `;
@@ -40,34 +40,10 @@ export class LeisureRouteDetails extends LitElement {
     constructor(registry: ServiceRegistry) {
         super();
         this._leisure = registry.get('leisure');
-        this.addEventListener('keydown', this._handleKeyDown.bind(this));
-    }
-
-    _handleKeyDown(ev) {
-        const {key} = ev;
-        const routeLength = this.stops.length;
-        if (routeLength) {
-            const selectedStopIndex = this.selectedStopIndex;
-            let newStopIndex = selectedStopIndex;
-            switch (key) {
-                case 'ArrowDown': {
-                    newStopIndex = (selectedStopIndex + 1) % routeLength;
-                    break;
-                }
-                case 'ArrowUp': {
-                    newStopIndex = selectedStopIndex - 1 >= 0 ? selectedStopIndex - 1 : routeLength - 1;
-                    break;
-                }
-            }
-            this._leisure.selectStop(newStopIndex);
-        }
-        ev.stopPropagation();
     }
 
     render() {
-
-        const selectStop = index => this._leisure.selectStop(index);
-
+        const selectStop = ev => this._leisure.selectStop(ev.selectedIndex);
         return template({stops: this.stops, selectedStopIndex: this.selectedStopIndex, selectStop});
     }
 
