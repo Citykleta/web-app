@@ -1,6 +1,7 @@
 import {html, LitElement} from 'lit-element';
 import {SearchResult} from '../../utils';
 import {style} from './search-panel.style';
+import {style as panelContentStyle} from '../../common/elements/panel-content.style';
 import {SearchService} from '../service';
 import {createSearchResultInstance} from './search-result';
 import {ServiceRegistry} from '../../common/service-registry';
@@ -31,7 +32,7 @@ export class SearchPanel extends LitElement {
     }
 
     static get styles() {
-        return style;
+        return [style, panelContentStyle];
     }
 
     static get properties() {

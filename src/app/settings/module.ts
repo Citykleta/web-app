@@ -4,6 +4,7 @@ import {SettingsPanel} from './elements/settings-panel';
 import {once} from '../utils';
 import {html} from 'lit-html';
 import {reducer} from './reducer';
+import {define} from '../common';
 
 export * from './service';
 export * from './actions';
@@ -16,7 +17,7 @@ export const loadServices = once((registry: ServiceRegistry, store) => {
 });
 
 export const loadComponents = once((injector) => {
-    customElements.define('citykleta-settings-panel', injector(SettingsPanel));
+    define('citykleta-settings-panel', injector(SettingsPanel));
 });
 
-export const view = () => html`<citykleta-settings-panel class="panel"></citykleta-settings-panel>`;
+export const view = () => html`<citykleta-settings-panel></citykleta-settings-panel>`;

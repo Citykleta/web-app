@@ -1,39 +1,51 @@
 import {html, LitElement} from 'lit-element';
 import {style} from './app.style';
 import {Theme} from './settings/module';
-import {View} from './navigation/module';
-import {loadingIndicator} from './common/elements/icons';
-import {defaultInjector, defaultRegistry} from './common';
-import store from './store/index';
+import {View} from './navigation/reducer';
+import {ServiceRegistry} from './common/service-registry';
 
 export const propsDef = {
-    selectedView: {type: String},
-    isLoading: {type: Boolean}
+    selectedView: {type: String, attribute: 'view', reflect: true}
 };
 
-const resolveModule = (view: View) => {
-    switch (view) {
-        case View.SEARCH:
-            return './search.js';
-        case View.ITINERARY:
-            return './itinerary.js';
-        case View.SETTINGS:
-            return './settings.js';
-        case View.LEISURE:
-            return './leisure.js';
-        default:
-            throw new Error(`could not find module for view: ${view}`);
-    }
-};
+const viewList = [View.SEARCH, View.ITINERARY, View.LEISURE, View.SETTINGS];
 
-export const template = ({selectedView, isLoading, component}) => html`<citykleta-navigation-bar .selectedView="${selectedView}"></citykleta-navigation-bar>
-${isLoading ? html`<div id="loading-indicator"><span>Loading ...</span><span id="spinner-container" aria-hidden="true">${loadingIndicator()}</span></div>` : component()}`;
+const viewToTabIndex = (view) => viewList.indexOf(view);
+
+const tabIndexToView = (index) => viewList[index];
+
+export const template = ({selectedView, onTabChange}) => {
+    const index = viewToTabIndex(selectedView);
+    return html`
+<citykleta-tabset @change="${onTabChange}" selected-tab-index="${index}">
+    <citykleta-tab ?selected=${index === 0}>Search</citykleta-tab>
+    <citykleta-tab ?selected=${index === 1}>Itinerary</citykleta-tab>
+    <citykleta-tab ?selected=${index === 2}>Leisure</citykleta-tab>
+    <citykleta-tab ?selected=${index === 3}>Settings</citykleta-tab>
+    <citykleta-tabpanel>
+        <app-search-panel .selectedView="${selectedView}"></app-search-panel>
+    </citykleta-tabpanel>
+    <citykleta-tabpanel>
+        <app-itinerary-panel .selectedView="${selectedView}"></app-itinerary-panel>
+    </citykleta-tabpanel>
+    <citykleta-tabpanel>
+        <app-leisure-panel .selectedView="${selectedView}"></app-leisure-panel>
+    </citykleta-tabpanel>
+    <citykleta-tabpanel>
+        <app-settings-panel .selectedView="${selectedView}"></app-settings-panel
+    </citykleta-tabpanel>
+</citykleta-tabset>`;
+};
 
 export class App extends LitElement {
 
-    isLoading = true;
+    private selectedView;
+    private _navigation;
 
-    private _component;
+    constructor(registry: ServiceRegistry) {
+        super();
+        this._navigation = registry.get('navigation');
+    }
 
     static get styles() {
         return style;
@@ -43,33 +55,16 @@ export class App extends LitElement {
         return propsDef;
     }
 
-    private _selectedView: View;
-
-    get selectedView() {
-        return this._selectedView;
-    }
-
-    set selectedView(val) {
-        if (val !== this._selectedView) {
-            this._selectedView = val;
-            this._loadModule();
-        }
-    }
-
     set theme(this: HTMLElement, val) {
         this.classList.toggle('dark', val === Theme.DARK);
     }
 
     render() {
-        return template({selectedView: this.selectedView, isLoading: this.isLoading, component: this._component});
-    }
-
-    private async _loadModule() {
-        this.isLoading = true;
-        const module = await import(resolveModule(this._selectedView));
-        module.loadServices(defaultRegistry, store);
-        module.loadComponents(defaultInjector);
-        this._component = module.view;
-        this.isLoading = false;
+        const onTabChange = ({selectedIndex}) => {
+            if (selectedIndex >= 0 && selectedIndex < viewList.length) {
+                this._navigation.selectView(tabIndexToView(selectedIndex));
+            }
+        };
+        return template({selectedView: this.selectedView, onTabChange});
     }
 }

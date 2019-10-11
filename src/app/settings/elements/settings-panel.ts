@@ -3,6 +3,7 @@ import {Theme} from '../reducer';
 import {style} from './settings-panel.style';
 import {SettingsService} from '../service';
 import {ServiceRegistry} from '../../common/service-registry';
+import {style as contentPanelStyle} from '../../common/elements/panel-content.style'
 
 export const template = ({onChange, theme}) => html`
 <div>
@@ -27,7 +28,7 @@ export class SettingsPanel extends LitElement {
     }
 
     static get styles() {
-        return style;
+        return [style, contentPanelStyle];
     }
 
     static get properties() {

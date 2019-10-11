@@ -1,5 +1,6 @@
 .idea
 .circleci
+dist
 node_modules
 scripts
 test

@@ -9,6 +9,7 @@ import {searchViewTool} from '../tools/search-tool';
 
 const ACCESS_TOKEN = mapboxconf.accessToken;
 const STYLE_URL = mapboxconf.style;
+const LEISURE_COLOR = '#278c68';
 
 export const template = ({
                              zoom,
@@ -21,15 +22,28 @@ export const template = ({
                              selectItineraryRoute
                          }) => {
     return html`
-<mb-map @click="${ev => console.log('map click')}" @camera-change="${onCameraChange}" center="${center.join(',')}" zoom="${zoom}" access-token="${ACCESS_TOKEN}" mb-style="${STYLE_URL}">
+<mb-map @camera-change="${onCameraChange}" center="${center.join(',')}" zoom="${zoom}" access-token="${ACCESS_TOKEN}" mb-style="${STYLE_URL}">
+    <mb-geojson data-url="bicycle_data.json" source-id="bicycle_data">
+        <mb-circle-layer layer-id="bicycle_data_circle"
+            circle-color="#0092ff"
+            circle-stroke-width="2"
+            circle-stroke-color="white"
+        ></mb-circle-layer>
+        <mb-symbol-layer layer-id="bicycle_data_label"
+            text-size="12"
+            text-offset="[0, -0.4]"
+            text-anchor="bottom"
+            text-font="['Open Sans Bold']"
+            text-field="['get', 'name']"></mb-symbol-layer>
+    </mb-geojson>
     <mb-geojson .data="${suggestions}" source-id="suggestions">
         <mb-circle-layer @click="${selectSuggestion}" layer-id="suggestions-point"
             filter="['==','$type','Point']"
             circle-color="#55B2FF" 
-            circle-radius="8"
+            circle-radius="6"
             circle-stroke-width="['case',['get','selected'],4,2]" 
             circle-stroke-color="['case',['get','selected'],'#55b2ff','#ff426f']" 
-            circle-opacity="0.2"></mb-circle-layer>
+            circle-opacity="0.4"></mb-circle-layer>
         <mb-line-layer  @click="${selectSuggestion}" layer-id="suggestions-line"
             line-color="['case',['get','selected'],'#55b2ff','#ff426f']"
             line-opacity="0.7"
@@ -39,23 +53,23 @@ export const template = ({
     <mb-geojson .data="${leisure}" source-id="leisure">
         <mb-circle-layer  layer-id="leisure-point"
             filter="['==','$type','Point']"
-            circle-color="['case',['get','selected'],'blue','green']"
-            circle-radius="['case',['get','selected'],12,8]"
+            circle-color="['case',['get','selected'],'blue','${LEISURE_COLOR}']"
+            circle-radius="['case',['get','selected'],8,6]"
             circle-stroke-width="2"
             circle-stroke-color="['case',['get','selected'],'blue','green']"
             circle-opacity="0.2"></mb-circle-layer>
         <mb-line-layer  layer-id="leisure-line"
-            line-color="green"
+            line-color="${LEISURE_COLOR}"
             line-opacity="1"
             line-width="5"></mb-line-layer>
         <mb-symbol-layer  layer-id="leisure-label"
             filter="['==','$type','Point']"
-            text-size="18"
+            text-size="14"
             text-offset="[0, -0.4]"
             text-anchor="bottom"
             text-font="['Open Sans Bold']"
             text-field="['get', 'name']"
-            text-color="blue"></mb-symbol-layer>
+            text-color="#334433"></mb-symbol-layer>
     </mb-geojson>
     <mb-geojson .data="${itinerary}" source-id="itinerary">
         <mb-line-layer @click="${selectItineraryRoute}" layer-id="itinerary-line"
@@ -104,7 +118,6 @@ export class GeoMap extends LitElement {
     attributeChangedCallback(name: string, old: string | null, value: string | null): void {
         super.attributeChangedCallback(name, old, value);
         if (name === 'view') {
-            console.log('change tool');
             this._toolBox.selectTool(value);
         }
     }
@@ -119,8 +132,6 @@ export class GeoMap extends LitElement {
     render() {
 
         const selectSuggestion = ev => {
-            console.log('click layer');
-
             const {features} = ev;
             const search = this._registry.get('search');
             if (features && features.length) {
@@ -144,9 +155,6 @@ export class GeoMap extends LitElement {
             zoom: ev.detail.zoom,
             center: ev.detail.center
         });
-
-        console.log('render');
-
         return template({
             zoom: this.zoom,
             center: this.center,

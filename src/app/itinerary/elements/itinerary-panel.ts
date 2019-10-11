@@ -3,6 +3,7 @@ import {classMap} from 'lit-html/directives/class-map';
 import {ItineraryService} from '../service';
 import {plus, remove, swap} from '../../common/elements/icons';
 import {style} from './itinerary-panel.style';
+import {style as panelContentStyle} from '../../common/elements/panel-content.style';
 import {ItineraryPoint, Route} from '../../utils';
 import {ServiceRegistry} from '../../common/service-registry';
 
@@ -62,8 +63,8 @@ export const template = ({stops, routes, selectedRoute, itinerary}) => {
 <div>
     <div id="stops-list-container">
         <citykleta-button-icon label="swap departure with destination" @click="${swapPoints}" id="swap-button" class="${classMap({
-            hidden: isMulti
-        })}">${swap()}</citykleta-button-icon>
+        hidden: isMulti
+    })}">${swap()}</citykleta-button-icon>
         <ol>${stops.map(stop => html`<li @dragstart="${dragstart(stop.id)}" @dragover="${dragOver(stop.id)}" @drop="${drop(stop.id)}" @dragleave="${dragLeave(stop.id)}"><citykleta-stop-point class=${classList} .location="${stop}"></citykleta-stop-point></li>`)}</ol>
     </div>
     <div id="action-buttons-container">
@@ -72,8 +73,8 @@ export const template = ({stops, routes, selectedRoute, itinerary}) => {
     </div>
 </div>
 ${routes.length ? html`<div id="routes-container">
-<h2>Route suggestions</h2>
-<citykleta-route-details tabindex="0" .selectedRoute="${selectedRoute}" .routes="${routes}">Hello world</citykleta-route-details></div>` : ''}`;
+<h2 id="route-suggestions">Route suggestions</h2>
+<citykleta-route-details .selectedRoute="${selectedRoute}" .routes="${routes}">Hello world</citykleta-route-details></div>` : ''}`;
 };
 
 export const propDef = {
@@ -95,7 +96,7 @@ export class ItineraryPanel extends LitElement {
     }
 
     static get styles() {
-        return style;
+        return [style, panelContentStyle];
     }
 
     static get properties() {

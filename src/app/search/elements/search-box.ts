@@ -3,6 +3,7 @@ import {classMap} from 'lit-html/directives/class-map';
 import {debounce, SearchResult} from '../../utils';
 import {loadingIndicator, myLocation} from '../../common/elements/icons';
 import {style} from './search-box.style';
+import {style as listboxStyle} from '../../common/elements/listbox.style';
 import {SearchService} from '../service';
 import {createSearchResultInstance} from './search-result';
 import {ServiceRegistry} from '../../common/service-registry';
@@ -26,7 +27,43 @@ export const propDef = {
     }
 };
 
-// todo remove dependency on store
+const suggestionElement = (suggestion, index) => html`
+<citykleta-listbox-option id="suggestion-${index}">
+    ${createSearchResultInstance(suggestion).toOptionElement()}
+</citykleta-listbox-option>`;
+
+const template = ({
+                      onSubmit,
+                      onInput,
+                      changeSelectedSuggestion,
+                      valueString,
+                      selectedIndex,
+                      suggestions,
+                      isBusy
+                  }) => html`
+<form @submit="${onSubmit}" aria-owns="place-suggestions-box" role="combobox" aria-expanded="${suggestions.length > 0}" aria-haspopup="listbox">
+    <div id="loading-indicator" class="${classMap({hidden: !isBusy})}" aria-hidden="true">
+        ${loadingIndicator()}
+    </div>
+    <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" type="search" placeholder="ex: teatro Karl Marx">
+    <citykleta-button-icon label="select my location" id="my-location">${myLocation()}</citykleta-button-icon>
+</form>
+<citykleta-listbox @change="${ev => changeSelectedSuggestion(suggestions[ev.selectedIndex])}" .selectedIndex="${selectedIndex}">
+${suggestions.map(suggestionElement)}
+</citykleta-listbox>`;
+
+const search = (fn, instance) => async function (query) {
+    try {
+        instance.isBusy = true;
+        await fn(query);
+        instance.suggestions = instance._search.getSearchResult();
+    } catch (e) {
+        instance.suggestions = [];
+    } finally {
+        instance.isBusy = false;
+    }
+};
+
 export class SearchBox extends LitElement {
     value: SearchResult = null;
     selectedSuggestion: SearchResult = null;
@@ -36,11 +73,12 @@ export class SearchBox extends LitElement {
     constructor(serviceRegistry: ServiceRegistry) {
         super();
         this._search = serviceRegistry.get('search');
+        this.changeSelectedSuggestion = this.changeSelectedSuggestion.bind(this);
         this.addEventListener('keydown', this.handleKeyDown);
     }
 
     static get styles() {
-        return style;
+        return [style, listboxStyle];
     }
 
     static get properties() {
@@ -72,19 +110,12 @@ export class SearchBox extends LitElement {
     }
 
     render() {
-        const {suggestions} = this;
-        const valueString = this.value === null ? '' : createSearchResultInstance(this.value).toString();
+        const {suggestions, isBusy, changeSelectedSuggestion, selectedSuggestion, value} = this;
+        const valueString = value === null ? '' : createSearchResultInstance(value).toString();
+        const selectedIndex = suggestions.indexOf(selectedSuggestion);
+
         const onInput = debounce(() => {
             this.suggest(this.searchInput.value);
-        });
-        const suggestionElements = suggestions.map((val, index) => {
-            const onClick = () => {
-                this.selectedSuggestion = val;
-                this.commitValue(val);
-            };
-            return html`<li @click="${onClick}" role="option" aria-selected="${this.selectedSuggestion === val}" id="${index}">
-                <citykleta-location-suggestion .suggestion="${val}"></citykleta-location-suggestion>
-            </li>`;
         });
 
         const onSubmit = (ev => {
@@ -92,18 +123,15 @@ export class SearchBox extends LitElement {
             this.submit(this.searchInput.value);
         });
 
-        return html`
-<form @submit="${onSubmit}" aria-owns="place-suggestions-box" role="combobox" aria-expanded="${suggestions.length > 0}" aria-haspopup="listbox">
-    <div id="loading-indicator" class="${classMap({hidden: !this.isBusy})}" aria-hidden="true">
-        ${loadingIndicator()}
-    </div>
-    <input @input="${onInput}" .value="${valueString}" aria-controls="place-suggestions-box" type="search" placeholder="ex: teatro Karl Marx">
-    <citykleta-button-icon label="select my location" id="my-location">${myLocation()}</citykleta-button-icon>
-</form>
-<ol role="listbox" id="place-suggestions-box">
-${suggestionElements}
-</ol>
-`;
+        return template({
+            onInput,
+            onSubmit,
+            changeSelectedSuggestion,
+            suggestions,
+            selectedIndex,
+            valueString,
+            isBusy: isBusy
+        });
     }
 
     updated(changedProperties) {
@@ -112,34 +140,19 @@ ${suggestionElements}
         }
     }
 
-    // todo refactor suggest & submit
     private async suggest(query: string) {
-        try {
-            this.isBusy = true;
-            await this._search.searchPointOfInterest(query);
-            this.suggestions = this._search.getSearchResult();
-        } catch (e) {
-            this.suggestions = [];
-        } finally {
-            this.isBusy = false;
-        }
+        return search(this._search.searchPointOfInterest, this)(query);
     }
 
-    private async submit(value) {
-        try {
-            this.isBusy = true;
-            await this._search.searchAddress(value);
-            this.suggestions = this._search.getSearchResult();
-        } catch (e) {
-            this.suggestions = [];
-        } finally {
-            this.isBusy = false;
-        }
+    private async submit(query) {
+        return search(this._search.searchAddress, this)(query);
     }
 
     private changeSelectedSuggestion(value) {
-        this.selectedSuggestion = value;
-        this._search.selectSearchResult(value);
+        if (value) {
+            this.selectedSuggestion = value || null;
+            this._search.selectSearchResult(this.selectedSuggestion);
+        }
     }
 
     private commitValue(newVal: SearchResult) {
@@ -157,17 +170,9 @@ ${suggestionElements}
         switch (key) {
             case 'ArrowDown':
             case 'ArrowUp': {
-                if (this.suggestions.length) {
-                    ev.preventDefault();
-                    const index = this.suggestions.indexOf(this.selectedSuggestion);
-                    let actualIndex = index;
-                    if (key === 'ArrowDown') {
-                        actualIndex = index + 1 >= this.suggestions.length ? 0 : index + 1;
-                    } else {
-                        actualIndex = index - 1 >= 0 ? index - 1 : this.suggestions.length - 1;
-                    }
-                    this.changeSelectedSuggestion(this.suggestions[actualIndex]);
-                }
+                //@ts-ignore
+                // delegate to listbox
+                this.shadowRoot.querySelector('citykleta-listbox')._handleKeydownEvent(ev);
                 break;
             }
             case 'Escape': {

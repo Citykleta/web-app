@@ -5,8 +5,8 @@ import {once} from '../utils';
 import {GeoMap} from './elements/map';
 import {reducer} from './reducer';
 import store from '../store/index';
-import {connect} from '../common/connect';
 import {ApplicationState} from '../store/store';
+import {define, connect} from '../common';
 
 export const loadServices = once((registry: ServiceRegistry, store) => {
     store.injectReducer('map', reducer);
@@ -21,10 +21,10 @@ export const loadComponents = once((injector) => {
             applicationState: state
         };
     });
-    customElements.define('mb-map', MbGeoMap);
-    customElements.define('mb-geojson', GeoJSONSource);
-    customElements.define('mb-circle-layer', CircleLayer);
-    customElements.define('mb-line-layer', LineLayer);
-    customElements.define('mb-symbol-layer', SymbolLayer);
-    customElements.define('citykleta-map', connectedMap(injector(GeoMap)));
+    define('mb-map', MbGeoMap);
+    define('mb-geojson', GeoJSONSource);
+    define('mb-circle-layer', CircleLayer);
+    define('mb-line-layer', LineLayer);
+    define('mb-symbol-layer', SymbolLayer);
+    define('citykleta-map', connectedMap(injector(GeoMap)));
 });

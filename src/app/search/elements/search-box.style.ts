@@ -4,9 +4,6 @@ import {css} from 'lit-element';
 export const style = css`:host {
     --border-color: var(--color-theme);
     --color: inherit;
-    --suggestion-bg-color: inherit;
-    --suggestion-color: inherit;
-    --suggestion-border-color: var(--background-theme-1);
     display: flex;
     flex-direction: column;
 }
@@ -50,39 +47,16 @@ input {
     padding: 0 0.2em;
 }
 
-ul:empty, ol:empty {
-    border-color: transparent;
-}
-
-[role=listbox] {
-    list-style: none;
-    margin: 0;
-    overflow: scroll;
-    padding: 0;
-    width: 100%;
-}
-
-li {
-    font-size: 0.95em;
-    padding: 0.5em 1em;
-    background: var(--suggestion-bg-color);
-    color: var(--suggestion-color);
-    transition: background-color 0.3s, color 0.3s;
-}
-
-li[aria-selected=true] {
-    --suggestion-bg-color: var(--color-theme-1);
-    --suggestion-color: var(--font-color-theme-2);
-}
-
-li:not(:last-child) {
-    border-bottom: 1px solid var(--suggestion-border-color);
-}
-
 #my-location {
     --color: var(--color-theme-compl);
     align-self: center;
     margin: 0 0.4em;
+}
+
+.municipality{
+    font-size: 0.9em;
+    margin: 0 0.5em;
+    font-weight: 300;
 }
 
 @keyframes rotateSpinner {

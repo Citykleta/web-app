@@ -3,10 +3,10 @@ import {StopPoint} from './elements/stop-point';
 import {once} from '../utils';
 import {html} from 'lit-html';
 import store from '../store/index';
-import {connect} from '../common/connect';
 import {ApplicationState} from '../store/store';
-import {loadSearchItineraryComponents} from '../common';
 import {RouteDetails} from './elements/route-details';
+import {SearchBox} from '../search/elements/search-box';
+import {connect, define} from '../common';
 
 export * from './actions';
 export * from './reducer';
@@ -17,11 +17,11 @@ export {loadSearchItineraryServices as loadServices} from '../common/index';
 
 export const loadComponents = once((injector) => {
     const connectedItineraryPanel = connect(store, (state: ApplicationState) => state.itinerary);
-    loadSearchItineraryComponents   (injector);
-    customElements.define('citykleta-itinerary-panel', connectedItineraryPanel(injector(ItineraryPanel)));
-    customElements.define('citykleta-stop-point', injector(StopPoint));
-    customElements.define('citykleta-route-details', injector(RouteDetails));
+    define('citykleta-search-box', injector(SearchBox));
+    define('citykleta-itinerary-panel', connectedItineraryPanel(injector(ItineraryPanel)));
+    define('citykleta-stop-point', injector(StopPoint));
+    define('citykleta-route-details', injector(RouteDetails));
 });
 
-export const view = () => html`<citykleta-itinerary-panel class="panel"></citykleta-itinerary-panel>`;
+export const view = () => html`<citykleta-itinerary-panel></citykleta-itinerary-panel>`;
 

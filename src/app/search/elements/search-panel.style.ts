@@ -17,8 +17,4 @@ export const style = css`
     citykleta-location {
         padding: 0 1em;
     }
-    
-    :host > *:not(:first-child){
-        margin-top: 1em;
-    }
 `;

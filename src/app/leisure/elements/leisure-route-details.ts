@@ -2,6 +2,7 @@ import {html} from 'lit-html';
 import {LitElement} from 'lit-element';
 import {ServiceRegistry} from '../../common/service-registry';
 import {style} from './leisure-route-details.style';
+import {style as listBoxStyle} from '../../common/elements/listbox.style';
 import {LeisureService} from '../service';
 
 export const template = ({stops, selectedStopIndex, selectStop}) => html`
@@ -34,7 +35,7 @@ export class LeisureRouteDetails extends LitElement {
     }
 
     static get styles() {
-        return style;
+        return [style, listBoxStyle];
     }
 
     constructor(registry: ServiceRegistry) {

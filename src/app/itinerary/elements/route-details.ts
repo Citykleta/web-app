@@ -3,13 +3,14 @@ import {formatDistance, formatDuration, Route} from '../../utils';
 import {ItineraryService} from '../service';
 import {ServiceRegistry} from '../../common/service-registry';
 import {style} from './route-details.style';
+import {style as listBoxStyle} from '../../common/elements/listbox.style';
 
-export const template = ({routes, selectedRoute, itinerary}) => html`<ol>${routes.map((r, i) => html`<li @click="${() => itinerary.selectRoute(i)}" aria-selected="${i === selectedRoute}">
+export const template = ({routes, selectedRoute, itinerary}) => html`<citykleta-listbox @change="${ev => itinerary.selectRoute(ev.selectedIndex)}" aria-labelledby="route-suggestions" .selectedIndex="${selectedRoute}">${routes.map((r, i) => html`<citykleta-listbox-option  ?selected=${i === 0}>
 <dl>
     <dt>Distance</dt><dd>${formatDistance(r.distance)}</dd>
     <dt>Duration</dt><dd>${formatDuration(r.duration)}</dd>
 </dl>
-</li>`)}</ol>`;
+</citykleta-listbox-option>`)}</citykleta-listbox>`;
 
 export const propDef = {
     routes: {type: Array},
@@ -25,7 +26,6 @@ export class RouteDetails extends LitElement {
     constructor(registry: ServiceRegistry) {
         super();
         this._itinerary = registry.get('itinerary');
-        this.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 
     static get properties() {
@@ -33,7 +33,7 @@ export class RouteDetails extends LitElement {
     }
 
     static get styles() {
-        return style;
+        return [style, listBoxStyle];
     }
 
     render() {
@@ -42,25 +42,5 @@ export class RouteDetails extends LitElement {
             selectedRoute: this.selectedRoute,
             itinerary: this._itinerary
         });
-    }
-
-    private handleKeyDown(ev) {
-        const {key} = ev;
-        const routeLength = this.routes.length;
-        if (routeLength) {
-            const selectedRoute = this.selectedRoute;
-            let newRoute = selectedRoute;
-            switch (key) {
-                case 'ArrowDown': {
-                    newRoute = (selectedRoute + 1) % routeLength;
-                    break;
-                }
-                case 'ArrowUp': {
-                    newRoute = selectedRoute - 1 >= 0 ? selectedRoute - 1 : routeLength - 1;
-                    break;
-                }
-            }
-            this._itinerary.selectRoute(newRoute);
-        }
     }
 }

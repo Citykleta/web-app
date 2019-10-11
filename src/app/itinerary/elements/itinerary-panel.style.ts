@@ -2,13 +2,6 @@ import {css} from 'lit-element';
 
 // language=CSS
 export const style = css`
-    :host > div {
-        background: var(--background-theme);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12),
-        0 4px 4px rgba(0, 0, 0, 0.12),
-        0 6px 4px rgba(0, 0, 0, 0.12);
-    }
-
     ol {
         flex-grow: 1;
         list-style: none;
@@ -68,11 +61,5 @@ export const style = css`
     #routes-container {
         margin-top: 1em;
         padding-bottom: 1em;
-    }
-
-    h2 {
-        border-bottom: 2px solid var(--color-theme);
-        font-size:1.2rem;
-        margin:1em;
     }
 `;

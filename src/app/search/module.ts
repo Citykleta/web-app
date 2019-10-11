@@ -4,10 +4,9 @@ import {SearchPanel} from './elements/search-panel';
 import {once} from '../utils';
 import {html} from 'lit-html';
 import {LocationDetails} from './elements/location-details';
-import {connect} from '../common/connect';
 import store from '../store/index';
 import {ApplicationState} from '../store/store';
-import {loadSearchItineraryComponents} from '../common';
+import {connect, define} from '../common';
 
 export * from './actions';
 export * from './reducers';
@@ -20,10 +19,10 @@ export {loadSearchItineraryServices as loadServices} from '../common/index';
 
 export const loadComponents = once((injector) => {
     const connectedSearchPanel = connect(store, (state: ApplicationState) => state.search);
-    loadSearchItineraryComponents(injector);
-    customElements.define('citykleta-location', injector(LocationDetails));
-    customElements.define('citykleta-actions-bar', injector(ActionsBar));
-    customElements.define('citykleta-search-panel', connectedSearchPanel(injector(SearchPanel)));
+    define('citykleta-search-box', injector(SearchBox));
+    define('citykleta-location', injector(LocationDetails));
+    define('citykleta-actions-bar', injector(ActionsBar));
+    define('citykleta-search-panel', connectedSearchPanel(injector(SearchPanel)));
 });
 
-export const view = () => html`<citykleta-search-panel class="panel"></citykleta-search-panel>`;
+export const view = () => html`<citykleta-search-panel></citykleta-search-panel>`;

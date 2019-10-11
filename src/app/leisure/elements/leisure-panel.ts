@@ -4,6 +4,8 @@ import {LeisureService} from '../service';
 import {ServiceRegistry} from '../../common/service-registry';
 import {LeisureRoute} from '../reducer';
 import {loadingIndicator} from '../../common/elements/icons';
+import {style as listBoxStyle} from '../../common/elements/listbox.style';
+import {style as panelContentStyle} from '../../common/elements/panel-content.style';
 
 export const template = ({leisure, isSearching, routes, selectedStopIndex, selectedRouteId}) => {
     if (isSearching) {
@@ -17,12 +19,13 @@ export const template = ({leisure, isSearching, routes, selectedStopIndex, selec
 
         return html`
 <div>
-    <citykleta-listbox @change="${selectRoute}">
+    <h2 id="routes-of-interest">Routes of interest</h2>
+    <citykleta-listbox aria-labelledby="routes-of-interest" @change="${selectRoute}">
         ${routes.map((r, i) => {
             return html`
         <citykleta-listbox-option ?selected=${i === 0} .selectedIndex="${selectedRouteIndex}" id="_route_listbox_${i}">
             <div>
-                <h2>${r.title}</h2>
+                <h3>${r.title}</h3>
                 <p>${r.description}</p>
             </div>
         </citykleta-listbox-option>`;
@@ -56,7 +59,7 @@ export class LeisurePanel extends LitElement {
     }
 
     static get styles() {
-        return style;
+        return [style, panelContentStyle, listBoxStyle];
     }
 
     static get properties() {
