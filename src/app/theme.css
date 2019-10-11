@@ -12,6 +12,7 @@
     --font-color-theme-2: var(--background-theme);
 }
 
+
 citykleta-app.dark {
     --background-theme: #333333;
     --background-theme-1: #4c4c4c;
