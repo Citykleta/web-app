@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/Citykleta/web-app#readme",
   "devDependencies": {
-    "@mapbox/mapbox-sdk": "^0.7.0",
+    "@mapbox/mapbox-sdk": "^0.14.0",
     "@types/mapbox-gl": "^0.54.4",
     "cpx": "^1.5.0",
     "http-serve": "^1.0.1",
